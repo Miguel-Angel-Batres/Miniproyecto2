@@ -5,7 +5,7 @@
 - [ ] 2. La portada.
 
 ## 🔗 Links del Proyecto
-- [ ] 3. Link al repositorio en GitHub: [ ]()
+- [✅] 3. Link al repositorio en GitHub: [ ]()
 - [ ] 4. Link a GitHub Pages (sistema publicado): [ ]()
 - [ ] 5. Link al video mostrando SPA con rúbrica (incluye todos los miembros del equipo): [ ]()
   - [ ] Link de respaldo: [ ]()
@@ -29,13 +29,13 @@
 - [ ] 15. Cumplimiento de todos los requisitos funcionales.
 - [ ] 16. Diseño consistente y buena UX.
 - [ ] 17. Nombre del sitio, lema, logotipo, favicon.
-- [ ] 18. Header, nav y footer constantes entre vistas.
-- [ ] 19. Menú principal con mínimo 4 opciones funcionales.
+- [✅] 18. Header, nav y footer constantes entre vistas.
+- [✅] 19. Menú principal con mínimo 4 opciones funcionales.
 - [ ] 20. Vista principal con al menos 3 secciones extra.
-- [ ] 21. Cada vista de menú tiene al menos 2 secciones extra.
-- [ ] 22. Uso de cards y carrusel.
-- [ ] 23. 3 iconos de redes sociales funcionales.
-- [ ] 24. Datos del equipo de desarrollo y texto en el footer sobre proyecto universitario.
+- [✅] 21. Cada vista de menú tiene al menos 2 secciones extra.
+- [✅] 22. Uso de cards y carrusel.
+- [✅] 23. 3 iconos de redes sociales funcionales.
+- [✅] 24. Datos del equipo de desarrollo y texto en el footer sobre proyecto universitario.
 
 ## 🔐 Login y Sesión
 - [ ] 25. Arreglo con 3 cuentas de administrador y login sin registro.
@@ -91,7 +91,7 @@
 
 ## ❗ Puntos NEGATIVOS por incumplimiento (Revisión técnica del código)
 
-- [-] 65. Componentes del proyecto.
+- [ ] 65. Componentes del proyecto.
 - [ ] 66. Interfaces y dónde se usan.
 - [ ] 67. Manejo de rutas (para qué).
 - [ ] 68. Rutas con parámetros.
@@ -113,7 +113,7 @@
 - [ ] 84. Double binding.
 - [ ] 85. Event binding.
 - [ ] 86. Uso de Flexbox o GridCSS.
-- [ ] 87. Angular Material instalado.
+- [✅] 87. Angular Material instalado.
 - [ ] 88. Uso de 5 componentes de Angular Material.
 
 ---
