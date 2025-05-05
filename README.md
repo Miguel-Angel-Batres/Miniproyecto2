@@ -27,8 +27,8 @@
 
 ## ✅ Requisitos Funcionales
 - [ ] 15. Cumplimiento de todos los requisitos funcionales.
-- [ ] 16. Diseño consistente y buena UX.
-- [ ] 17. Nombre del sitio, lema, logotipo, favicon.
+- [✅] 16. Diseño consistente y buena UX.
+- [✅] 17. Nombre del sitio, lema, logotipo, favicon.
 - [✅] 18. Header, nav y footer constantes entre vistas.
 - [✅] 19. Menú principal con mínimo 4 opciones funcionales.
 - [ ] 20. Vista principal con al menos 3 secciones extra.
@@ -91,21 +91,21 @@
 
 ## ❗ Puntos NEGATIVOS por incumplimiento (Revisión técnica del código)
 
-- [ ] 65. Componentes del proyecto.
+- [✅] 65. Componentes del proyecto.
 - [ ] 66. Interfaces y dónde se usan.
-- [ ] 67. Manejo de rutas (para qué).
-- [ ] 68. Rutas con parámetros.
+- [✅] 67. Manejo de rutas (para qué).
+- [✅] 68. Rutas con parámetros.
 - [ ] 69. Manejo de localStorage.
-- [ ] 70. Uso de `@if` (NO *ngIf).
-- [ ] 71. Uso de `@for` (NO *ngFor).
+- [✅] 70. Uso de `@if` (NO *ngIf).
+- [✅] 71. Uso de `@for` (NO *ngFor).
 - [ ] 72. ngClass o ngStyle en vistas.
 - [ ] 73. Uso útil de `@Input`.
 - [ ] 74. Uso útil de `@Output`.
-- [ ] 75. Uso útil de servicios.
+- [✅] 75. Uso útil de servicios.
 - [ ] 76. Arreglo y validación para login.
 - [ ] 77. Explicación clara del formulario reactivo.
 - [ ] 78. Explicación clara del formulario template.
-- [ ] 79. Lista desplegable desde arreglo.
+- [✅] 79. Lista desplegable desde arreglo.
 - [ ] 80. Código para mostrar API.
 - [ ] 81. Código de búsqueda en API.
 - [ ] 82. Interpolación.
