@@ -91,7 +91,7 @@
 
 ## ❗ Puntos NEGATIVOS por incumplimiento (Revisión técnica del código)
 
-- [ ] 65. Componentes del proyecto.
+- [-] 65. Componentes del proyecto.
 - [ ] 66. Interfaces y dónde se usan.
 - [ ] 67. Manejo de rutas (para qué).
 - [ ] 68. Rutas con parámetros.
