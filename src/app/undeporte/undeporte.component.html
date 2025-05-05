@@ -1,0 +1,42 @@
+<div class="sport-detail-container">
+  <div class="sport-header">
+    <h1>
+      {{deporte.nombre}}
+    </h1>
+  </div>
+  
+  <div class="content-wrapper">
+    <!-- Centered image -->
+    <div class="image-section">
+      <div class="image-container">
+        <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="sport-image">
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2 class="section-title">Información</h2>
+      <div class="divider"></div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <h3 class="info-label">Descripción</h3>
+          <p class="info-content">{{deporte.bio}}</p>
+        </div>
+        
+        <div class="info-item">
+          <h3 class="info-label">Horario</h3>
+          <p class="info-content">{{deporte.horario}}</p>
+        </div>
+        
+        <div class="info-item">
+          <h3 class="info-label">Costo por clase</h3>
+          <p class="info-content">{{deporte.costo || '$XX.XX'}} MXN</p>
+        </div>
+      </div>
+      
+      <a [routerLink]="['/deportes']" class="return-button">
+        <i class="fas fa-arrow-left"></i> Regresar
+      </a>
+    </div>
+  </div>
+</div>

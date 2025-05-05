@@ -1,0 +1,93 @@
+<div class="horarios-costos-container">
+  <div class="horcos-header">
+    <h1>Horarios & Costos</h1>
+    <div class="divider"></div>
+    <h4>Descubre nuestros planes y horarios diseñados para adaptarse a tu estilo de vida</h4>
+  </div>
+
+  <!-- Tabs para navegar entre secciones -->
+  <div class="tabs">
+    <!-- <button [class.active]="activeTab === 'planes'" (click)="setActiveTab('planes')">Horarios del Gimnasio</button> -->
+    <button [class.active]="activeTab === 'horarios'" (click)="setActiveTab('horarios')">Planes de Membresia</button>
+    <button [class.active]="activeTab === 'clases'" (click)="setActiveTab('clases')">Horarios de Clases</button>
+  </div>
+
+  <!-- Sección de Planes de Membresía
+  <div class="section planes-section" *ngIf="activeTab === 'planes'">
+    <div class="horario-gimnasio">
+      <div class="horario-card" *ngFor="let item of horarioGimnasio | keyvalue">
+        <div class="dia">{{ item.key }}</div>
+        <div class="hora">{{ item.value }}</div>
+      </div>
+    </div>
+  </div> -->
+  
+  <!-- Sección de Horarios del Gimnasio -->
+  <div class="section horarios-section" *ngIf="activeTab === 'horarios'">
+    <div class="planes-container">
+      <div class="plan-card basic">
+        <div class="plan-header">
+          <h3>Plan Básico</h3>
+          <div class="price">$29.99<span>/mes</span></div>
+        </div>
+        <div class="plan-features">
+          <ul>
+            <li>Acceso a área de pesas</li>
+            <li>Acceso a cardio</li>
+            <li>Horario limitado (6AM - 8PM)</li>
+            <li>2 clases grupales por semana</li>
+            <li>Casillero estándar</li>
+          </ul>
+        </div>
+        <button class="plan-button">Elegir Plan</button>
+      </div>
+  
+      <div class="plan-card pro">
+        <div class="plan-header">
+          <h3>Plan Pro</h3>
+          <div class="price">$49.99<span>/mes</span></div>
+        </div>
+        <div class="plan-features">
+          <ul>
+            <li>Todas las áreas del gimnasio</li>
+            <li>Clases ilimitadas</li>
+            <li>1 sesión mensual con entrenador</li>
+            <li>Casillero premium</li>
+            <li>Acceso a sauna y spa</li>
+            <li>Estacionamiento gratuito</li>
+          </ul>
+        </div>
+        <button class="plan-button pro-button">Elegir Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Horarios de Clases -->
+<div class="section clases-section" *ngIf="activeTab === 'clases'">
+  <div class="tabla-clases-container">
+    <table class="tabla-clases">
+      <thead>
+        <tr>
+          <th>Clase</th>
+          <th>Horario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let deporte of deportes">
+          <td>
+            <div class="clase-info-tabla">
+              <div>
+                <strong>{{ deporte.nombre }}</strong>
+                <p>{{ deporte.bio }}</p>
+              </div>
+            </div>
+          </td>
+          <div class="clase-info-horario">
+            <p>{{ deporte.horario }}</p>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>

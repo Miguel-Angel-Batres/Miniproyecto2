@@ -1,0 +1,333 @@
+/* Estilos generales */
+.horarios-costos-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+
+  }
+  
+  .horcos-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .horcos-header h1 {
+    color: #2c3e50;
+    font-size: 3rem;
+    font-weight: 700;
+    display: inline-block;
+  }
+  
+  .horcos-header h4 {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    font-weight: 400;
+    margin-top: 1rem;
+  }
+  
+  /* Estilos para las pestañas */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+  
+  .tabs button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    margin: 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+  }
+  
+  .tabs button:hover {
+    color: #0c3f61;
+    background-color: #f3f4f6;
+  }
+  
+  .tabs button.active {
+    color: #ffffff;
+    background-color: #0c3f61;
+  }
+  
+  .section {
+    margin-bottom: 3rem;
+  }
+  
+  .section h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #0c3f61;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+  
+  /* Estilos para los planes */
+  .planes-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .plan-card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 2rem;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .plan-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .plan-header h3 {
+    font-size: 1.5rem;
+    color: #0c3f61;
+    margin-bottom: 1rem;
+  }
+  
+  .price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0c3f61;
+  }
+  
+  .price span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #6b7280;
+  }
+  
+  .plan-features ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .plan-features li {
+    padding: 0.5rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .plan-features li::before {
+    content: "✓";
+    color: #10b981;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+  
+  .plan-button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0c3f61;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .plan-button:hover {
+    background-color: #0c3f61;
+  }
+  
+  .pro {
+    border: 2px solid #0c3f61;
+    transform: scale(1.05);
+  }
+  
+  .pro:hover {
+    transform: scale(1.05) translateY(-10px);
+  }
+  
+  .pro-button {
+    background-color: #0c3f61;
+  }
+  
+  .pro-button:hover {
+    background-color: #0c3f61;
+  }
+  
+
+  /* Estilos para clases */
+  .clases-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  .clase-card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .clase-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .clase-img {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .clase-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .clase-card:hover .clase-img img {
+    transform: scale(1.1);
+  }
+  
+  .clase-info {
+    padding: 1.5rem;
+  }
+  
+  .clase-info h3 {
+    font-size: 1.5rem;
+    color: #0c3f61;
+    margin-bottom: 0.5rem;
+  }
+  
+  .clase-bio {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .clase-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    
+    .header h1 {
+      font-size: 2rem;
+    }
+    
+    .tabs {
+      flex-wrap: wrap;
+    }
+    
+    .tabs button {
+      margin-bottom: 0.5rem;
+    }
+    
+    .planes-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .plan-card {
+      width: 100%;
+      max-width: 350px;
+    }
+    
+    .pro {
+      transform: none;
+    }
+    
+    .pro:hover {
+      transform: translateY(-10px);
+    }
+    
+    .clases-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tabla-clases-container {
+    overflow-x: auto;
+  }
+  
+  .tabla-clases {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f7f7f7;
+    border-radius: 0.7rem;
+    overflow: hidden;
+  }
+  
+  .tabla-clases thead {
+    background-color: #0c3f61;
+    color: #ffffff;
+  }
+  
+  .tabla-clases th, .tabla-clases td {
+    padding: 1rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  
+  .tabla-clases tbody tr:nth-child(even) {
+    background-color: #ebf1f6;
+  }
+  
+  .clase-info-tabla {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .clase-info-tabla p {
+    margin: 0.2rem 0 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .clase-info-tabla {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
+  .divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 0 auto 2rem auto;
+    width: 250px;
+  }
+
+  .clase-info-horario {
+    display: flex; /* Centrado horizontal */
+    height: 100%;
+    margin-top: 20px; /* Centrado vertical */
+    color: #6b7280;
+    font-size: 0.8rem;
+  }
+  

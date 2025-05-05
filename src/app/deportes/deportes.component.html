@@ -1,0 +1,22 @@
+<section class="deportes-section">
+  <div class="deportes-header">
+    <h1>Deportes</h1>
+    <div class="divider"></div>
+    <h4>Descubre el poder del deporte con el respaldo de un equipo profesional y capacitado. Mejora tu salud, supera tus límites y disfruta cada paso del camino. ¡Inscríbete y vive la diferencia!</h4>
+  </div>
+  
+  <div class="deportes-container">
+    @for (deporte of misDeportes; track deporte; let i = $index) {
+      <div class="deporte-card">
+        <div class="card-image-container">
+          <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{deporte.nombre}}</h3>
+          <p class="card-description">{{deporte.bio}}</p>
+          <a [routerLink]="['/deporte', i]" class="card-button">Ver Más</a>
+        </div>
+      </div>
+    }
+  </div>
+</section>
