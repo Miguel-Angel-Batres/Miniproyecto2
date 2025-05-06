@@ -20,22 +20,23 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       nombre: ['',Validators.required],
-      password: ['', [Validators.required]]
+      contraseña: ['', [Validators.required]]
     });
   }
   onSubmit() {
     if (this.loginForm.valid) {
-      const { nombre, password } = this.loginForm.value;
+      const { nombre, contraseña } = this.loginForm.value;
   
       const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
       const usuarioValido = usuarios.find(
-        (u: any) => u.nombre === nombre && u.contraseña === password
+        (u: any) => u.nombre === nombre && u.contraseña === contraseña
       );
   
       if (usuarioValido) {
         this.authService.login(usuarioValido);
         console.log('Login correcto:', usuarioValido);
         this.router.navigate(['/perfil']);
+      
       } else {
         alert('Correo o contraseña incorrectos');
       }
