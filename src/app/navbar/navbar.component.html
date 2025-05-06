@@ -18,7 +18,7 @@
           <a class="nav-link" routerLink="/deportes" routerLinkActive="active">Deportes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/horarioscostos" routerLinkActive="active">Horarios &amp; Costos</a>
+          <a class="nav-link" routerLink="/horarioscostos" routerLinkActive="active">Horarios & Costos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/nosotros" routerLinkActive="active">Nosotros</a>
@@ -26,14 +26,26 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/contacto" routerLinkActive="active">Contacto</a>
         </li>
+
+        @if(!user){
         <li class="nav-item">
           <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
         </li>
+        }
+
+        @if(user){
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/perfil" routerLinkActive="active">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()">Cerrar sesión</a>
+        </li>
+        }
       </ul>
 
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>
     </div>
   </div>
