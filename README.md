@@ -108,10 +108,10 @@
 - [✅] 79. Lista desplegable desde arreglo.
 - [ ] 80. Código para mostrar API.
 - [ ] 81. Código de búsqueda en API.
-- [ ] 82. Interpolación.
-- [ ] 83. Property binding.
+- [✅] 82. Interpolación.
+- [✅] 83. Property binding.
 - [ ] 84. Double binding.
-- [ ] 85. Event binding.
+- [✅] 85. Event binding.
 - [ ] 86. Uso de Flexbox o GridCSS.
 - [✅] 87. Angular Material instalado.
 - [ ] 88. Uso de 5 componentes de Angular Material.
