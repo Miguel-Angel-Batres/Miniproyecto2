@@ -27,7 +27,14 @@
             <li><a routerLink="/horarioscostos">Horarios &amp; Costos</a></li>
             <li><a routerLink="/nosotros">Nosotros</a></li>
             <li><a routerLink="/contacto">Contacto</a></li>
-            <li><a routerLink="/login">Login</a></li>
+            @if(!user){
+              <li><a routerLink="/login">Login</a></li>
+              <li><a routerLink="/registro">Registro</a></li>
+            }
+            @if(user){
+              <li><a routerLink="/perfil">Perfil</a></li>
+              <li><a (click)="logout()">Cerrar sesión</a></li>
+            }
           </ul>
         </div>
   
