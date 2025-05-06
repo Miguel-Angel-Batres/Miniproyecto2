@@ -18,7 +18,7 @@ export const DEPORTES: Deporte[] = [
     {
         nombre: "Pilates",
         bio: "Ejercicios de bajo impacto que se enfocan en la fuerza del core, la flexibilidad y la postura.",
-        img: "assets/pilates.avif",
+        img: "assets/pilates.jpg",
         horario: "Martes y Jueves de 9:00 AM a 10:00 AM",
         costo: 22,
     },
