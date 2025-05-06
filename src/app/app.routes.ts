@@ -7,6 +7,9 @@ import { ContactoComponent } from './contacto/contacto.component';
 import { LoginComponent } from './login/login.component';
 import { UndeporteComponent } from './undeporte/undeporte.component';
 import { FooterComponent } from './footer/footer.component';
+import { FormularioSuscripcionComponent } from './formulario-suscripcion/formulario-suscripcion.component';
+import { RegistroComponent } from './registro/registro.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -18,4 +21,7 @@ export const routes: Routes = [
     {path: 'login', component: LoginComponent},
     {path: 'deporte/:id', component: UndeporteComponent},
     {path: 'footer', component: FooterComponent},
+    { path: 'formulario-suscripcion', component: FormularioSuscripcionComponent }, 
+    { path: 'registro', component: RegistroComponent },
+    { path: 'perfil', component: PerfilComponent }
 ];  

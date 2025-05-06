@@ -1,12 +1,38 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../shared/auth.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  user: any = null;
 
+  constructor(private authService: AuthService,private router: Router) {}
+
+  ngOnInit(): void {
+    this.authService.user.subscribe(user => {
+      this.user = user;
+      console.log('Usuario desde NavbarComponent:', this.user);
+    });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/inicio']);
+    Swal.fire({
+      icon: 'success',
+      title: 'Sesión cerrada',
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
+  
 }
