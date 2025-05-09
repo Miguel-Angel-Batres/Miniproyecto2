@@ -6,7 +6,7 @@ import { Deporte } from '../deporte';
 import { DeportesService } from '../shared/deportes.service';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../shared/usuario.service';
-
+import { PLANES } from '../models/planes.model';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class HorarioscostosComponent implements OnInit {
   usuario : any = null;
   deportes: Deporte[] = [];
   activeTab: 'horarios' | 'pago' | 'pagoplus' | 'clases' = 'horarios';
-  
+  planes = PLANES;
 
   
   constructor(
@@ -29,7 +29,6 @@ export class HorarioscostosComponent implements OnInit {
     private router: Router,
     private usuarioService: UsuarioService
   ) {
-    
   }
 
   ngOnInit(): void {
@@ -39,6 +38,14 @@ export class HorarioscostosComponent implements OnInit {
       });
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
+    });
+    // agregar los planes al local storage una vez
+    this.planes.forEach((plan) => {
+      const planesGuardados = JSON.parse(localStorage.getItem('planes') || '[]');
+      if (!planesGuardados.some((p: any) => p.nombre === plan.nombre)) {
+        planesGuardados.push(plan);
+      }
+      localStorage.setItem('planes', JSON.stringify(planesGuardados));
     });
   }
 

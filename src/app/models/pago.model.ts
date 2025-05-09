@@ -7,5 +7,6 @@ export interface Pago {
     banco: string;
     terminos: boolean;
     duracion: number;
+    plan: string;
   }
   

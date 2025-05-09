@@ -38,7 +38,8 @@ export class PagosComponent implements OnInit {
     banco: '',
     terminos: false,
     duracion: 1,
-    monto: 0
+    monto: 0,
+    plan: this.planSeleccionado,
   };
 
   metodo_marcado = true; 
@@ -72,6 +73,10 @@ export class PagosComponent implements OnInit {
         this.pago.monto = usuario.plan.precio * this.pago.duracion;
         usuario.pagos.push(this.pago);
         this.usuarioService.actualizarUsuario(usuario);
+        // guardar pago en local storage
+        const pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
+        pagos.push(this.pago);
+        localStorage.setItem('pagos', JSON.stringify(pagos));
         
         // mostrar mensaje de éxito con sweetalert
         Swal.fire({

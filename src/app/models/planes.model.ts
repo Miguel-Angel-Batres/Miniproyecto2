@@ -2,9 +2,11 @@ export interface Plan {
     nombre: string;
     precio: number;
     beneficios: string[];
-    fechaInicio: string;
-    fechaFin: string;
+    fechaInicio?: string;
+    fechaFin?: string;
     estado: string;
+    descripcion: string; 
+    tipo: string; 
   }
   
   // Lista de planes predefinidos
@@ -19,9 +21,11 @@ export interface Plan {
         '2 clases grupales por semana',
         'Casillero estándar'
       ],
+      tipo: 'mensual',
       fechaInicio: '',
       fechaFin: '',
-      estado: 'Disponible'
+      estado: 'Disponible',
+      descripcion: 'Plan básico para quienes buscan un entrenamiento sencillo y efectivo.'
     },
     {
       nombre: 'Pro',
@@ -34,9 +38,11 @@ export interface Plan {
         'Acceso a sauna y spa',
         'Estacionamiento gratuito'
       ],
+      tipo: 'mensual',
       fechaInicio: '',
       fechaFin: '',
-      estado: 'Disponible'
+      estado: 'Disponible',
+      descripcion: 'Plan premium para quienes buscan un entrenamiento completo y personalizado.'
     }
   ];
   

@@ -3,17 +3,62 @@
   
     <div class="row">
       <!-- Sección de información del administrador -->
-      <div class="col-md-4 text-center mb-4">
-        <img 
-          [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
-          alt="Imagen del administrador" 
-          class="img-thumbnail rounded-circle mb-3" 
-          width="200" height="200">
-        <h5>{{ usuario.nombre }}</h5>
-        <p class="text-muted">{{ usuario.correo }}</p>
-        <span class="badge bg-primary">Administrador</span>
-      </div>
-  
+      @if (editandoPerfil) {
+        <div class="col-md-4 mb-4">
+          <!-- Input para editar la imagen de perfil -->
+          <label for="imagenPerfil" class="form-label">Imagen de perfil</label>
+          <input 
+            type="file" 
+            id="imagenPerfil" 
+            (change)="onFileSelected($event)" 
+            class="form-control mb-3" 
+          />
+          <img 
+            [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
+            alt="Imagen del administrador" 
+            class="img-thumbnail rounded-circle mb-3" 
+            width="200" 
+            height="200"
+          />
+          
+          <!-- Campo para editar nombre -->
+          <label for="nombre" class="form-label">Nombre</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            class="form-control mb-3" 
+            [(ngModel)]="usuario.nombre" 
+            required
+          />
+          
+          <!-- Campo para editar correo -->
+          <label for="correo" class="form-label">Correo</label>
+          <input 
+            type="email" 
+            id="correo" 
+            class="form-control mb-3" 
+            [(ngModel)]="usuario.correo" 
+            required
+          />
+          
+          <button class="btn btn-success mt-3" (click)="guardarEdicionPerfil()">Guardar cambios</button>
+          <button class="btn btn-secondary mt-3 ms-2" (click)="cancelarEdicionPerfil()">Cancelar</button>
+        </div>
+      } @else {
+        <div class="col-md-4 text-center mb-4">
+          <img 
+            [src]="usuario.imagenPerfil ? 'assets/' + usuario.imagenPerfil : 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
+            alt="Imagen del administrador" 
+            class="img-thumbnail rounded-circle mb-3" 
+            width="200" 
+            height="200"
+          >
+          <h5>{{ usuario.nombre }}</h5>
+          <p class="text-muted">{{ usuario.correo }}</p>
+          <span class="badge bg-primary">Administrador</span>
+        </div>
+      }
+      
       <!-- Acciones del administrador -->
       <div class="col-md-8">
         <div class="card mb-3">
@@ -46,12 +91,258 @@
             <button class="btn btn-outline-danger" (click)="logout()">
               <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
             </button>
-            <button class="btn btn-outline-dark" (click)="editarPerfil()">
-              <i class="bi bi-pencil-square me-2"></i> Editar Perfil
-            </button>
+           
+            @if(editandoPerfil){
+              <button class="btn btn-outline-secondary" (click)="cancelarEdicionPerfil()">
+                <i class="bi bi-x-circle me-2"></i> Cancelar Edición
+              </button>
+            } @else {
+              <button class="btn btn-outline-primary" (click)="editandoPerfil = true">
+                <i class="bi bi-pencil-square me-2"></i> Editar Perfil
+              </button>
+            }
           </div>
         </div>
+
+
       </div>
     </div>
   </div>
+  @if (ventanas.usuarios) {
+    <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+      
+      <!-- Header con botón cerrar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Gestión de Usuarios</h3>
+        <button class="btn btn-sm btn-outline-danger" (click)="ventanas.usuarios = false">
+          &times;
+        </button>
+      </div>
   
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Contraseña</th>
+            <th>Teléfono</th>
+            <th>Género</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (usuarios.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center">No hay usuarios registrados.</td>
+            </tr>
+          } @else {
+            @for (usuario of usuarios; track usuario) {
+              @if (usuario.rol !== 'admin') {
+                <tr>
+                  @if (usuarioEditando!= null) {
+                    <!-- Modo edición -->
+                    <td><input [(ngModel)]="usuarioEditando.nombre" class="form-control" /></td>
+                    <td><input [(ngModel)]="usuarioEditando.correo" class="form-control" /></td>
+                    <td><input [(ngModel)]="usuarioEditando['contraseña']" class="form-control" /></td>
+                    <td><input [(ngModel)]="usuarioEditando.telefono" class="form-control" /></td>
+                    <td>
+                      <select [(ngModel)]="usuarioEditando.genero" class="form-select">
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="no-binario">No Binario</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button class="btn btn-success btn-sm me-1" (click)="guardarCambios()">Guardar</button>
+                      <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion()">Cancelar</button>
+                    </td>
+                  } @else {
+                    <!-- Modo normal -->
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.correo }}</td>
+                    <td>{{ usuario['contraseña'] }}</td>
+                    <td>{{ usuario.telefono }}</td>
+                    <td>{{ usuario.genero }}</td>
+                    <td>
+                      <button class="btn btn-outline-warning btn-sm me-1" (click)="editarUsuario(usuario)">Editar</button>
+                      <button class="btn btn-outline-danger btn-sm" (click)="eliminarUsuario(usuario.nombre)">Eliminar</button>
+                    </td>
+                  }
+                </tr>
+              }
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (ventanas.pagos) {
+    <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+      <!-- Header con botón cerrar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Gestión de Pagos</h3>
+        <button class="btn btn-sm btn-outline-danger" (click)="ventanas.pagos = false">
+          &times;
+        </button>
+      </div>
+  
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Plan</th>
+            <th>Fecha de Pago</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (pagos.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center">No hay pagos registrados.</td>
+            </tr>
+          } @else {
+            @for (pago of pagos; track pago) {
+              <tr>
+            
+                <td>{{ pago.titular }}</td>
+                <td>{{ pago.tarjeta }}</td>
+                <td>{{ pago.plan }}</td>
+                <td>{{ pago.fechaPago }}</td>
+                <td>${{ pago.monto }}</td>
+                <td>
+                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarPago(pago)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          }
+        
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (ventanas.planes) {
+    <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+      <!-- Header con botón cerrar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Planes de Membresía</h3>
+        <button class="btn btn-sm btn-outline-danger" (click)="ventanas.planes = false">
+          &times;
+        </button>
+      </div>
+  
+      @if(ventanas.nuevoplan){
+      <!-- Formulario para nuevo plan -->
+      <div class="mb-4 border p-3 rounded bg-white shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0">Planes de Membresía</h5>
+          <button class="btn btn-sm btn-outline-danger" (click)="ventanas.nuevoplan = false">
+            &times;
+          </button>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <input type="text" [(ngModel)]="nuevoPlan.nombre" placeholder="Nombre del Plan" class="form-control" />
+          </div>
+          <div class="col-md-2">
+            <input type="number" [(ngModel)]="nuevoPlan.precio" placeholder="Precio" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <input type="text" [(ngModel)]="nuevoPlan.descripcion" placeholder="Descripción" class="form-control" />
+          </div>
+          <div class="col-md-2">
+            <select [(ngModel)]="nuevoPlan.tipo" class="form-select" aria-placeholder="Tipo de Plan">
+              <option value="mensual">Mensual</option>
+              <option value="anual">Anual</option>
+            </select>
+          </div>
+        
+          <div class="col-md-2">
+            <button class="btn btn-success w-100" (click)="guardarNuevoPlan()">Guardar</button>
+          </div>
+        </div>
+      </div>
+    }
+  
+      <!-- Tabla de planes existentes -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombre del Plan</th>
+            <th>Precio</th>
+            <th>Descripción</th>
+            <th>Tipo</th>
+            <th>Beneficios</th> <!-- Nueva columna -->
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+          @if (planes.length === 0) {
+            <tr>
+              <td colspan="4" class="text-center">No hay planes registrados.</td>
+            </tr>
+          } @else {
+            @for (plan of planes; track plan) {
+              <tr>
+                @if (planEditando != null && planEditando.nombre === plan.nombre) {
+                  <!-- Modo edición -->
+                  <td><input [(ngModel)]="planEditando.nombre" class="form-control" /></td>
+                  <td><input [(ngModel)]="planEditando.precio" class="form-control" /></td>
+                  <td><input [(ngModel)]="planEditando.descripcion" class="form-control" /></td>
+                  <td>
+                    <select [(ngModel)]="planEditando.tipo" class="form-select">
+                      <option value="mensual">Mensual</option>
+                      <option value="anual">Anual</option>
+                    </select>
+                  </td>
+                  <td>
+                     <select [(ngModel)]="beneficioSeleccionado" class="form-select">
+                      @for (beneficio of planEditando.beneficios; track $index) {
+                        <option [value]="beneficio">{{ beneficio }}</option>
+                      
+                      }
+                    </select>
+                    <div class="d-flex flex-column">
+                      <input [(ngModel)]="nuevoBeneficio" class="form-control mb-2" placeholder="Agregar beneficio" />
+                      <div>
+                        <button class="btn btn-primary btn-sm" (click)="agregarBeneficio()">Agregar Beneficio</button>
+                        <button class="btn btn-danger btn-sm" (click)="eliminarBeneficio(beneficioSeleccionado)">Eliminar Beneficio</button>
+                      </div>
+                    </div>
+                    </td>
+                  
+                  <!-- Sección de beneficios -->
+        
+                  <td >
+                    
+                    <button class="btn btn-success btn-sm me-1" (click)="guardarCambiosPlan()">Guardar</button>
+                    <button class="btn btn-secondary btn-sm" (click)="cancelarEdicionPlan()">Cancelar</button>
+                  </td>
+                } @else {
+                  <!-- Modo normal -->
+                  <td>{{ plan.nombre }}</td>
+                  <td>${{ plan.precio }}</td>
+                  <td>{{ plan.descripcion }}</td>
+                  <td>{{ plan.tipo }}</td>
+                  <td>{{ plan.beneficios}}</td>
+
+                  <td>
+                    <button class="btn btn-outline-warning btn-sm me-1" (click)="editarPlan(plan)">Editar</button>
+                    <button class="btn btn-outline-danger btn-sm" (click)="eliminarPlan(plan)">Eliminar</button>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+        
+      </table>
+      <!-- botton agregar nuevo plan -->
+      <button class="btn btn-primary" (click)="ventanas.nuevoplan = true">Agregar Nuevo Plan</button>
+    </div>
+  }
+  
+
