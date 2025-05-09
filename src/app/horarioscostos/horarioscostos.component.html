@@ -70,6 +70,12 @@
             </tr>
           </thead>
           <tbody>
+            @if (deportes.length === 0) {
+              <div class="loading-message">
+                <p>No se pudieron cargar los deportes...</p>
+              </div>
+            }
+            @if (deportes.length > 0) {
             @for (deporte of deportes; track deporte.nombre) {
               <tr>
                 <td>
@@ -86,6 +92,7 @@
                   </div>
                 </td>
               </tr>
+            }
             }
           </tbody>
         </table>
