@@ -24,7 +24,9 @@ export class HorarioscostosComponent implements OnInit {
   constructor(private deporteService: DeportesService) {}
 
   ngOnInit(): void {
-    this.deportes = this.deporteService.getDeportes();
+    this.deporteService.getDeportes().subscribe((data: Deporte[]) => {
+      this.deportes = data;
+    });
   }
 
   setActiveTab(tab: string): void {
