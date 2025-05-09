@@ -24,11 +24,20 @@
 
       </div>
       <div class="col-md-4 text-center">
-        @if (usuario.plan.nombre !== '') {
-          <p><strong>Plan Contratado:</strong> {{ usuario.plan.nombre }}</p>
-        } @else {
-          <p class="text-warning"><strong>Nota:</strong> No tienes un plan contratado aún.</p>
-        }
+      @if (usuario.plan.nombre !== '') {
+      <p 
+        [ngStyle]="{
+          color: usuario.plan.nombre === 'Básico' ? '#0d6efd' : 
+                usuario.plan.nombre === 'Premium' ? '#d4af37' : 
+                usuario.plan.nombre === 'Avanzado' ? '#198754' : 
+                '#6c757d'
+        }"
+      >
+        <strong>Plan Contratado:</strong> {{ usuario.plan.nombre }}
+      </p>
+      } @else {
+        <p class="text-warning"><strong>Nota:</strong> No tienes un plan contratado aún.</p>
+      }
       </div>
     </div>
   } @else {
