@@ -1,0 +1,11 @@
+<form class="d-flex" role="search" (submit)="onSubmit($event)">
+    <input 
+      class="form-control me-2" 
+      type="search" 
+      placeholder="Busca un deporte" 
+      aria-label="Buscar" 
+      [(ngModel)]="searchQuery" 
+      (input)="onSearchInput()"
+      name="search"
+    >
+</form>

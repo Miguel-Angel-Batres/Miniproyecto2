@@ -5,25 +5,27 @@
     <h4>Descubre el poder del deporte con el respaldo de un equipo profesional y capacitado. Mejora tu salud, supera tus límites y disfruta cada paso del camino. ¡Inscríbete y vive la diferencia!</h4>
   </div>
   
-  <div class="deportes-container">
-    @if (deportes_de_api.length === 0) {
-      <div class="loading-message">
-        <p>No se pudieron cargar los deportes...</p>
+  <app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+
+ <div class="deportes-container">
+  @if (filteredDeportes.length === 0) {
+    <div class="loading-message">
+      <p>No se encontraron deportes...</p>
+    </div>
+  }
+  @if (filteredDeportes.length > 0) {
+    @for (deporte of filteredDeportes; track deporte) {
+      <div class="deporte-card">
+        <div class="card-image-container">
+          <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{deporte.nombre}}</h3>
+          <p class="card-description">{{deporte.bio}}</p>
+          <a [routerLink]="['/deporte', deporte.nombre]" class="card-button">Ver Más</a>
+        </div>
       </div>
     }
-    @if (deportes_de_api.length > 0) {
-      @for (deporte of deportes_de_api; track deporte) {
-        <div class="deporte-card">
-          <div class="card-image-container">
-            <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">{{deporte.nombre}}</h3>
-            <p class="card-description">{{deporte.bio}}</p>
-            <a [routerLink]="['/deporte', deporte.nombre]" class="card-button">Ver Más</a>
-          </div>
-        </div>
-      }
-    }
-  </div>
+  }
+</div>
 </section>
