@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../shared/auth.service';
+import { UsuarioService } from '../shared/usuario.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -15,16 +15,16 @@ import Swal from 'sweetalert2';
 export class FooterComponent {
   user: any = null;
 
-  constructor(private authService: AuthService,private router: Router) {}
+  constructor(private usuarioService: UsuarioService,private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.user.subscribe(user => {
+    this.usuarioService.user.subscribe(user => {
       this.user = user;
     });
   }
 
   logout() {
-    this.authService.logout();
+    this.usuarioService.logout();
     this.router.navigate(['/inicio']);
     Swal.fire({
       icon: 'success',

@@ -1,1 +1,151 @@
-<p>perfil works!</p>
+<div class="container mt-5 p-4 border rounded shadow bg-light">
+  <h2 class="mb-4 text-center">Informacion Personal</h2>
+
+  @if (usuario) {
+    <div class="row">
+      <!-- Imagen de perfil -->
+      <div class="col-md-4 text-center mb-4">
+        <img 
+          [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
+          alt="Imagen de perfil" 
+          class="img-thumbnail rounded-circle" 
+          width="250" 
+          height="250">
+      </div>
+
+      <!-- Datos del usuario -->
+      <div class="col-md-4">
+        <p class="d-flex justify-content-between"><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+        <p class="d-flex justify-content-between"><strong>Email:</strong> {{ usuario.correo }}</p>
+        <p class="d-flex justify-content-between"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+        <p class="d-flex justify-content-between"><strong>Fecha de Nacimiento:</strong> {{ usuario.fechaNacimiento | date }}</p>
+        <p class="d-flex justify-content-between"><strong>Horario:</strong> {{ usuario.horario }}</p>
+        <p class="d-flex justify-content-between"><strong>Género:</strong> {{ usuario.genero }}</p>
+
+      </div>
+      <div class="col-md-4 text-center">
+        @if (usuario.plan.nombre !== '') {
+          <p><strong>Plan Contratado:</strong> {{ usuario.plan.nombre }}</p>
+        } @else {
+          <p class="text-warning"><strong>Nota:</strong> No tienes un plan contratado aún.</p>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="alert alert-danger text-center">
+      No has iniciado sesión o el usuario no existe.
+    </div>
+  }
+</div>
+
+<!-- Informacion de la membresia -->
+<div class="container mt-5 p-4 border rounded shadow bg-light">
+  <h2 class="mb-4 text-center">Informacion de membresia</h2>
+  @if(this.usuario.plan.nombre === '') {
+    <div class="alert alert-warning text-center">
+      No tienes una membresía activa. Por favor, 
+      <a routerLink="/horarioscostos" class="text-success">Elige un plan</a>
+    </div>
+  } @else {
+    <div class="row ">
+      <div class="col-md-12">
+        <h3 class="text-center">Detalles de la Membresía</h3>
+        <p class="text-center">Aquí puedes ver los detalles de tu membresía actual.</p>
+         <!-- datos de usuario.plan -->
+        <table class="table table-bordered mb-4">
+          <thead>
+            <tr>
+              <th>Nombre del Plan</th>
+              <th>Precio</th>
+              <th>Duración</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (usuario.plan) {
+              <tr>
+                <td>{{ usuario.plan.nombre }}</td>
+                <td>{{ usuario.plan.precio | currency }}</td>
+                <td>{{ usuario.plan.duracion }} meses</td>
+                @if (usuario.plan.estado === 'Activo') {
+                  <td class="text-success">Activo</td>
+                } @if (usuario.plan.estado === 'Vencido') {
+                  <td class="text-warning">Inactivo</td>
+                } @if (usuario.plan.estado === 'Cancelado') {
+                  <td class="text-danger">Cancelado</td>
+                }
+              </tr>
+            } @else {
+              <tr>
+                <td colspan="3" class="text-center">No tienes un plan contratado.</td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
+        <!-- Beneficios -->
+        <h4 class="text-center">Beneficios de tu Membresía</h4>
+        <ul class="list-group mb-4">
+          @if (usuario.plan && usuario.plan.beneficios) {
+            @for (beneficio of usuario.plan.beneficios; track beneficio) {
+              <li class="list-group-item">{{ beneficio }}</li>
+            }
+          } @else {
+            <li class="list-group-item">No hay beneficios disponibles.</li>
+          }
+        </ul>
+        <!-- Fecha de inicio y fin -->
+        <h4 class="text-center">Fechas de Membresía</h4>
+        <p class="text-center">Tu membresía es válida desde {{ usuario.plan.fechaInicio | date }} hasta {{ usuario.plan.fechaFin | date }}</p>
+        <!-- Botón para renovar -->
+        <div class="text-center">
+          @if(usuario.plan && usuario.plan.estado === 'Activo') {
+            <button class="btn bg-danger" (click)="cancelarMembresia()">Cancelar Membresia</button>
+          } @else {
+            <button class="btn btn-primary" (click)="renovarMembresia()">Renovar Membresía</button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+<!-- Informacion de pagos -->
+<div class="container mt-5 p-4 border rounded shadow bg-light">
+  <h2 class="mb-4 text-center">Informacion de Pagos</h2>
+  @if (pagos.length === 0) {
+    <div class="alert alert-warning text-center">
+      No tienes pagos registrados.
+    </div>
+  } @else {
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="text-center">Historial de Pagos</h3>
+      <p class="text-center">Aquí puedes ver el historial de tus pagos.</p>
+      <!-- datos de pagos -->
+      <table class="table table-bordered mb-4">
+        <thead>
+          <tr>
+            <th>Fecha de Pago</th>
+            <th>Monto</th>
+            <th>Método</th>
+            <th>Banco</th>
+            <th>Duración</th>
+          </tr>
+        </thead>
+        <tbody>
+            @for (pago of pagos; track pago) {
+              <tr>
+                <td>{{ pago.fechaPago | date }}</td>
+                <td>{{ pago.monto | currency }}</td>
+                <td>{{ pago.metodo }}</td>
+                <td>{{ pago.banco }}</td>
+                <td>{{ pago.duracion }} meses</td>
+              </tr>
+            }
+         
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+</div>

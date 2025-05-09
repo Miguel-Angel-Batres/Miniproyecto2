@@ -1,95 +1,115 @@
 <div class="horarios-costos-container">
   <div class="horcos-header">
-    <h1>Horarios & Costos</h1>
+      <h1>Horarios & Costos</h1>
+    
     <div class="divider"></div>
-    <h4>Descubre nuestros planes y horarios diseñados para adaptarse a tu estilo de vida</h4>
+    <h4>
+      Descubre nuestros planes y horarios diseñados para adaptarse a tu estilo
+      de vida
+    </h4>
   </div>
 
   <!-- Tabs para navegar entre secciones -->
+  @if (activeTab !== 'pago') {
   <div class="tabs">
     <!-- <button [class.active]="activeTab === 'planes'" (click)="setActiveTab('planes')">Horarios del Gimnasio</button> -->
-    <button [class.active]="activeTab === 'horarios'" (click)="setActiveTab('horarios')">Planes de Membresia</button>
-    <button [class.active]="activeTab === 'clases'" (click)="setActiveTab('clases')">Horarios de Clases</button>
-  </div>
-  
+    <button
+      [class.active]="activeTab === 'horarios'"
+      (click)="setActiveTab('horarios')"
+    >
+      Planes de Membresia
+    </button>
+    <button
+      [class.active]="activeTab === 'clases'"
+      (click)="setActiveTab('clases')"
+    >
+      Horarios de Clases
+    </button>
+    </div>
+  }
+
   <!-- Sección de Horarios del Gimnasio -->
   @if (activeTab === 'horarios') {
-    <div class="section horarios-section">
-      <div class="planes-container">
-       <div class="plan-card basic">
-  <div class="plan-header">
-    <h3>Plan Básico</h3>
-    <div class="price">$29.99<span>/mes</span></div>
-  </div>
-  <div class="plan-features">
-    <ul>
-      <li>Acceso a área de pesas</li>
-      <li>Acceso a cardio</li>
-      <li>Horario limitado (6AM - 8PM)</li>
-      <li>2 clases grupales por semana</li>
-      <li>Casillero estándar</li>
-    </ul>
-  </div>
-  <button class="plan-button">Elegir Plan</button>
-  <!-- aqui iria el form -->
-</div>
+  <div class="section horarios-section">
+    <div class="planes-container">
+      <div class="plan-card basic">
+        <div class="plan-header">
+          <h3>Plan Básico</h3>
+          <div class="price">$29.99<span>/mes</span></div>
+        </div>
+        <div class="plan-features">
+          <ul>
+            <li>Acceso a área de pesas</li>
+            <li>Acceso a cardio</li>
+            <li>Horario limitado (6AM - 8PM)</li>
+            <li>2 clases grupales por semana</li>
+            <li>Casillero estándar</li>
+          </ul>
+        </div>
+        <button class="plan-button" (click)="pagar('Basico')">
+          Elegir Plan
+        </button>
+        <!-- aqui iria el form -->
+      </div>
 
-<div class="plan-card pro">
-  <div class="plan-header">
-    <h3>Plan Pro</h3>
-    <div class="price">$49.99<span>/mes</span></div>
-  </div>
-  <div class="plan-features">
-    <ul>
-      <li>Todas las áreas del gimnasio</li>
-      <li>Clases ilimitadas</li>
-      <li>1 sesión mensual con entrenador</li>
-      <li>Casillero premium</li>
-      <li>Acceso a sauna y spa</li>
-      <li>Estacionamiento gratuito</li>
-    </ul>
-  </div>
-  <button class="plan-button">Elegir Plan</button>
-    <!-- aqui iria el form -->
-
-</div>
-        
+      <div class="plan-card pro">
+        <div class="plan-header">
+          <h3>Plan Pro</h3>
+          <div class="price">$49.99<span>/mes</span></div>
+        </div>
+        <div class="plan-features">
+          <ul>
+            <li>Todas las áreas del gimnasio</li>
+            <li>Clases ilimitadas</li>
+            <li>1 sesión mensual con entrenador</li>
+            <li>Casillero premium</li>
+            <li>Acceso a sauna y spa</li>
+            <li>Estacionamiento gratuito</li>
+          </ul>
+        </div>
+        <button class="plan-button" (click)="pagar('Pro')">
+          Elegir Plan
+        </button>
+        <!-- aqui iria el form -->
       </div>
     </div>
+  </div>
   }
 
   <!-- Sección de Horarios de Clases -->
   @if (activeTab === 'clases') {
-    <div class="section clases-section">
-      <div class="tabla-clases-container">
-        <table class="tabla-clases">
-          <thead>
-            <tr>
-              <th>Clase</th>
-              <th>Horario</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (deporte of deportes; track deporte.nombre) {
-              <tr>
-                <td>
-                  <div class="clase-info-tabla">
-                    <div>
-                      <strong>{{ deporte.nombre }}</strong>
-                      <p>{{ deporte.bio }}</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="clase-info-horario">
-                    <p>{{ deporte.horario }}</p>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+  <div class="section clases-section">
+    <div class="tabla-clases-container">
+      <table class="tabla-clases">
+        <thead>
+          <tr>
+            <th>Clase</th>
+            <th>Horario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (deporte of deportes; track deporte.nombre) {
+          <tr>
+            <td>
+              <div class="clase-info-tabla">
+                <div>
+                  <strong>{{ deporte.nombre }}</strong>
+                  <p>{{ deporte.bio }}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="clase-info-horario">
+                <p>{{ deporte.horario }}</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
+  </div>
   }
+  
+  
 </div>

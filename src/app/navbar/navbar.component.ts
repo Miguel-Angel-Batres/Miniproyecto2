@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../shared/auth.service';
+import { UsuarioService } from '../shared/usuario.service';
 import Swal from 'sweetalert2';
 
 
@@ -15,16 +15,16 @@ import Swal from 'sweetalert2';
 export class NavbarComponent implements OnInit {
   user: any = null;
 
-  constructor(private authService: AuthService,private router: Router) {}
+  constructor(private UsuarioService: UsuarioService,private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.user.subscribe(user => {
+    this.UsuarioService.user.subscribe(user => {
       this.user = user;
     });
   }
 
   logout() {
-    this.authService.logout();
+    this.UsuarioService.logout();
     this.router.navigate(['/inicio']);
     Swal.fire({
       icon: 'success',

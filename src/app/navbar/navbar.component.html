@@ -29,19 +29,10 @@
 
         @if(!user){
         <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesion</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registro</a>
-        }
-
-        @if(user){
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/perfil" routerLinkActive="active">Perfil</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="logout()">Cerrar sesión</a>
-        </li>
+          <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
         }
       </ul>
 
@@ -49,6 +40,24 @@
         <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
         <button class="btn btn-outline-success" type="submit">Buscar</button>
       </form>
+      @if(user){
+        <!-- Icono perfil -->
+      <div class="dropdown">
+        <button class="dropdown-toggle d-flex align-items-center profile_button" type="button" id="dropdownMenuButton1"
+        data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{user.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'}}" alt="Imagen de Perfil" class="rounded-circle" width="40" height="40">
+          <span class="ms-2">{{user.nombre}}</span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -30px; top: 60px;">
+          @if(user.rol === 'admin'){
+          <li><a class="dropdown-item" routerLink="/perfil_admin">Panel de Administración</a></li>
+          }@else{
+          <li><a class="dropdown-item" routerLink="/perfil">Panel de Usuario</a></li>
+          }
+          <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </div>
+      }
     </div>
   </div>
 </nav>
