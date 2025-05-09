@@ -45,8 +45,17 @@
       <div class="dropdown">
         <button class="dropdown-toggle d-flex align-items-center profile_button" type="button" id="dropdownMenuButton1"
         data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{{user.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'}}" alt="Imagen de Perfil" class="rounded-circle" width="40" height="40">
-          <span class="ms-2">{{user.nombre}}</span>
+        <img
+        [src]="user.rol === 'admin' 
+                ? 'assets/' + (user.imagenPerfil || 'default-admin.png') 
+                : (user.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png')"
+        alt="Imagen de Perfil"
+        class="rounded-circle"
+        width="40"
+        height="40"
+      />
+      <span class="ms-2">{{ user.nombre }}</span>
+      
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="left: -30px; top: 60px;">
           @if(user.rol === 'admin'){

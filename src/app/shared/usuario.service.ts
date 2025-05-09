@@ -15,6 +15,10 @@ export class UsuarioService {
     if (storedUser) {
       this.userSubject.next(JSON.parse(storedUser));
     }
+    // limpiar nulos de planes del local storage
+    const planes = JSON.parse(localStorage.getItem('planes') || '[]');
+    const planesFiltrados = planes.filter((plan: any) => plan !== null);
+    localStorage.setItem('planes', JSON.stringify(planesFiltrados));
   }
 
   get user() {
@@ -76,4 +80,38 @@ export class UsuarioService {
     const usuario = this.obtenerUsuarioLogeado();
     return usuario?.pagos || [];
   }
+  eliminarUsuario(usuario: any): void{
+    const usuarios = this.obtenerUsuarios();
+    const user = usuarios.find(u=> u.correo === usuario.correo);
+    if(user){
+      const index = usuarios.indexOf(user);
+      if(index !== -1){
+        usuarios.splice(index, 1);
+        localStorage
+        .setItem(this.KEY, JSON.stringify(usuarios));
+      }
+    }
+  }
+  actualizarPlan(plan: any): void {
+    const planes = JSON.parse(localStorage.getItem('planes') || '[]');
+    const index = planes.findIndex((p: any) => p.nombre === plan.nombre);
+    if (index !== -1) {
+      planes[index] = plan;
+      localStorage.setItem('planes', JSON.stringify(planes));
+    }
+  }
+  eliminarPlan(plan: any): void {
+    const planes = JSON.parse(localStorage.getItem('planes') || '[]');
+    const index = planes.findIndex((p: any) => p.nombre === plan.nombre);
+    if (index !== -1) {
+      planes.splice(index, 1);
+      localStorage.setItem('planes', JSON.stringify(planes));
+    }
+  }
+  agregarPlan(plan: any): void {
+    const planes = JSON.parse(localStorage.getItem('planes') || '[]');
+    planes.push(plan);
+    localStorage.setItem('planes', JSON.stringify(planes));
+  }
+
 }
