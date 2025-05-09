@@ -10,6 +10,8 @@ import { FooterComponent } from './footer/footer.component';
 import { FormularioSuscripcionComponent } from './formulario-suscripcion/formulario-suscripcion.component';
 import { RegistroComponent } from './registro/registro.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { PagosComponent } from './pagos/pagos.component';
+import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -23,5 +25,7 @@ export const routes: Routes = [
     {path: 'footer', component: FooterComponent},
     { path: 'formulario-suscripcion', component: FormularioSuscripcionComponent }, 
     { path: 'registro', component: RegistroComponent },
-    { path: 'perfil', component: PerfilComponent }
+    { path: 'perfil', component: PerfilComponent },
+    { path: 'pagos', component: PagosComponent },
+    { path: 'perfil_admin',component: PerfilAdminComponent},
 ];  

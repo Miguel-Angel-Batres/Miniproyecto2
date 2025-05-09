@@ -1,33 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Deporte } from '../deporte';
 import { DeportesService } from '../shared/deportes.service';
+import { Router } from '@angular/router';
+import { UsuarioService } from '../shared/usuario.service';
+
+
 
 @Component({
   selector: 'app-horarioscostos',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './horarioscostos.component.html',
-  styleUrl: './horarioscostos.component.css'
+  styleUrls: ['./horarioscostos.component.css']
 })
 export class HorarioscostosComponent implements OnInit {
+  // datos iniciales
+  usuario : any = null;
   deportes: Deporte[] = [];
-  activeTab: string = 'horarios'; // Para controlar las pestañas
-  diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  horarioGimnasio = {
-    'Lunes a Viernes': '5:00 AM - 10:00 PM',
-    'Sábados': '7:00 AM - 8:00 PM',
-    'Domingos y Festivos': '8:00 AM - 2:00 PM'
-  };
+  activeTab: 'horarios' | 'pago' | 'pagoplus' | 'clases' = 'horarios';
+  
 
-  constructor(private deporteService: DeportesService) {}
+  
+  constructor(
+    private deporteService: DeportesService,
+    private router: Router,
+    private usuarioService: UsuarioService
+  ) {
+    
+  }
 
   ngOnInit(): void {
     this.deportes = this.deporteService.getDeportes();
+    this.usuarioService.user.subscribe(user => {
+      this.usuario = user;
+    });
+    
   }
 
-  setActiveTab(tab: string): void {
+  setActiveTab(tab: 'horarios' |  'clases'): void {
     this.activeTab = tab;
   }
+
+  pagar(plan: string): void {
+    // cambiar ruta a pagos
+    if(this.usuarioService.isAuthenticated()){
+    this.router.navigate(['/pagos']);
+    localStorage.setItem('planSeleccionado', plan);
+    }else{
+      this.router.navigate(['/login']);
+    }
+  }
+  
+  
 }

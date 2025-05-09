@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../shared/auth.service'; // Ajusta la ruta si es necesario
-
+import { UsuarioService } from '../shared/usuario.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +15,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private usuarioService: UsuarioService
   ) {
     this.loginForm = this.fb.group({
       nombre: ['',Validators.required],
@@ -33,10 +32,8 @@ export class LoginComponent {
       );
   
       if (usuarioValido) {
-        this.authService.login(usuarioValido);
-        console.log('Login correcto:', usuarioValido);
-        this.router.navigate(['/perfil']);
-      
+        this.usuarioService.login(usuarioValido);
+        console.log('Login correcto:', usuarioValido);      
       } else {
         alert('Correo o contraseña incorrectos');
       }

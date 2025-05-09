@@ -1,0 +1,198 @@
+    <div class="container mt-5">
+        <h1 class="text-center mb-4 ">Formulario de Pago</h1>
+        <p class="text-center">Completa el siguiente formulario para procesar tu pago.</p>
+        <form #formPago="ngForm" (ngSubmit)="onSubmit()" style="border-radius: 1rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); padding: 20px;">
+    
+
+        <!-- Número de Tarjeta -->
+        <div class="mb-3">
+          <label for="tarjeta" class="form-label d-flex align-items-center justify-content-between">
+            Número de Tarjeta:
+            @if (pago.banco) {
+              <img
+                [src]="bancoIcons[pago.banco]"
+                alt="Logo banco"
+                width="120"
+                height="32"
+              />
+            }
+          </label>
+          <input
+            id="tarjeta"
+            name="tarjeta"
+            type="text"
+            class="form-control"
+            [(ngModel)]="pago.tarjeta"
+            required
+            pattern="^\d{16}$"
+            #tarjetaRef="ngModel"
+          />
+          @if (tarjetaRef.invalid && tarjetaRef.touched) {
+            <div class="text-danger">Debe ser un número de 16 dígitos.</div>
+          }
+        </div>
+  
+        <div class="row">
+          <!-- Titular -->
+          <div class="col-md-6 mb-3">
+            <label for="titular" class="form-label">Nombre del Titular:</label>
+            <input
+              id="titular"
+              name="titular"
+              type="text"
+              class="form-control"
+              [(ngModel)]="pago.titular"
+              required
+              minlength="3"
+              #titularRef="ngModel"
+            />
+            @if (titularRef.invalid && titularRef.touched) {
+              <div class="text-danger">El nombre es obligatorio y debe tener mínimo 3 letras.</div>
+            }
+          </div>
+          <!-- Duracion del plan -->
+          <div class="col-md-6 mb-3">
+            <label for="duracion" class="form-label">Duración del Plan:</label>
+            <select
+              id="duracion"
+              name="duracion"
+              class="form-select"
+              [(ngModel)]="pago.duracion"
+              required
+              #duracionRef="ngModel"
+            >
+              <option value="">Selecciona una duración</option>
+              <option value="1">1 mes</option>
+              <option value="3">3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">12 meses</option>
+            </select>
+            @if (duracionRef.invalid && duracionRef.touched) {
+              <div class="text-danger">Selecciona una duración válida.</div>
+            }
+          </div>
+          
+        </div>
+  
+        <div class="row">
+          <!-- Banco -->
+          <div class="col-md-6 mb-3">
+            <label for="banco" class="form-label">Banco:</label>
+            <select
+              id="banco"
+              name="banco"
+              class="form-select"
+              [(ngModel)]="pago.banco"
+              required
+              #bancoRef="ngModel"
+            >
+              <option value="">Selecciona un banco</option>
+              @for (banco of bancos; track banco) {
+                <option [value]="banco">{{ banco }}</option>
+              }
+            </select>
+            @if (bancoRef.invalid && bancoRef.touched) {
+              <div class="text-danger">Selecciona un banco válido.</div>
+            }
+          </div>
+  
+          <!-- Método de Pago -->
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Método de Pago:</label><br />
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="metodo"
+                id="credito"
+                value="Crédito"
+                [(ngModel)]="pago.metodo"
+                required
+              />
+              <label class="form-check-label" for="credito">Crédito</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="metodo"
+                id="debito"
+                value="Débito"
+                [(ngModel)]="pago.metodo"
+                required
+              />
+              <label class="form-check-label" for="debito">Débito</label>
+            </div>
+            @if (!pago.metodo && !metodo_marcado) {
+              <div class="text-danger">Selecciona un método de pago.</div>
+            }
+            
+          </div>
+          
+        </div>
+
+  
+        <!-- Plan Seleccionado -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="plan" class="form-label">Plan Seleccionado:</label>
+            @if (planSeleccionado === 'Basico') {
+              <input
+                id="plan"
+                name="plan"
+                type="text"
+                class="form-control bg-primary text-white"
+                [value]="planSeleccionado"
+                readonly
+              />
+            }
+            @if (planSeleccionado === 'Pro') {
+              <input
+                id="plan"
+                name="plan"
+                type="text"
+                class="form-control bg-warning text-dark"
+                [value]="planSeleccionado"
+                readonly
+              />
+            }
+          </div>
+        </div>
+  
+        <!-- Términos -->
+        <div class="mb-4 mt-2 form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="terminos"
+            name="terminos"
+            [(ngModel)]="pago.terminos"
+            required
+            #terminosRef="ngModel"
+          />
+          <label class="form-check-label" for="terminos">Acepto los términos y condiciones</label>
+          @if (terminosRef.invalid && terminosRef.touched) {
+            <div class="text-danger">Debes aceptar los términos.</div>
+          }
+        </div>
+  
+        <div class="d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-secondary w-25 me-2"
+            (click)="cambiarPlan()"
+          >
+            Elegir Otro Plan
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success w-25"
+            (click)="validacion()"
+          >
+            Continuar
+          </button>
+        </div>
+      </form>
+    </div>
+  
+  
