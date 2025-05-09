@@ -33,11 +33,13 @@ export class HorarioscostosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.deportes = this.deporteService.getDeportes();
+    this.deporteService.getDeportes().subscribe(
+      (data: Deporte[]) => {
+        this.deportes = data;
+      });
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
     });
-    
   }
 
   setActiveTab(tab: 'horarios' |  'clases'): void {

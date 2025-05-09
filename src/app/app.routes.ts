@@ -21,7 +21,7 @@ export const routes: Routes = [
     {path: 'nosotros', component: NosotrosComponent},
     {path: 'contacto', component: ContactoComponent},
     {path: 'login', component: LoginComponent},
-    {path: 'deporte/:id', component: UndeporteComponent},
+    {path: 'deporte/:nombre', component: UndeporteComponent},
     {path: 'footer', component: FooterComponent},
     { path: 'formulario-suscripcion', component: FormularioSuscripcionComponent }, 
     { path: 'registro', component: RegistroComponent },
