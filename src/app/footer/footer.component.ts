@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
-
+import { SecuredomPipe } from '../securedom.pipe';
 @Component({
   selector: 'app-footer',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, SecuredomPipe],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
@@ -33,5 +33,7 @@ export class FooterComponent {
       timer: 1500
     });
   }
-  
+    address: string = 'Calle Falsa 123, CDMX';
+  phone: string = '+52 55 1234 5678';
+  email: string = 'contacto@SantaCruzGYM.com';
 }

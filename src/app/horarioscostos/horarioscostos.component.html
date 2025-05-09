@@ -78,37 +78,44 @@
 
   <!-- Sección de Horarios de Clases -->
   @if (activeTab === 'clases') {
-  <div class="section clases-section">
-    <div class="tabla-clases-container">
-      <table class="tabla-clases">
-        <thead>
-          <tr>
-            <th>Clase</th>
-            <th>Horario</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (deporte of deportes; track deporte.nombre) {
-          <tr>
-            <td>
-              <div class="clase-info-tabla">
-                <div>
-                  <strong>{{ deporte.nombre }}</strong>
-                  <p>{{ deporte.bio }}</p>
-                </div>
+    <div class="section clases-section">
+      <div class="tabla-clases-container">
+        <table class="tabla-clases">
+          <thead>
+            <tr>
+              <th>Clase</th>
+              <th>Horario</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (deportes.length === 0) {
+              <div class="loading-message">
+                <p>No se pudieron cargar los deportes...</p>
               </div>
-            </td>
-            <td>
-              <div class="clase-info-horario">
-                <p>{{ deporte.horario }}</p>
-              </div>
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+            }
+            @if (deportes.length > 0) {
+            @for (deporte of deportes; track deporte.nombre) {
+              <tr>
+                <td>
+                  <div class="clase-info-tabla">
+                    <div>
+                      <strong>{{ deporte.nombre }}</strong>
+                      <p>{{ deporte.bio }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="clase-info-horario">
+                    <p>{{ deporte.horario }}</p>
+                  </div>
+                </td>
+              </tr>
+            }
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
   }
   
   

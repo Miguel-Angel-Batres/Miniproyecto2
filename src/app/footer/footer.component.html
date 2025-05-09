@@ -49,14 +49,19 @@
           <ul class="contact-list">
             <li>
               <i class="bi bi-geo-alt-fill"></i>
-              <span>Calle Falsa 123, CDMX</span>
+              <span>
+                <a [href]="address | securedom:'https://www.google.com/maps/search/?api=1&query='" target="_blank" rel="noopener">
+                  {{ address }}
+                </a>
+              </span>
             </li>
             <li>
               <i class="bi bi-telephone-fill"></i>
-              <span>+52 55 1234 5678</span>
+              <span><a [href]="phone | securedom:'https://wa.me/'" target="_blank" rel="noopener">{{ phone }}</a></span>
             </li>
             <li>
               <i class="bi bi-envelope-fill"></i>
+              <span><a [href]=" email |   securedom:'mailto:'">{{ email }}</a></span>
             </li>
           </ul>
         </div>

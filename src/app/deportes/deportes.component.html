@@ -6,17 +6,24 @@
   </div>
   
   <div class="deportes-container">
-    @for (deporte of misDeportes; track deporte; let i = $index) {
-      <div class="deporte-card">
-        <div class="card-image-container">
-          <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">{{deporte.nombre}}</h3>
-          <p class="card-description">{{deporte.bio}}</p>
-          <a [routerLink]="['/deporte', i]" class="card-button">Ver Más</a>
-        </div>
+    @if (deportes_de_api.length === 0) {
+      <div class="loading-message">
+        <p>No se pudieron cargar los deportes...</p>
       </div>
+    }
+    @if (deportes_de_api.length > 0) {
+      @for (deporte of deportes_de_api; track deporte) {
+        <div class="deporte-card">
+          <div class="card-image-container">
+            <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">{{deporte.nombre}}</h3>
+            <p class="card-description">{{deporte.bio}}</p>
+            <a [routerLink]="['/deporte', deporte.nombre]" class="card-button">Ver Más</a>
+          </div>
+        </div>
+      }
     }
   </div>
 </section>

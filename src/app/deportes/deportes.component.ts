@@ -1,26 +1,24 @@
-import { Component } from '@angular/core';
-import { Deporte } from '../deporte';
+import { Component, OnInit } from '@angular/core';
 import { DeportesService } from '../shared/deportes.service';
+import { Deporte } from '../deporte';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-deportes',
+  standalone: true,
   imports: [RouterModule],
   templateUrl: './deportes.component.html',
-  styleUrl: './deportes.component.css'
+  styleUrls: ['./deportes.component.css']
 })
-export class DeportesComponent {
+export class DeportesComponent implements OnInit {
+  deportes_de_api: Deporte[] = [];
 
-  misDeportes: Deporte[] = [];
-
-  constructor(public miservicio: DeportesService) {
-    console.log("Constructor DeportesComponent");
-  }
-
+  constructor(private deportesService: DeportesService) {}
   ngOnInit(): void {
-    console.log("ngOnInit DeportesComponent");
-    this.misDeportes = this.miservicio.getDeportes();
-    console.log(this.misDeportes);
+    this.deportesService.getDeportes().subscribe({
+      next: (data) => {
+        this.deportes_de_api = data;
+      }
+    });
   }
-
 }
