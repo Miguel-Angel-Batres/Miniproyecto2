@@ -136,26 +136,16 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="plan" class="form-label">Plan Seleccionado:</label>
-            @if (planSeleccionado === 'Basico') {
-              <input
-                id="plan"
-                name="plan"
-                type="text"
-                class="form-control bg-primary text-white"
-                [value]="planSeleccionado"
-                readonly
-              />
-            }
-            @if (planSeleccionado === 'Pro') {
-              <input
-                id="plan"
-                name="plan"
-                type="text"
-                class="form-control bg-warning text-dark"
-                [value]="planSeleccionado"
-                readonly
-              />
-            }
+            <input
+            id="plan"
+            name="plan"
+            type="text"
+            class="form-control bg-warning text-dark"
+            [value]="planSeleccionado"
+            readonly
+          />
+          
+            
           </div>
         </div>
   
