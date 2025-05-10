@@ -19,8 +19,8 @@ export class PagosComponent implements OnInit {
   @ViewChild('formPago') formPago!: NgForm;
 
   today: string;
-  planSeleccionado = localStorage.getItem('planSeleccionado') || 'Basico';
-
+  planSeleccionado = JSON.parse(localStorage.getItem('planSeleccionado') || '""');
+  planes: any[] = [];
   bancos = ['BBVA', 'Santander', 'Banorte', 'HSBC', 'Citibanamex'];
   bancoIcons: { [key: string]: string } = {
     BBVA: 'assets/bbva.png',
@@ -48,6 +48,7 @@ export class PagosComponent implements OnInit {
     const fecha = new Date();
     this.today = fecha.toISOString().split('T')[0];
     this.pago.fechaPago = this.today;
+    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   }
 
   ngOnInit(): void {}
@@ -59,12 +60,8 @@ export class PagosComponent implements OnInit {
       // obtener usuario logeado
       const usuario = this.usuarioService.obtenerUsuarioLogeado();
       if (usuario) {
-        // guardar pago en el usuario
-        if(this.planSeleccionado === 'Basico') {
-          usuario.plan = PLANES[0];
-        }else if(this.planSeleccionado === 'Pro') {
-          usuario.plan = PLANES[1];
-        }
+       
+        usuario.plan = this.planes.find((plan) => plan.nombre === this.planSeleccionado);
         usuario.plan.fechaInicio = this.today;
         // calcular fecha fin segun duracion
         usuario.plan.fechaFin = new Date();

@@ -225,6 +225,7 @@ export class PerfilAdminComponent implements OnInit {
   }
   
   guardarCambiosPlan() {
+    console.log(this.planEditando);
     const planes = JSON.parse(localStorage.getItem('planes') || '[]');
     const index = planes.findIndex((p: any) => p.nombre === this.planEditando.nombre);
     if (index !== -1) {
@@ -238,6 +239,8 @@ export class PerfilAdminComponent implements OnInit {
       });
     }
     this.planEditando = null;
+    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
+  
   }
   cancelarEdicionPlan() {
     this.planEditando = null;

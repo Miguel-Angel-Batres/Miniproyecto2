@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 // usuario service
 import { UsuarioService } from '../shared/usuario.service';
 
@@ -22,6 +22,7 @@ export class PerfilComponent implements OnInit {
 
   constructor(private route: Router, private usuarioService: UsuarioService) {
     this.today = new Date().toISOString().split('T')[0];
+    
   }
 
   ngOnInit(): void {
@@ -33,10 +34,7 @@ export class PerfilComponent implements OnInit {
           this.usuario.plan.estado = 'Vencido';
           this.usuarioService.actualizarUsuario(this.usuario);
       }}
-      this.pagos = this.usuarioService.obtenerPagosUsuario();
-
-    
-    
+      this.pagos = this.usuarioService.obtenerPagosUsuario(); 
   }
   renovarMembresia() {
       // redirigir a la pagina de pago

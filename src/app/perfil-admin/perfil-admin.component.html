@@ -13,23 +13,27 @@
             (change)="onFileSelected($event)" 
             class="form-control mb-3" 
           />
-          <img 
-            [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
+          <div class="d-flex justify-content-center  mt-4">
+            <img 
+            [src]="usuario.imagenPerfil || 'assets' + usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
             alt="Imagen del administrador" 
-            class="img-thumbnail rounded-circle mb-3" 
+            class="img-thumbnail rounded-circle mb-3 " 
             width="200" 
             height="200"
           />
+          </div>
           
           <!-- Campo para editar nombre -->
-          <label for="nombre" class="form-label">Nombre</label>
-          <input 
-            type="text" 
-            id="nombre" 
-            class="form-control mb-3" 
-            [(ngModel)]="usuario.nombre" 
-            required
-          />
+          <div>
+            <label for="nombre" class="form-label">Nombre</label>
+            <input 
+              type="text" 
+              id="nombre" 
+              class="form-control mb-3" 
+              [(ngModel)]="usuario.nombre" 
+              required
+            />
+          </div>
           
           <!-- Campo para editar correo -->
           <label for="correo" class="form-label">Correo</label>
@@ -47,7 +51,7 @@
       } @else {
         <div class="col-md-4 text-center mb-4">
           <img 
-            [src]="usuario.imagenPerfil ? 'assets/' + usuario.imagenPerfil : 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
+            [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png' || 'assets' + usuario.imagenPerfil" 
             alt="Imagen del administrador" 
             class="img-thumbnail rounded-circle mb-3" 
             width="200" 
