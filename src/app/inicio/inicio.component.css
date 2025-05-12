@@ -355,3 +355,47 @@
   max-width: 600px;
   flex-shrink: 0;
 }
+
+.deportes-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos del encabezado */
+.deportes-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.deportes-header h1 {
+  color: #2c3e50;
+  font-size: 3rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.deportes-header h1::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 3px;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.deportes-header h4 {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  font-weight: 400;
+  margin-top: 1rem;
+}
+
+.divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 0 auto 2rem auto;
+  width: 150px;
+}
