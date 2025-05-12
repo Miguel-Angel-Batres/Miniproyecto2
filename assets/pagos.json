@@ -1,0 +1,59 @@
+[
+    {
+      "titular": "Ana Torres",
+      "tarjeta": "4111111111111111",
+      "fechaPago": "2025-01-15",
+      "metodo": "Tarjeta",
+      "banco": "BBVA",
+      "terminos": true,
+      "duracion": 1,
+      "monto": 500,
+      "plan": "Basico"
+    },
+    {
+      "titular": "Luis Martínez",
+      "tarjeta": "5500000000000004",
+      "fechaPago": "2025-02-10",
+      "metodo": "Transferencia",
+      "banco": "Santander",
+      "terminos": true,
+      "duracion": 3,
+      "monto": 1500,
+      "plan": "Pro"
+    },
+    {
+      "titular": "María López",
+      "tarjeta": "340000000000009",
+      "fechaPago": "2025-03-05",
+      "metodo": "Tarjeta",
+      "banco": "Banorte",
+      "terminos": true,
+      "duracion": 6,
+      "monto": 3000,
+      "plan": "Premium"
+    },
+    {
+      "titular": "Carlos Ríos",
+      "tarjeta": "6011000000000004",
+      "fechaPago": "2025-04-20",
+      "metodo": "Tarjeta",
+      "banco": "HSBC",
+      "terminos": true,
+      "duracion": 1,
+      "monto": 500,
+      "plan": "Basico"
+    },
+    {
+      "titular": "Fernanda Ruiz",
+      "tarjeta": "3530111333300000",
+      "fechaPago": "2025-05-08",
+      "metodo": "Transferencia",
+      "banco": "Citibanamex",
+      "terminos": true,
+      "duracion": 3,
+      "monto": 1500,
+      "plan": "Pro"
+    }
+    
+  ]
+  
