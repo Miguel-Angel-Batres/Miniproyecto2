@@ -26,9 +26,13 @@
             required
             pattern="^\d{16}$"
             #tarjetaRef="ngModel"
+            (input)="onTarjetaInput()"
           />
           @if (tarjetaRef.invalid && tarjetaRef.touched) {
             <div class="text-danger">Debe ser un número de 16 dígitos.</div>
+          }
+          @if (tarjetaRef.valid && pago.tarjeta && tarjetaInvalida) {
+            <div class="text-danger">El número de tarjeta no es válido.</div>
           }
         </div>
   

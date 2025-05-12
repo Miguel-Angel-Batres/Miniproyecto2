@@ -1,26 +1,28 @@
 <div class="hero-carousel">
   <div class="slides">
-    <div class="slide" *ngFor="let image of images; let i = index" [class.active]="i === currentIndex">
-      <img [src]="image" alt="Imagen del gimnasio">
-      <div class="overlay">
-        <div class="highlight-box">
-          <h1>Santa Cruz</h1>
-          <p class="spaced-text">G&nbsp;&nbsp;Y&nbsp;&nbsp;M</p>
+    @for (image of images; track images) {
+      <div class="slide" [class.active]="images.indexOf(image) === currentIndex">
+        <img [src]="image" alt="Imagen del gimnasio">
+        <div class="overlay">
+          <div class="highlight-box">
+            <h1>Santa Cruz</h1>
+            <p class="spaced-text">G&nbsp;&nbsp;Y&nbsp;&nbsp;M</p>
+          </div>
         </div>
       </div>
-      
-    </div>
+    }
   </div>
 
   <button class="nav prev" (click)="prevSlide()">&#10094;</button>
   <button class="nav next" (click)="nextSlide()">&#10095;</button>
 
   <div class="dots">
-    <span *ngFor="let image of images; let i = index"
-      [class.active]="i === currentIndex"
-      (click)="goToSlide(i)">
-</span>
-
+    @for (image of images; track images) {
+      <span
+        [class.active]="images.indexOf(image) === currentIndex"
+        (click)="goToSlide(images.indexOf(image))">
+      </span>
+    }
   </div>
 </div>
 
@@ -38,13 +40,15 @@
   </div>
 
   <div class="services-container">
-    <div class="service-card" *ngFor="let servicio of servicios">
-      <div class="card-image-container">
-        <img [src]="servicio.imagen" [alt]="servicio.titulo" class="card-image">
+    @for (servicio of servicios; track servicios) {
+      <div class="service-card">
+        <div class="card-image-container">
+          <img [src]="servicio.imagen" [alt]="servicio.titulo" class="card-image">
+        </div>
+        <h2 class="service-title">{{ servicio.titulo }}</h2>
+        <p class="service-description">{{ servicio.descripcion }}</p>
       </div>
-      <h2 class="service-title">{{ servicio.titulo }}</h2>
-      <p class="service-description">{{ servicio.descripcion }}</p>
-    </div>
+    }
   </div>
 </div>
 
@@ -59,13 +63,15 @@
     <h4>Garantizando excelencia en cada etapa de tu transformación física</h4>
   </div>
   <div class="features-grid">
-    <div class="feature-card" *ngFor="let feature of features">
-      <div class="feature-icon-container">
-        <i class="feature-icon {{feature.icon}}"></i>
+    @for (feature of features; track features) {
+      <div class="feature-card">
+        <div class="feature-icon-container">
+          <i class="feature-icon {{feature.icon}}"></i>
+        </div>
+        <h3 class="feature-card-title">{{feature.title}}</h3>
+        <p class="feature-card-description">{{feature.description}}</p>
       </div>
-      <h3 class="feature-card-title">{{feature.title}}</h3>
-      <p class="feature-card-description">{{feature.description}}</p>
-    </div>
+    }
   </div>
 </div>
 
