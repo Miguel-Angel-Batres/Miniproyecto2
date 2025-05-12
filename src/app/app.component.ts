@@ -16,7 +16,7 @@ export class AppComponent {
   constructor(private router: Router) {
     const usuariosAdmin = [
       {
-        nombre: 'Admin1',
+        nombre: 'admin1',
         correo: 'admin1@ejemplo.com',
         telefono: '1234567890',
         fechaNacimiento: '1985-06-15',
@@ -31,7 +31,7 @@ export class AppComponent {
         pagos: [],  
       },
       {
-        nombre: 'Admin2',
+        nombre: 'admin2',
         correo: 'admin2@ejemplo.com',
         telefono: '0987654321',
         fechaNacimiento: '1990-02-20',
@@ -46,7 +46,7 @@ export class AppComponent {
         pagos: [],   
       },
       {
-        nombre: 'Admin3',
+        nombre: 'admin3',
         correo: 'admin3@ejemplo.com',
         telefono: '1122334455',
         fechaNacimiento: '1980-11-11',
@@ -61,18 +61,36 @@ export class AppComponent {
         pagos: [],  
       },
     ];
-
-    // eliminar usuariosAdmin del local storage
-    const usuariosExistentes = JSON.parse(localStorage.getItem('usuarios') || '[]');
    
-    // Verificar si ya existen usuarios en el local storage
-    const adminsExistentes = usuariosExistentes.filter((usuario: any) => usuario.rol === 'admin');
-    if (adminsExistentes.length === 0) {
-      localStorage.setItem('usuarios', JSON.stringify([...usuariosExistentes, ...usuariosAdmin]));
+
+    if(!localStorage.getItem('usuariosAgregados')) {
+    // Añadir usuariosAdmin al local storage
+    localStorage.setItem('usuarios', JSON.stringify(usuariosAdmin));
+
+    // Añadir usuarios de assets/usuarios.json solo una vez
+    fetch('assets/usuarios.json')
+      .then(response => response.json())
+      .then(data => {
+      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      const usuariosFiltrados = data.filter((usuario: any) => !usuarios.some((u: any) => u.correo === usuario.correo));
+      localStorage.setItem('usuarios', JSON.stringify([...usuarios, ...usuariosFiltrados]));
+      localStorage.setItem('usuariosAgregados', 'true'); // Marcar que ya se agregaron
+      })
+      .catch(error => console.error('Error al cargar el archivo JSON:', error));
+    fetch('assets/pagos.json')
+      .then(response => response.json())
+      .then(data => {
+        const pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
+        const pagosFiltrados = data.filter((pago: any) => !pagos.some((p: any) => p.titular === pago.titular));
+        localStorage.setItem('pagos', JSON.stringify([...pagos, ...pagosFiltrados]));
+      })
+      .catch(error => console.error('Error al cargar el archivo JSON:', error));
     }
+
     
     
   }
+ 
 
   
 }

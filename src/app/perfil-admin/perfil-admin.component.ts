@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { Plan } from '../models/planes.model';
-import { S } from '@angular/cdk/keycodes';
-import { ChartDataset } from 'chart.js';
+import { ChartData } from 'chart.js';
 import { GraficoComponent } from '../grafico/grafico.component';
 
 @Component({
@@ -13,7 +12,7 @@ import { GraficoComponent } from '../grafico/grafico.component';
   templateUrl: './perfil-admin.component.html',
   styleUrls: ['./perfil-admin.component.css'],
   standalone: true,
-  
+
   imports: [FormsModule,GraficoComponent]
 })
 export class PerfilAdminComponent implements OnInit {
@@ -36,11 +35,10 @@ export class PerfilAdminComponent implements OnInit {
     tipo: '',
     descripcion: ''
   };
+  UsuariosPorPlan: any = {};
+ 
+  
 
-  datos: ChartDataset[] = [
-    { data: [10, 20, 30], label: 'Mi Serie A' }
-  ];
-  etiquetas: string[] = ['Lunes', 'Martes', 'Miércoles'];
 
   constructor(
     private usuarioService: UsuarioService,
@@ -55,6 +53,26 @@ export class PerfilAdminComponent implements OnInit {
   };
   
 
+  GraficaPastel: ChartData<'pie'> = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+      }
+    ]
+  };
+  graficaUsuariosPorFecha: ChartData<'line'> = {
+    labels: [],
+    datasets: []
+  };
+  graficaIngresosPorMes: ChartData<'bar'> = {
+    labels: [],
+    datasets: []
+  };
+  
+  
   ngOnInit(): void {
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
@@ -62,6 +80,98 @@ export class PerfilAdminComponent implements OnInit {
     this.usuarios = this.usuarioService.obtenerUsuarios();
     this.pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
+
+    this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
+      if (usuario.plan && usuario.plan.nombre) {
+        const plan = usuario.plan.nombre;
+        if (!acc[plan]) {
+          acc[plan] = 0;
+        }
+        acc[plan]++;
+      }
+      return acc;
+    }, {});
+
+    // Prepare data for the pie chart
+    const chartLabels = Object.keys(this.UsuariosPorPlan);
+    const chartData = Object.values(this.UsuariosPorPlan) as number[];
+
+    this.GraficaPastel = {
+      labels: chartLabels,
+      datasets: [
+      {
+        data: chartData,
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+      }
+      ]
+    };
+
+    const registrosPorFecha: { [key: string]: number } = {};
+
+    this.usuarios.forEach(usuario => {
+      const fecha = new Date(usuario.fechaRegistro).toISOString().split('T')[0]; // YYYY-MM-DD
+      registrosPorFecha[fecha] = (registrosPorFecha[fecha] || 0) + 1;
+    });
+
+    const fechas = Object.keys(registrosPorFecha).sort();
+    const registros = fechas.map(fecha => registrosPorFecha[fecha]);
+
+    this.graficaUsuariosPorFecha = {
+      labels: fechas,
+      datasets: [
+        {
+          label: 'Usuarios Registrados',
+          data: registros,
+          fill: false,
+          borderColor: '#42A5F5',
+          backgroundColor: '#42A5F5',
+          tension: 0.4
+        }
+      ]
+    };
+    const ingresosPorMes: { [key: string]: number } = {};
+
+    this.pagos.forEach(pago => {
+      const fecha = new Date(pago.fechaPago);
+      const mes = `${fecha.getFullYear()}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}`; // Formato YYYY-MM
+      ingresosPorMes[mes] = (ingresosPorMes[mes] || 0) + pago.monto;
+    });
+
+    const meses = Object.keys(ingresosPorMes).sort();
+    const ingresos = meses.map(mes => ingresosPorMes[mes]);
+
+    this.graficaIngresosPorMes = {
+      labels: meses,
+      datasets: [
+        {
+          label: 'Ingresos ($)',
+          data: ingresos,
+          backgroundColor: '#4CAF50',
+          borderColor: '#388E3C',
+          borderWidth: 1
+        }
+      ]
+    };
+
+    const usuariosActualizados = this.usuarios.map(usuario => {
+      if (usuario.rol === 'admin') return usuario; // Excluir admins
+    
+      const planBase = this.planes[Math.floor(Math.random() * this.planes.length)];
+      const fechaInicio = new Date().toISOString().split('T')[0];
+      const fechaFin = this.getFechaFin(fechaInicio);
+    
+      // Asignar un único plan (no en array)
+      return {
+        ...usuario,
+        plan: {
+          ...planBase,
+          fechaInicio,
+          fechaFin
+        }
+      };
+    });
+    localStorage.setItem('usuarios', JSON.stringify(usuariosActualizados));
   }
 
   logout(): void {
@@ -75,6 +185,14 @@ export class PerfilAdminComponent implements OnInit {
 
     this.router.navigate(['/inicio']);
     
+  }
+
+
+  getFechaFin(fechaInicio: string): string {
+    const inicio = new Date(fechaInicio);
+    const meses = Math.floor(Math.random() * 3) + 1; // 1 a 3 meses
+    inicio.setMonth(inicio.getMonth() + meses);
+    return inicio.toISOString().split('T')[0];
   }
 
 

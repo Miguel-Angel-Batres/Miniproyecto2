@@ -1,0 +1,233 @@
+[
+  {
+    "titular": "Felipe",
+    "monto": 499.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-05-12",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "BBVA",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Luc\u00eda",
+    "monto": 1399.99,
+    "tarjeta": "5500000000000004",
+    "fechaPago": "2025-05-15",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Banorte",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Carlos",
+    "monto": 4999.99,
+    "tarjeta": "340000000000009",
+    "fechaPago": "2025-03-22",
+    "metodo": "PayPal",
+    "banco": "HSBC",
+    "terminos": true,
+    "duracion": 12,
+    "plan": "Anual"
+  },
+  {
+    "titular": "Marta",
+    "monto": 1399.99,
+    "tarjeta": "6011000000000004",
+    "fechaPago": "2025-03-22",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Santander",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "David",
+    "monto": 499.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-02-17",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "Scotiabank",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Isabel",
+    "monto": 1399.99,
+    "tarjeta": "5500000000000004",
+    "fechaPago": "2025-01-16",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Banamex",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Fernando",
+    "monto": 4999.99,
+    "tarjeta": "340000000000009",
+    "fechaPago": "2025-03-25",
+    "metodo": "PayPal",
+    "banco": "HSBC",
+    "terminos": true,
+    "duracion": 12,
+    "plan": "Anual"
+  },
+  {
+    "titular": "Clara",
+    "monto": 1399.99,
+    "tarjeta": "6011000000000004",
+    "fechaPago": "2025-03-15",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Santander",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Alejandro",
+    "monto": 499.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-02-20",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "BBVA",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Sofia",
+    "monto": 499.99,
+    "tarjeta": "5500000000000004",
+    "fechaPago": "2025-03-25",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Banorte",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Jos\u00e9",
+    "monto": 1399.99,
+    "tarjeta": "340000000000009",
+    "fechaPago": "2025-05-03",
+    "metodo": "PayPal",
+    "banco": "HSBC",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Laura",
+    "monto": 4999.99,
+    "tarjeta": "6011000000000004",
+    "fechaPago": "2025-05-09",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "Scotiabank",
+    "terminos": true,
+    "duracion": 12,
+    "plan": "Anual"
+  },
+  {
+    "titular": "Jorge",
+    "monto": 499.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-03-03",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Banamex",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Beatriz",
+    "monto": 1399.99,
+    "tarjeta": "5500000000000004",
+    "fechaPago": "2025-02-28",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "BBVA",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Ricardo",
+    "monto": 4999.99,
+    "tarjeta": "340000000000009",
+    "fechaPago": "2025-05-12",
+    "metodo": "PayPal",
+    "banco": "HSBC",
+    "terminos": true,
+    "duracion": 12,
+    "plan": "Anual"
+  },
+  {
+    "titular": "Eva",
+    "monto": 1399.99,
+    "tarjeta": "6011000000000004",
+    "fechaPago": "2025-05-15",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "Santander",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "\u00c1ngel",
+    "monto": 499.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-05-14",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "BBVA",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Patricia",
+    "monto": 1399.99,
+    "tarjeta": "5500000000000004",
+    "fechaPago": "2025-03-04",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Banorte",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  },
+  {
+    "titular": "Samuel",
+    "monto": 4999.99,
+    "tarjeta": "340000000000009",
+    "fechaPago": "2025-04-14",
+    "metodo": "PayPal",
+    "banco": "HSBC",
+    "terminos": true,
+    "duracion": 12,
+    "plan": "Anual"
+  },
+  {
+    "titular": "Raquel",
+    "monto": 499.99,
+    "tarjeta": "6011000000000004",
+    "fechaPago": "2025-04-12",
+    "metodo": "Tarjeta de d\u00e9bito",
+    "banco": "Scotiabank",
+    "terminos": true,
+    "duracion": 1,
+    "plan": "Mensual"
+  },
+  {
+    "titular": "Tom\u00e1s",
+    "monto": 1399.99,
+    "tarjeta": "4111111111111111",
+    "fechaPago": "2025-05-08",
+    "metodo": "Tarjeta de cr\u00e9dito",
+    "banco": "Santander",
+    "terminos": true,
+    "duracion": 3,
+    "plan": "Trimestral"
+  }
+]

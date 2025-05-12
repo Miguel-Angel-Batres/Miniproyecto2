@@ -1,19 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { ChartOptions, ChartType, ChartDataset } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-grafico',
   templateUrl: './grafico.component.html',
-  styleUrls: ['./grafico.component.css']
+  styleUrls: ['./grafico.component.css'],
+  imports: [BaseChartDirective],
+  standalone: true,
 })
 export class GraficoComponent {
-  @Input() lineChartData: ChartDataset[] = [];
-  @Input() lineChartLabels: string[] = [];
-
-  public lineChartOptions: ChartOptions = {
-    responsive: true,
-  };
-  public lineChartLegend = true;
-  public lineChartType: ChartType = 'line';
-  public lineChartPlugins = [];
+  @Input() GraficaPastel!: ChartData<'pie'>;
+  @Input() graficaUsuariosPorFecha!: ChartData<'line'>;
+  @Input() graficaIngresosPorMes!: ChartData<'bar'>;
+ 
 }
