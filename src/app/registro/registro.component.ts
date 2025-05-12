@@ -10,6 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-registro',
@@ -22,7 +24,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css',
@@ -30,6 +34,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class RegistroComponent {
   registroForm: FormGroup;
   today = new Date().toISOString().split('T')[0];
+  minDate = new Date(new Date().getFullYear() - 150, new Date().getMonth(), new Date().getDate());
+
 
   horariosDisponibles = ['Mañana', 'Tarde', 'Noche'];
   intereses = ['Pesas', 'Cardio', 'Yoga'];
@@ -67,12 +73,20 @@ export class RegistroComponent {
     });
   }
 
-  validarFecha(control: any) {
-    const inputDate = new Date(control.value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return inputDate > today ? { fechaInvalida: true } : null;
+validarFecha(control: any) {
+  const inputDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const minDate = new Date(today.getFullYear() - 150, today.getMonth(), today.getDate());
+
+  if (inputDate > today) {
+    return { fechaFutura: true };
   }
+  if (inputDate < minDate) {
+    return { fechaMuyAntigua: true };
+  }
+  return null;
+}
 
   get interesesSeleccionados() {
     const intereses = this.registroForm.get('intereses')?.value;

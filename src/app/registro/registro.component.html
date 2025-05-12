@@ -4,117 +4,118 @@
     <div class="row">
       <!-- Columna izquierda -->
       <div class="col-md-6">
-       
-
         <!-- Nombre -->
-<mat-form-field appearance="outline" class="w-100 mb-3">
-  <mat-label>Nombre</mat-label>
-  <input matInput id="nombre" formControlName="nombre" type="text"
-         [class.is-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" />
-  @if(registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched){
-    <mat-error>
-      Nombre es obligatorio y debe tener al menos 3 letras.
-    </mat-error>
-  }
-</mat-form-field>
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Nombre</mat-label>
+          <input matInput id="nombre" formControlName="nombre" type="text"
+                 [class.is-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" />
+          @if(registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched){
+            <mat-error>
+              Nombre es obligatorio y debe tener al menos 3 letras.
+            </mat-error>
+          }
+        </mat-form-field>
 
         <!-- Contraseña -->
-        <div class="mb-3">
-          <label for="contraseña" class="form-label">Contraseña:</label>
-          <input id="contraseña" formControlName="contraseña" type="password" class="form-control"
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Contraseña</mat-label>
+          <input matInput id="contraseña" formControlName="contraseña" type="password"
                  [class.is-invalid]="registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched" />
           @if(registroForm.get('contraseña')?.invalid && registroForm.get('contraseña')?.touched){
-            <div class="invalid-feedback">
+            <mat-error>
               Contraseña es obligatoria y debe tener mínimo 6 caracteres.
-            </div>
+            </mat-error>
           }
-        </div>
+        </mat-form-field>
 
         <!-- Correo -->
-        <div class="mb-3">
-          <label for="correo" class="form-label">Correo Electrónico:</label>
-          <input id="correo" formControlName="correo" type="email" class="form-control"
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput id="correo" formControlName="correo" type="email"
                  [class.is-invalid]="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched" />
           @if(registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched){
-            <div class="invalid-feedback">
+            <mat-error>
               Correo es obligatorio y debe ser válido.
-            </div>
+            </mat-error>
           }
-        </div>
-         <!-- Imagen de Perfil -->
-         <div class="mb-3 text-center">
-          <img [src]="registroForm.get('imagenPerfil')?.value || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" class="img-thumbnail mt-2" width="200" style=" border-radius: 50%;" alt="Imagen de Perfil">
+        </mat-form-field>
+
+        <!-- Imagen de Perfil -->
+        <div class="mb-3 text-center">
+          <img [src]="registroForm.get('imagenPerfil')?.value || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" class="img-thumbnail mt-2" width="200" style="border-radius: 50%;" alt="Imagen de Perfil">
           <label for="imagenPerfil" class="form-label d-block">Imagen de Perfil</label>
           <input id="imagenPerfil" type="file" accept="image/*" class="form-control" (change)="onFileChange($event)">
-
         </div>
-
-        
       </div>
 
       <!-- Columna derecha -->
       <div class="col-md-6">
         <!-- Teléfono -->
-        <div class="mb-3">
-          <label for="telefono" class="form-label">Teléfono:</label>
-          <input id="telefono" formControlName="telefono" type="tel" class="form-control"
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Teléfono</mat-label>
+          <input matInput id="telefono" formControlName="telefono" type="tel"
                  [class.is-invalid]="registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched" />
           @if(registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched){
-            <div class="invalid-feedback">
+            <mat-error>
               Teléfono es obligatorio y debe tener 10 dígitos.
-            </div>
+            </mat-error>
           }
-        </div>
+        </mat-form-field>
+
         <!-- Fecha de Nacimiento -->
-        <div class="mb-3">
-          <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
-          <input id="fechaNacimiento" formControlName="fechaNacimiento" type="date" class="form-control"
-                 [min]="today"
-                 [class.is-invalid]="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched" />
-          @if(registroForm.get('fechaNacimiento')?.errors?.['fechaInvalida'] && registroForm.get('fechaNacimiento')?.touched){
-            <div class="invalid-feedback">
-              No puedes elegir una fecha superior a hoy.
-            </div>
-          }
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="fechaNacimiento"
+            [min]="minDate"
+            [max]="today"
+            placeholder="mm/dd/aaaa"
+            [class.is-invalid]="registroForm.get('fechaNacimiento')?.invalid && registroForm.get('fechaNacimiento')?.touched"
+          />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+@if(registroForm.get('fechaNacimiento')?.errors?.['fechaFutura'] && registroForm.get('fechaNacimiento')?.touched){
+  <mat-error>
+    No puedes elegir una fecha superior a hoy.
+  </mat-error>
+}
+@if(registroForm.get('fechaNacimiento')?.errors?.['fechaMuyAntigua'] && registroForm.get('fechaNacimiento')?.touched){
+  <mat-error>
+    No puedes tener más de 150 años.
+  </mat-error>
+}
           @if(registroForm.get('fechaNacimiento')?.errors?.['required'] && registroForm.get('fechaNacimiento')?.touched){
-            <div class="invalid-feedback">
+            <mat-error>
               Fecha de nacimiento es obligatoria.
-            </div>
+            </mat-error>
           }
-        </div>
+        </mat-form-field>
 
         <!-- Horario Disponible (Select) -->
-        <div class="mb-3">
-          <label for="horario" class="form-label">Horario Disponible:</label>
-          <select id="horario" formControlName="horario" class="form-select"
-                  [class.is-invalid]="registroForm.get('horario')?.invalid && registroForm.get('horario')?.touched">
-            <option value="">Selecciona un horario</option>
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Horario Disponible</mat-label>
+          <mat-select id="horario" formControlName="horario"
+                      [class.is-invalid]="registroForm.get('horario')?.invalid && registroForm.get('horario')?.touched">
+            <mat-option value="">Selecciona un horario</mat-option>
             @for (horario of horariosDisponibles; track horario) {
-              <option [value]="horario">{{ horario }}</option>
+              <mat-option [value]="horario">{{ horario }}</mat-option>
             }
-          </select>
+          </mat-select>
           @if(registroForm.get('horario')?.invalid && registroForm.get('horario')?.touched){
-            <div class="invalid-feedback">
+            <mat-error>
               Selecciona un horario válido.
-            </div>
+            </mat-error>
           }
-        </div>
+        </mat-form-field>
 
         <!-- Intereses (Checkboxes) -->
-        <div class="mb-3">
-          <label class="form-label">Intereses:</label>
-          <div class="form-check" formGroupName="intereses">
-            <input class="form-check-input" type="checkbox" id="pesas" formControlName="pesas">
-            <label class="form-check-label" for="pesas">Pesas</label>
-          </div>
-          <div class="form-check" formGroupName="intereses">
-            <input class="form-check-input" type="checkbox" id="cardio" formControlName="cardio">
-            <label class="form-check-label" for="cardio">Cardio</label>
-          </div>
-          <div class="form-check" formGroupName="intereses">
-            <input class="form-check-input" type="checkbox" id="yoga" formControlName="yoga">
-            <label class="form-check-label" for="yoga">Yoga</label>
-          </div>
+        <label class="form-label">Intereses:</label>
+        <div class="mb-3" formGroupName="intereses">
+          <mat-checkbox formControlName="pesas">Pesas</mat-checkbox>
+          <mat-checkbox formControlName="cardio">Cardio</mat-checkbox>
+          <mat-checkbox formControlName="yoga">Yoga</mat-checkbox>
           @if(!interesesSeleccionados && registroForm.touched){
             <div class="text-danger">
               Debes seleccionar al menos un interés.
@@ -123,16 +124,12 @@
         </div>
 
         <!-- Género (Radio Buttons) -->
+        <label class="form-label">Género:</label>
         <div class="mb-3">
-          <label class="form-label">Género:</label><br />
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" formControlName="genero" value="Masculino" id="masculino" />
-            <label class="form-check-label" for="masculino">Masculino</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" formControlName="genero" value="Femenino" id="femenino" />
-            <label class="form-check-label" for="femenino">Femenino</label>
-          </div>
+          <mat-radio-group formControlName="genero">
+            <mat-radio-button value="Masculino">Masculino</mat-radio-button>
+            <mat-radio-button value="Femenino">Femenino</mat-radio-button>
+          </mat-radio-group>
           @if(registroForm.get('genero')?.invalid && registroForm.get('genero')?.touched){
             <div class="text-danger">
               Selecciona un género.
@@ -144,7 +141,7 @@
 
     <!-- Botón de Envío -->
     <div class="mt-3">
-      <button type="submit" class="btn btn-primary w-100" [disabled]="registroForm.invalid || !interesesSeleccionados">
+      <button mat-raised-button color="primary" type="submit" class="w-100" [disabled]="registroForm.invalid || !interesesSeleccionados">
         Registrarse
       </button>
     </div>
