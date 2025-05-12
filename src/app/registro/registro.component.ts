@@ -3,11 +3,27 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+// Angular Material 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatButtonModule
+  ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css',
 })
@@ -100,10 +116,18 @@ export class RegistroComponent {
 onFileChange(event: any) {
   const file = event.target.files[0];
   if (file) {
+    if (file.size > 1024 * 1024) { // 1 MB
+      Swal.fire({
+        icon: 'error',
+        title: 'Archivo demasiado grande',
+        text: 'El archivo es demasiado grande. Selecciona una imagen menor a 1 MB.',
+      });
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
-      this.registroForm.patchValue({ imagenPerfil: reader.result }); 
-      localStorage.setItem('imagenPerfil', reader.result as string); 
+      this.registroForm.patchValue({ imagenPerfil: reader.result });
+      localStorage.setItem('imagenPerfil', reader.result as string);
     };
     reader.readAsDataURL(file);
   }
