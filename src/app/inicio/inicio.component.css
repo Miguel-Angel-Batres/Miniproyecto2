@@ -332,18 +332,36 @@
 
 .video-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .video-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 .video-text {
   max-width: 400px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .video-text {
+    text-align: left;
+  }
 }
 
 .video-title {
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
+  color:#2c3e50;
+  font-weight: bold;
 }
 
 .video-description {
@@ -352,9 +370,11 @@
 }
 
 .video-frame {
+  width: 100%;
   max-width: 600px;
   flex-shrink: 0;
 }
+
 
 .deportes-section {
   max-width: 1200px;
