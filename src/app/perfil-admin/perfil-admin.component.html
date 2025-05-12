@@ -349,4 +349,19 @@
     </div>
   }
   
+  @if(ventanas.estadisticas){
+    <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+      <!-- Header con botón cerrar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Estadísticas del Sistema</h3>
+        <button class="btn btn-sm btn-outline-danger" (click)="ventanas.estadisticas = false">
+          &times;
+        </button>
+      </div>
+  
+      <!-- Aquí puedes agregar gráficos o estadísticas -->
+      <p>Gráficos y estadísticas vendrán aquí.</p>
+      <app-grafico [lineChartData]="datos" [lineChartLabels]="etiquetas"></app-grafico>
 
+    </div>
+  }
