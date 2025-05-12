@@ -5,13 +5,16 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { Plan } from '../models/planes.model';
 import { S } from '@angular/cdk/keycodes';
+import { ChartDataset } from 'chart.js';
+import { GraficoComponent } from '../grafico/grafico.component';
 
 @Component({
   selector: 'app-perfil-admin',
   templateUrl: './perfil-admin.component.html',
   styleUrls: ['./perfil-admin.component.css'],
   standalone: true,
-  imports: [FormsModule]
+  
+  imports: [FormsModule,GraficoComponent]
 })
 export class PerfilAdminComponent implements OnInit {
   usuario: any = null;
@@ -34,7 +37,10 @@ export class PerfilAdminComponent implements OnInit {
     descripcion: ''
   };
 
-  
+  datos: ChartDataset[] = [
+    { data: [10, 20, 30], label: 'Mi Serie A' }
+  ];
+  etiquetas: string[] = ['Lunes', 'Martes', 'Miércoles'];
 
   constructor(
     private usuarioService: UsuarioService,
