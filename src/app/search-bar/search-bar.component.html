@@ -1,11 +1,16 @@
 <form class="d-flex" role="search" (submit)="onSubmit($event)">
-    <input 
-      class="form-control me-2" 
-      type="search" 
-      placeholder="Busca un deporte" 
-      aria-label="Buscar" 
-      [(ngModel)]="searchQuery" 
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Busca un deporte</mat-label>
+    <input
+      matInput
+      type="search"
+      aria-label="Buscar"
+      [(ngModel)]="searchQuery"
       (input)="onSearchInput()"
       name="search"
-    >
+    />
+    <button mat-icon-button matSuffix type="submit" aria-label="Buscar">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
 </form>
