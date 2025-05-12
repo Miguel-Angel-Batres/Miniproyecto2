@@ -15,12 +15,12 @@ interface Feature {
   styleUrl: './inicio.component.css'
 })
 export class InicioComponent implements OnInit {
-  video: string = "aHYvmY3nV5U";
+  video: string = "gr8emAKZV7M";
 
   images = [
-    'assets/zumba.avif',
-    'assets/pilates.jpg',
-    'assets/yoga.avif'
+    'assets/inicio/inicio1.avif',
+    'assets/inicio/inico4.avif',
+    'assets/inicio/inicio3.avif'
   ];
 
   currentIndex = 0;
@@ -55,19 +55,19 @@ export class InicioComponent implements OnInit {
 
   servicios = [
     {
-      titulo: 'Gestión de Transporte',
-      descripcion: 'Coordinación eficiente de envíos terrestres, aéreos y marítimos',
-      imagen: 'assets/images/transporte.jpg'
+      titulo: 'Mejora tu Salud',
+      descripcion: 'Entrenamiento personalizado para alcanzar tus metas de salud y bienestar',
+      imagen: 'assets/inicio/salud.avif'
     },
     {
-      titulo: 'Logística Transfronteriza',
-      descripcion: 'Especialistas en rutas comerciales entre EE.UU., México y Canadá',
-      imagen: 'assets/images/transfronteriza.jpg'
+      titulo: 'Calidad de Vida',
+      descripcion: 'Entrenamiento adaptado a tus necesidades para mejorar tu calidad de vida',
+      imagen: 'assets/inicio/bienestar.avif'
     },
     {
-      titulo: 'Supervisión de Calidad',
-      descripcion: 'Garantizando el cumplimiento de estándares en toda la cadena de suministro',
-      imagen: 'assets/images/calidad.jpg'
+      titulo: 'Mayor Rendimiento',
+      descripcion: 'Entrenamiento especializado para mejorar tu rendimiento deportivo',
+      imagen: 'assets/inicio/iniciofisi.avif'
     }
   ];
 
