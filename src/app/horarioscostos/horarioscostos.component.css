@@ -6,6 +6,10 @@
     padding: 2rem;
 
   }
+  .clases-section{
+    display: none;
+  }
+  
   
   .horcos-header {
     text-align: center;

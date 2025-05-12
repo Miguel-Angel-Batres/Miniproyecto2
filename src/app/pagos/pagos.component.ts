@@ -52,15 +52,11 @@ export class PagosComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
   onSubmit(): void {
-    this.validacion();
-  
     if (this.formPago.valid) {
       // obtener usuario logeado
       const usuario = this.usuarioService.obtenerUsuarioLogeado();
       if (usuario) {
-       
         usuario.plan = this.planes.find((plan) => plan.nombre === this.planSeleccionado);
         usuario.plan.fechaInicio = this.today;
         // calcular fecha fin segun duracion
@@ -92,12 +88,7 @@ export class PagosComponent implements OnInit {
     }
   }
   
-  validacion(): void {
-    Object.keys(this.formPago.controls).forEach((controlName) => {
-      const control = this.formPago.controls[controlName];
-      control.markAsTouched();
-    });
-  }
+  
   cambiarPlan(): void {
     this.route.navigate(['/horarioscostos']);
   }

@@ -154,10 +154,7 @@ export class PerfilAdminComponent implements OnInit {
     });
   }
   editarPlan(plan: any) {
-    this.planEditando = {
-      ...plan,
-      beneficios: [...plan.beneficios]  
-    };
+    this.planEditando = plan;
   }
   
   eliminarPlan(plan: any) {
@@ -190,7 +187,7 @@ export class PerfilAdminComponent implements OnInit {
   }
   guardarNuevoPlan() {
     if (!this.nuevoPlan || 
-      !this.nuevoPlan.nombre?.trim() || 
+      !this.nuevoPlan.nombre || 
       !this.nuevoPlan.descripcion?.trim() ||
       !this.nuevoPlan.tipo?.trim() ||
       this.nuevoPlan.precio <= 0) {     
@@ -225,19 +222,15 @@ export class PerfilAdminComponent implements OnInit {
   }
   
   guardarCambiosPlan() {
-    console.log(this.planEditando);
-    const planes = JSON.parse(localStorage.getItem('planes') || '[]');
-    const index = planes.findIndex((p: any) => p.nombre === this.planEditando.nombre);
-    if (index !== -1) {
-      planes[index] = this.planEditando;
-      localStorage.setItem('planes', JSON.stringify(planes));
+    
+      localStorage.setItem('planes', JSON.stringify(this.planes));
       Swal.fire({
         icon: 'success',
         title: 'Plan actualizado',
         text: `El plan ${this.nuevoPlan.nombre} ha sido actualizado.`,
         confirmButtonText: 'Aceptar'
       });
-    }
+    
     this.planEditando = null;
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   

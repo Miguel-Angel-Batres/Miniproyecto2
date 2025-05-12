@@ -177,7 +177,7 @@
           <button
             type="submit"
             class="btn btn-success w-25"
-            (click)="validacion()"
+            [disabled]="formPago.invalid"
           >
             Continuar
           </button>

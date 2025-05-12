@@ -291,7 +291,7 @@
           } @else {
             @for (plan of planes; track plan) {
               <tr>
-                @if (planEditando != null && planEditando.nombre === plan.nombre) {
+                @if (planEditando != null && planEditando === plan) {
                   <!-- Modo edición -->
                   <td><input [(ngModel)]="planEditando.nombre" class="form-control" /></td>
                   <td><input [(ngModel)]="planEditando.precio" class="form-control" /></td>
