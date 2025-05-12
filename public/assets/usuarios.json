@@ -1,0 +1,364 @@
+[
+    {
+      "nombre": "Felipe",
+      "correo": "felipe@felipe.com",
+      "telefono": "4494940008",
+      "contraseña": "felipe",
+      "fechaNacimiento": "2003-11-20",
+      "fechaRegistro": "2025-05-10",
+      "genero": "Masculino",
+      "horario": "Mañana",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": false,
+        "yoga": false
+      },
+      "rol": "usuario"
+    
+    },
+    {
+      "nombre": "Lucía",
+      "correo": "lucia@correo.com",
+      "telefono": "4491234567",
+      "contraseña": "lucia123",
+      "fechaNacimiento": "1998-03-15",
+      "fechaRegistro": "2025-05-10",
+      "genero": "Femenino",
+      "horario": "Tarde",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": true,
+        "yoga": false
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Carlos",
+      "correo": "carlos@correo.com",
+      "telefono": "4497654321",
+      "contraseña": "carlos456",
+      "fechaNacimiento": "1995-07-10",
+      "fechaRegistro": "2025-03-20",
+      "genero": "Masculino",
+      "horario": "Noche",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": false,
+        "cardio": true,
+        "yoga": true
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Marta",
+      "correo": "marta@marta.com",
+      "telefono": "4499876543",
+      "contraseña": "marta321",
+      "fechaNacimiento": "1992-11-05",
+      "fechaRegistro": "2025-03-20",
+      "genero": "Femenino",
+      "horario": "Mañana",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": true,
+        "yoga": true
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "David",
+      "correo": "david@correo.com",
+      "telefono": "4493322110",
+      "contraseña": "david1234",
+      "fechaNacimiento": "1990-06-23",
+      "fechaRegistro": "2025-02-15",
+      "genero": "Masculino",
+      "horario": "Tarde",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": false,
+        "cardio": false,
+        "yoga": true
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Isabel",
+      "correo": "isabel@correo.com",
+      "telefono": "4495647382",
+      "contraseña": "isabel123",
+      "fechaNacimiento": "1995-09-17",
+      "fechaRegistro": "2025-01-15",
+      "genero": "Femenino",
+      "horario": "Mañana",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": false,
+        "yoga": false
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Fernando",
+      "correo": "fernando@correo.com",
+      "telefono": "4494455667",
+      "contraseña": "fernando321",
+      "fechaNacimiento": "1988-01-09",
+      "fechaRegistro": "2025-03-20",
+      "genero": "Masculino",
+      "horario": "Noche",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": true,
+        "yoga": false
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Clara",
+      "correo": "clara@correo.com",
+      "telefono": "4491239876",
+      "contraseña": "clara456",
+      "fechaNacimiento": "1999-12-30",
+      "fechaRegistro": "2025-03-15",
+      "genero": "Femenino",
+      "horario": "Tarde",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": false,
+        "cardio": true,
+        "yoga": true
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Alejandro",
+      "correo": "alejandro@correo.com",
+      "telefono": "4496874231",
+      "contraseña": "alejandro789",
+      "fechaNacimiento": "1996-05-11",
+      "fechaRegistro": "2025-02-20",
+      "genero": "Masculino",
+      "horario": "Mañana",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": true,
+        "yoga": false
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "Sofia",
+      "correo": "sofia@correo.com",
+      "telefono": "4493456789",
+      "contraseña": "sofia987",
+      "fechaNacimiento": "1997-04-19",
+      "fechaRegistro": "2025-03-22",
+      "genero": "Femenino",
+      "horario": "Noche",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": false,
+        "cardio": true,
+        "yoga": true
+      },
+      "rol": "usuario"
+    },
+    {
+      "nombre": "José",
+      "correo": "jose@correo.com",
+      "telefono": "4498765432",
+      "contraseña": "jose1234",
+      "fechaNacimiento": "1985-02-25",
+      "fechaRegistro": "2025-05-03",
+      "genero": "Masculino",
+      "horario": "Tarde",
+      "imagenPerfil": "",
+      "intereses": {
+        "pesas": true,
+        "cardio": false,
+        "yoga": false
+      },
+      "rol": "usuario"
+    }
+    ,
+        {
+          "nombre": "Laura",
+          "correo": "laura@correo.com",
+          "telefono": "4497654321",
+          "contraseña": "laura123",
+          "fechaNacimiento": "1998-07-08",
+          "fechaRegistro": "2025-05-08",
+          "genero": "Femenino",
+          "horario": "Mañana",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": false,
+            "yoga": false
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Jorge",
+          "correo": "jorge@correo.com",
+          "telefono": "4493216547",
+          "contraseña": "jorge456",
+          "fechaNacimiento": "2000-02-14",
+          "fechaRegistro": "2025-02-28",
+          "genero": "Masculino",
+          "horario": "Noche",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": false,
+            "cardio": true,
+            "yoga": true
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Beatriz",
+          "correo": "beatriz@correo.com",
+          "telefono": "4498995543",
+          "contraseña": "beatriz789",
+          "fechaNacimiento": "1996-11-22",
+          "fechaRegistro": "2025-02-28",
+          "genero": "Femenino",
+          "horario": "Tarde",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": true,
+            "yoga": false
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Ricardo",
+          "correo": "ricardo@correo.com",
+          "telefono": "4499871234",
+          "contraseña": "ricardo321",
+          "fechaNacimiento": "1993-03-27",
+          "fechaRegistro": "2025-05-11",
+          "genero": "Masculino",
+          "horario": "Mañana",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": false,
+            "cardio": false,
+            "yoga": true
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Eva",
+          "correo": "eva@correo.com",
+          "telefono": "4495478321",
+          "contraseña": "eva234",
+          "fechaNacimiento": "1994-06-15",
+          "fechaRegistro": "2025-05-11",
+          "genero": "Femenino",
+          "horario": "Tarde",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": false,
+            "yoga": true
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Ángel",
+          "correo": "angel@correo.com",
+          "telefono": "4496543219",
+          "contraseña": "angel987",
+          "fechaNacimiento": "1990-09-10",
+          "fechaRegistro": "2025-05-10",
+          "genero": "Masculino",
+          "horario": "Noche",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": false,
+            "yoga": false
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Patricia",
+          "correo": "patricia@correo.com",
+          "telefono": "4499875678",
+          "contraseña": "patricia654",
+          "fechaNacimiento": "1997-01-20",
+          "fechaRegistro": "2025-02-28",
+          "genero": "Femenino",
+          "horario": "Mañana",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": false,
+            "cardio": true,
+            "yoga": true
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Samuel",
+          "correo": "samuel@correo.com",
+          "telefono": "4491236789",
+          "contraseña": "samuel1122",
+          "fechaNacimiento": "1991-04-05",
+          "fechaRegistro": "2025-04-12",
+          "genero": "Masculino",
+          "horario": "Tarde",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": true,
+            "yoga": false
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Raquel",
+          "correo": "raquel@correo.com",
+          "telefono": "4498765432",
+          "contraseña": "raquel1122",
+          "fechaNacimiento": "1993-08-15",
+          "fechaRegistro": "2025-04-12",
+          "genero": "Femenino",
+          "horario": "Noche",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": true,
+            "cardio": false,
+            "yoga": false
+          },
+          "rol": "usuario"
+        },
+        {
+          "nombre": "Tomás",
+          "correo": "tomas@correo.com",
+          "telefono": "4495432109",
+          "contraseña": "tomas456",
+          "fechaNacimiento": "1989-12-22",
+          "fechaRegistro": "2025-05-08",
+          "genero": "Masculino",
+          "horario": "Mañana",
+          "imagenPerfil": "",
+          "intereses": {
+            "pesas": false,
+            "cardio": true,
+            "yoga": true
+          },
+          "rol": "usuario"
+        }
+      
+      
+  ]
+  

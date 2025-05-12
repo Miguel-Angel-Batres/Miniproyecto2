@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 // servicio de usuario
 import { UsuarioService } from '../shared/usuario.service';
 // modelo de planes
-import { PLANES } from '../models/planes.model';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 

@@ -1,0 +1,43 @@
+<div style="display: block;">
+    
+
+    <!-- grafica pastel -->
+    <canvas baseChart
+    [data]="GraficaPastel"
+    [options]="{ responsive: true }"
+    [legend]="true"
+    [type]="'pie'"
+    [plugins]="[]"
+    style="width: 100%; max-height: 300px;">
+    </canvas>
+    
+    <canvas baseChart
+    [data]="graficaUsuariosPorFecha"
+    [type]="'line'"
+    [options]="{ responsive: true }"
+    [legend]="true"
+    [plugins]="[]"
+    style="width: 100%; max-height: 300px;"
+    >
+  </canvas>
+    <canvas baseChart
+    [data]="graficaIngresosPorMes"
+    [type]="'bar'"
+    [options]="{
+        responsive: true,
+        plugins: {
+        legend: { display: true },
+        title: { display: true, text: 'Ingresos Mensuales' }
+        },
+        scales: {
+        y: {
+            beginAtZero: true
+        }
+        }
+    }">
+    </canvas>
+
+  
+
+  </div>
+  
