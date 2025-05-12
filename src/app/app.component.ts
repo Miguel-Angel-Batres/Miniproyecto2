@@ -65,6 +65,7 @@ export class AppComponent {
     // eliminar usuariosAdmin del local storage
     const usuariosExistentes = JSON.parse(localStorage.getItem('usuarios') || '[]');
    
+    // Verificar si ya existen usuarios en el local storage
     const adminsExistentes = usuariosExistentes.filter((usuario: any) => usuario.rol === 'admin');
     if (adminsExistentes.length === 0) {
       localStorage.setItem('usuarios', JSON.stringify([...usuariosExistentes, ...usuariosAdmin]));
