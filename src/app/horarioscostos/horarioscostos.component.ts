@@ -71,15 +71,16 @@ export class HorarioscostosComponent implements OnInit{
   }
 
   pagar(plan: string): void {
-    if (this.usuarioService.isAuthenticated() && this.usuario.rol !== 'admin') {
-       if(this.usuarioService.isAuthenticated()){
-        this.router.navigate(['/pagos']);
-        localStorage.setItem('planSeleccionado', JSON.stringify(plan));
-       }else{
-        this.router.navigate(['/login']);
-       }
+    if (this.usuarioService.isAuthenticated()) {
+        if(this.usuario.rol === 'admin') {
+          this.router.navigate(['/inicio']);
+        }else{
+          this.router.navigate(['/pagos']);
+          localStorage.setItem('planSeleccionado', JSON.stringify(plan));
+   
+        }
     } else {
-      this.router.navigate(['/inicio']);
+      this.router.navigate(['/login']);
     }
   }
   
