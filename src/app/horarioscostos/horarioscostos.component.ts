@@ -47,6 +47,11 @@ export class HorarioscostosComponent implements OnInit{
     });
 
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
+    if(!this.planes || this.planes.length === 0){
+      this.planes = this.planesGimnasio;
+      localStorage.setItem('planes', JSON.stringify(this.planes));
+    }
+
   }
 
   
@@ -73,4 +78,50 @@ export class HorarioscostosComponent implements OnInit{
       this.router.navigate(['/inicio']);
     }
   }
+  
+  planesGimnasio = [
+    {
+      nombre: "Básico",
+      precio: 99.99,
+      descripcion: "Plan básico para quienes buscan un entrenamiento sencillo y efectivo.",
+      tipoPago: "mensual",
+      beneficios: [
+        "Acceso a área de pesas",
+        "Acceso a cardio",
+        "Horario limitado (6AM - 8PM)",
+        "2 clases grupales por semana",
+        "Casillero estándar"
+      ]
+    },
+    {
+      nombre: "Pro",
+      precio: 199.99,
+      descripcion: "Plan premium para quienes buscan un entrenamiento completo y personalizado.",
+      tipoPago: "mensual",
+      beneficios: [
+        "Todas las áreas del gimnasio",
+        "Clases ilimitadas",
+        "1 sesión mensual con entrenador",
+        "Casillero premium",
+        "Acceso a sauna y spa",
+        "Estacionamiento gratuito"
+      ]
+    },
+    {
+      nombre: "Exclusivo",
+      precio: 299.99,
+      descripcion: "Plan exclusivo para tener acceso a cualquier clase de forma completa",
+      tipoPago: "mensual",
+      beneficios: [
+        "Acceso ilimitado a todas las áreas del gimnasio",
+        "Clases grupales ilimitadas",
+        "Sesiones semanales con entrenador personal",
+        "Estacionamiento VIP",
+        "Acceso 24/7",
+        "Bebidas energéticas y toallas incluidas"
+      ]
+    }
+  ];
+  
+  
 }
