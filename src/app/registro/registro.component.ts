@@ -3,17 +3,39 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+// Angular Material 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css',
 })
 export class RegistroComponent {
   registroForm: FormGroup;
   today = new Date().toISOString().split('T')[0];
+  minDate = new Date(new Date().getFullYear() - 150, new Date().getMonth(), new Date().getDate());
+
 
   horariosDisponibles = ['Mañana', 'Tarde', 'Noche'];
   intereses = ['Pesas', 'Cardio', 'Yoga'];
@@ -51,12 +73,20 @@ export class RegistroComponent {
     });
   }
 
-  validarFecha(control: any) {
-    const inputDate = new Date(control.value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return inputDate > today ? { fechaInvalida: true } : null;
+validarFecha(control: any) {
+  const inputDate = new Date(control.value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const minDate = new Date(today.getFullYear() - 150, today.getMonth(), today.getDate());
+
+  if (inputDate > today) {
+    return { fechaFutura: true };
   }
+  if (inputDate < minDate) {
+    return { fechaMuyAntigua: true };
+  }
+  return null;
+}
 
   get interesesSeleccionados() {
     const intereses = this.registroForm.get('intereses')?.value;
@@ -100,10 +130,18 @@ export class RegistroComponent {
 onFileChange(event: any) {
   const file = event.target.files[0];
   if (file) {
+    if (file.size > 1024 * 1024) { // 1 MB
+      Swal.fire({
+        icon: 'error',
+        title: 'Archivo demasiado grande',
+        text: 'El archivo es demasiado grande. Selecciona una imagen menor a 1 MB.',
+      });
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
-      this.registroForm.patchValue({ imagenPerfil: reader.result }); 
-      localStorage.setItem('imagenPerfil', reader.result as string); 
+      this.registroForm.patchValue({ imagenPerfil: reader.result });
+      localStorage.setItem('imagenPerfil', reader.result as string);
     };
     reader.readAsDataURL(file);
   }

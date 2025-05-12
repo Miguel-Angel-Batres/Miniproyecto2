@@ -40,6 +40,7 @@ export class PagosComponent implements OnInit {
     monto: 0,
     plan: this.planSeleccionado,
   };
+  tarjetaInvalida = false;
 
   metodo_marcado = true; 
 
@@ -92,6 +93,23 @@ export class PagosComponent implements OnInit {
     this.route.navigate(['/horarioscostos']);
   }
   
+  onTarjetaInput() {
+    this.tarjetaInvalida =
+      this.pago.tarjeta.length === 16 && !this.luhnCheck(this.pago.tarjeta);
+  }
   
-  
+  luhnCheck(numero: string): boolean {
+  let sum = 0;
+  let shouldDouble = false;
+  for (let i = numero.length - 1; i >= 0; i--) {
+    let digit = parseInt(numero.charAt(i), 10);
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+  return sum % 10 === 0;
+  }
 }
