@@ -193,7 +193,7 @@ export class PerfilAdminComponent implements OnInit {
     this.ventanas.estadisticas = true;
   }
 
-  eliminarUsuario(nombre:string): void {
+  eliminarUsuario(nombre: string): void {
     Swal.fire({
       title: '¿Estás seguro?',
       text: `¿Quieres eliminar a ${nombre}?`,
@@ -203,14 +203,15 @@ export class PerfilAdminComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.usuarioService.eliminarUsuario(nombre);
-        this.usuarios = this.usuarioService.obtenerUsuarios(); 
+        this.usuarioService.eliminarUsuario(nombre); 
+        this.usuarios = this.usuarios.filter(usuario => usuario.nombre !== nombre); 
+        localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
+        
         Swal.fire(
           'Eliminado!',
           `El usuario ${nombre} ha sido eliminado.`,
           'success'
         );
-        window.location.reload();
       }
     });
   }
