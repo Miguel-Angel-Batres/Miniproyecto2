@@ -1,3 +1,10 @@
+@if(usuario == null) {
+<div class="container mt-5 p-4 border rounded shadow bg-light">
+  <h2 class="text-center mb-4">No hay Usuario logeado</h2>
+</div>
+} @else {
+
+
 <div class="container mt-5 p-4 border rounded shadow bg-light">
   <h2 class="text-center mb-4">Panel de Administración</h2>
 
@@ -161,7 +168,7 @@
       </tr>
     </thead>
     <tbody>
-      @if (usuarios.length === 0) {
+      @if (usuarios.length === 0 || usuarios == null) {
       <tr>
         <td colspan="6" class="text-center">No hay usuarios registrados.</td>
       </tr>
@@ -258,7 +265,7 @@
       </tr>
     </thead>
     <tbody>
-      @if (pagos.length === 0) {
+      @if (pagos.length === 0 || pagos == null) {
       <tr>
         <td colspan="6" class="text-center">No hay pagos registrados.</td>
       </tr>
@@ -369,9 +376,9 @@
     </thead>
 
     <tbody>
-      @if (planes.length === 0) {
+      @if (planes.length === 0 || planes == null) {
       <tr>
-        <td colspan="4" class="text-center">No hay planes registrados.</td>
+        <td colspan="6" class="text-center">No hay planes registrados.</td>
       </tr>
       } @else { @for (plan of planes; track plan) {
       <tr>
@@ -493,4 +500,5 @@
     [graficaIngresosPorMes]="graficaIngresosPorMes"
   ></app-grafico>
 </div>
+}
 }
