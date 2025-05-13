@@ -39,6 +39,14 @@ onSubmit() {
     const { nombre, contraseña } = this.loginForm.value;
 
     const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    if (!usuarios || usuarios.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No hay usuarios registrados',
+      });
+      return;
+    }
     const usuarioValido = usuarios.find(
       (u: any) => u.nombre === nombre && u.contraseña === contraseña
     );
