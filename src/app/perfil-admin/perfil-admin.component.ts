@@ -154,25 +154,7 @@ export class PerfilAdminComponent implements OnInit {
       ]
     };
 
-    const usuariosActualizados = this.usuarios.map(usuario => {
-      if (usuario.rol === 'admin') return usuario; // Excluir admins
-    
-      const planBase = this.planes[Math.floor(Math.random() * this.planes.length)];
-      const fechaInicio = new Date().toISOString().split('T')[0];
-      const fechaFin = this.getFechaFin(fechaInicio);
-    
-      // Asignar un único plan (no en array)
-      return {
-        ...usuario,
-        plan: {
-          ...planBase,
-          fechaInicio,
-          fechaFin
-        }
-      };
-    });
-    localStorage.setItem('usuarios', JSON.stringify(usuariosActualizados));
-  }
+     }
 
   logout(): void {
     this.usuarioService.logout();
@@ -188,12 +170,7 @@ export class PerfilAdminComponent implements OnInit {
   }
 
 
-  getFechaFin(fechaInicio: string): string {
-    const inicio = new Date(fechaInicio);
-    const meses = Math.floor(Math.random() * 3) + 1; // 1 a 3 meses
-    inicio.setMonth(inicio.getMonth() + meses);
-    return inicio.toISOString().split('T')[0];
-  }
+ 
 
 
   editarPerfil(): void {
