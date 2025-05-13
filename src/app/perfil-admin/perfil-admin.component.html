@@ -175,7 +175,7 @@
       } @else { @for (usuario of usuarios; track usuario) { @if (usuario.rol !==
       'admin') {
       <tr>
-        @if (usuarioEditando!= null) {
+        @if (usuarioEditando!= null && usuarioEditando.nombre === usuario.nombre) {
         <!-- Modo edición -->
         <td>
           <input [(ngModel)]="usuarioEditando.nombre" class="form-control" />
