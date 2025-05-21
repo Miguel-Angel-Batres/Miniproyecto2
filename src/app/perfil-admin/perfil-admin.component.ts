@@ -77,8 +77,18 @@ export class PerfilAdminComponent implements OnInit {
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
     });
-    this.usuarios = this.usuarioService.obtenerUsuarios();
-    this.pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
+   this.usuarioService.users.subscribe(usuarios => {
+      this.usuarios = usuarios;
+    }
+    );
+    this.usuarioService.pagos.subscribe(pagos => {
+      this.pagos = pagos;
+    }
+    );
+
+    this.usuarioService.obtenerUsuarios();
+    
+
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
 
     this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
@@ -203,10 +213,8 @@ export class PerfilAdminComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.usuarioService.eliminarUsuario(nombre); 
-        this.usuarios = this.usuarios.filter(usuario => usuario.nombre !== nombre); 
-        localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
-        
+        const usuario = this.usuarios.find((u) => u.nombre === nombre);
+        this.usuarioService.eliminarUsuario(usuario.uid);
         Swal.fire(
           'Eliminado!',
           `El usuario ${nombre} ha sido eliminado.`,
@@ -227,7 +235,6 @@ export class PerfilAdminComponent implements OnInit {
   guardarCambios() {
     this.usuarioService.actualizarUsuario(this.usuarioEditando);
     this.usuarioEditando = null;
-    this.usuarios = this.usuarioService.obtenerUsuarios(); 
   }
 
 

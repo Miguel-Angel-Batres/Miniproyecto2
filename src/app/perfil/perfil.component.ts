@@ -15,10 +15,9 @@ import { UsuarioService } from '../shared/usuario.service';
 })
 export class PerfilComponent implements OnInit {
   usuario: any = null;
-  
-  pagos: any[] = [];
- 
+  pagos: any[] = []; 
   today: string;
+  user: any;
 
   constructor(private route: Router, private usuarioService: UsuarioService) {
     this.today = new Date().toISOString().split('T')[0];
@@ -27,14 +26,18 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     
-      this.usuario = this.usuarioService.obtenerUsuarioLogeado();
-        
+    this.usuarioService.user.subscribe(user => {
+      this.usuario = user;
+    });
+    this.usuarioService.pagos.subscribe(pagos => {  
+      this.pagos = pagos;
+    });
       if(this.usuario.plan.nombre !== ''){
         if (this.usuario.plan.fechaFin < this.today) {
           this.usuario.plan.estado = 'Vencido';
           this.usuarioService.actualizarUsuario(this.usuario);
       }}
-      this.pagos = this.usuarioService.obtenerPagosUsuario(); 
+     
   }
   renovarMembresia() {
       // redirigir a la pagina de pago

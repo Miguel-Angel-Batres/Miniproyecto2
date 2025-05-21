@@ -51,41 +51,48 @@ export class PagosComponent implements OnInit {
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   }
 
-  ngOnInit(): void {}
-  onSubmit(): void {
-    if (this.formPago.valid) {
-      // obtener usuario logeado
-      const usuario = this.usuarioService.obtenerUsuarioLogeado();
-      if (usuario) {
-        usuario.plan = this.planes.find((plan) => plan.nombre === this.planSeleccionado);
-        usuario.plan.fechaInicio = this.today;
-        // calcular fecha fin segun duracion
-        usuario.plan.fechaFin = new Date();
-        usuario.plan.fechaFin.setMonth(usuario.plan.fechaFin.getMonth() + usuario.plan.duracion);
-        usuario.plan.estado = 'Activo';
-        this.pago.monto = usuario.plan.precio * this.pago.duracion;
-        usuario.pagos.push(this.pago);
-        this.usuarioService.actualizarUsuario(usuario);
-        // guardar pago en local storage
-        const pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
-        pagos.push(this.pago);
-        localStorage.setItem('pagos', JSON.stringify(pagos));
-        
-        // mostrar mensaje de éxito con sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: 'Pago realizado con éxito',
-          text: `Plan ${this.planSeleccionado} contratado`,
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          this.route.navigate(['/horarioscostos']);
-        });
-      } else {
-        console.error('Usuario no encontrado');
+  ngOnInit(): void {
+    this.usuarioService.user.subscribe((user) => {
+      if (user) {
+        this.pago.titular = user.nombre;
+        this.pago.plan = user.plan;
       }
-    } else {
-      console.warn('Formulario inválido');
     }
+    );
+  }
+  onSubmit(): void {
+    // if (this.formPago.valid) {
+    
+    //   if (usuario) {
+    //     usuario.plan = this.planes.find((plan) => plan.nombre === this.planSeleccionado);
+    //     usuario.plan.fechaInicio = this.today;
+    //     // calcular fecha fin segun duracion
+    //     usuario.plan.fechaFin = new Date();
+    //     usuario.plan.fechaFin.setMonth(usuario.plan.fechaFin.getMonth() + usuario.plan.duracion);
+    //     usuario.plan.estado = 'Activo';
+    //     this.pago.monto = usuario.plan.precio * this.pago.duracion;
+    //     usuario.pagos.push(this.pago);
+    //     this.usuarioService.actualizarUsuario(usuario);
+    //     // guardar pago en local storage
+    //     const pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
+    //     pagos.push(this.pago);
+    //     localStorage.setItem('pagos', JSON.stringify(pagos));
+        
+    //     // mostrar mensaje de éxito con sweetalert
+    //     Swal.fire({
+    //       icon: 'success',
+    //       title: 'Pago realizado con éxito',
+    //       text: `Plan ${this.planSeleccionado} contratado`,
+    //       confirmButtonText: 'Aceptar'
+    //     }).then(() => {
+    //       this.route.navigate(['/horarioscostos']);
+    //     });
+    //   } else {
+    //     console.error('Usuario no encontrado');
+    //   }
+    // } else {
+    //   console.warn('Formulario inválido');
+    // }
   }
   
   

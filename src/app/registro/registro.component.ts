@@ -12,6 +12,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { UsuarioService } from '../shared/usuario.service';
+
 
 @Component({
   selector: 'app-registro',
@@ -42,7 +44,8 @@ export class RegistroComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
@@ -93,39 +96,41 @@ validarFecha(control: any) {
     return Object.values(intereses).some(val => val);
   }
 
-  onSubmit() {
-    if (this.registroForm.valid && this.interesesSeleccionados) {
-      const nuevoUsuario = this.registroForm.value;
-      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+  
+async onSubmit() {
+  if(this.registroForm.invalid && !this.interesesSeleccionados) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Por favor completa todos los campos requeridos.',
+    });
+    return;
+  }else{
+    const formData = this.registroForm.value;
+    const dataExtra = { ...formData };
+    delete dataExtra.correo;
+    delete dataExtra.contraseña;
 
-      const yaExiste = usuarios.some((u: any) => u.correo === nuevoUsuario.correo);
-
-      if (yaExiste) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Correo duplicado',
-          text: 'Ya existe un usuario con ese correo.',
-        });
-      } else {
-        usuarios.push(nuevoUsuario);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        Swal.fire({
-          icon: 'success',
-          title: '¡Registro exitoso!',
-          text: 'Tu información ha sido guardada.',
-        }).then(() => {
-          this.registroForm.reset();
-          this.router.navigate(['/login']);
-        });
-      }
+    const reg = await this.usuarioService.registrarUsuario(formData.correo, formData.contraseña, dataExtra);
+    if (reg) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Registro exitoso',
+        text: 'Usuario registrado correctamente.',
+      });
+      this.router.navigate(['/login']);
     } else {
       Swal.fire({
-        icon: 'warning',
-        title: 'Formulario incompleto',
-        text: 'Completa todos los campos correctamente.',
+        icon: 'error',
+        title: 'Error',
+        text: 'El correo ya está registrado.',
       });
     }
   }
+}
+
+
+
 
 onFileChange(event: any) {
   const file = event.target.files[0];
