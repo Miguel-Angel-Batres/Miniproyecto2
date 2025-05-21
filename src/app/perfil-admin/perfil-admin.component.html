@@ -52,7 +52,7 @@
         type="email"
         id="correo"
         class="form-control mb-3"
-        [(ngModel)]="usuario.correo"
+        [(ngModel)]="usuario.email"
         required
       />
 
@@ -80,7 +80,7 @@
         height="200"
       />
       <h5>{{ usuario.nombre }}</h5>
-      <p class="text-muted">{{ usuario.correo }}</p>
+      <p class="text-muted">{{ usuario.email }}</p>
       <span class="badge bg-primary">Administrador</span>
     </div>
     }
@@ -168,7 +168,7 @@
       </tr>
     </thead>
     <tbody>
-      @if (usuarios.length === 0 || usuarios == null) {
+      @if (usuarios.length === 0 || usuarios === null) {
       <tr>
         <td colspan="6" class="text-center">No hay usuarios registrados.</td>
       </tr>
@@ -181,7 +181,7 @@
           <input [(ngModel)]="usuarioEditando.nombre" class="form-control" />
         </td>
         <td>
-          <input [(ngModel)]="usuarioEditando.correo" class="form-control" />
+          <input [(ngModel)]="usuarioEditando.email" class="form-control" />
         </td>
         <td>
           <input
@@ -214,8 +214,8 @@
         } @else {
         <!-- Modo normal -->
         <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.correo }}</td>
-        <td>{{ usuario["contraseña"] }}</td>
+        <td>{{ usuario.email }}</td>
+        <td> ************ </td>
         <td>{{ usuario.telefono }}</td>
         <td>{{ usuario.genero }}</td>
         <td>

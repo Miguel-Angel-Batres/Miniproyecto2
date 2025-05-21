@@ -29,36 +29,34 @@ export class LoginComponent {
     private usuarioService: UsuarioService
   ) {
     this.loginForm = this.fb.group({
-      nombre: ['',Validators.required],
+      correo: ['',Validators.required],
       contraseña: ['', [Validators.required]]
     });
+   
   }
 
-onSubmit() {
-  if (this.loginForm.valid) {
-    const { nombre, contraseña } = this.loginForm.value;
-
-    const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
-    if (!usuarios || usuarios.length === 0) {
+async onSubmit() {
+  if (this.loginForm.invalid) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Por favor, completa todos los campos requeridos.',
+    });
+    return;
+  }else{
+    const log = await this.usuarioService.login(this.loginForm.value.correo, this.loginForm.value.contraseña);
+    if (log) {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No hay usuarios registrados',
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Has iniciado sesión correctamente.',
       });
-      return;
     }
-    const usuarioValido = usuarios.find(
-      (u: any) => u.nombre === nombre && u.contraseña === contraseña
-    );
-
-    if (usuarioValido) {
-      this.usuarioService.login(usuarioValido);
-      console.log('Login correcto:', usuarioValido);      
-    } else {
+    else {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'usuario o contraseña incorrectos',
+        text: 'Usuario o contraseña incorrectos.',
       });
     }
   }
