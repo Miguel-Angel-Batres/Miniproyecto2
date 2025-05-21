@@ -10,8 +10,9 @@
   </div>
 
   <!-- Tabs para navegar entre secciones -->
-  <div class="tabs">
+  <div class="tabs">    
     <!-- <button [class.active]="activeTab === 'planes'" (click)="setActiveTab('planes')">Horarios del Gimnasio</button> -->
+
     <button
       [class.active]="activeTab === 'horarios'"
       (click)="setActiveTab('horarios')"
@@ -30,23 +31,25 @@
   <!-- Sección de Horarios del Gimnasio -->
   <div class="section horarios-section ">
     <div class="planes-container"> 
-      
+      @if (planes.length === 0) {
+        <div class="text-center text-danger my-4">No hay planes disponibles.</div>
+      }
       @for (plan of planes; track plan.nombre) {
-      <div class="plan-card {{ plan.nombre | lowercase }}">
-        <div class="plan-header">
-          <h3>{{ plan.nombre }}</h3>
-          <div class="price">${{ plan.precio }}<span>/mes</span></div>
-        </div>
-        <div class="plan-features">
-          <ul>
-            @for (beneficio of plan.beneficios; track beneficio) {
-              <li>{{ beneficio }}</li>
-            }
-          </ul>
-        </div>
-        <button class="plan-button" (click)="pagar(plan.nombre)">
-          Elegir Plan
-        </button>
+        <div class="plan-card {{ plan.nombre | lowercase }}">
+          <div class="plan-header">
+            <h3>{{ plan.nombre }}</h3>
+            <div class="price">${{ plan.precio }}<span>/mes</span></div>
+          </div>
+          <div class="plan-features">
+            <ul>
+              @for (beneficio of plan.beneficios; track beneficio) {
+                <li>{{ beneficio }}</li>
+              }
+            </ul>
+          </div>
+          <button class="plan-button" (click)="pagar(plan.nombre)">
+            Elegir Plan
+          </button>
         </div>
       }
     </div>
@@ -54,41 +57,36 @@
   
 
   <!-- Sección de Horarios de Clases -->
-    <div class="section clases-section">
-      <div class="tabla-clases-container mat-elevation-z2">
+  <div class="section clases-section">
+    <div class="tabla-clases-container mat-elevation-z2">
 
-        <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
-    
-          <!-- Columna Clase -->
-          <ng-container matColumnDef="clase">
-            <th mat-header-cell *matHeaderCellDef> Clase </th>
-            <td mat-cell *matCellDef="let deporte"> {{ deporte.nombre }} </td>
-          </ng-container>
-    
-          <!-- Columna Descripción -->
-          <ng-container matColumnDef="descripcion">
-            <th mat-header-cell *matHeaderCellDef> Descripción </th>
-            <td mat-cell *matCellDef="let deporte"> {{ deporte.bio }} </td>
-          </ng-container>
-    
-          <!-- Columna Horario -->
-          <ng-container matColumnDef="horario">
-            <th mat-header-cell *matHeaderCellDef> Horario </th>
-            <td mat-cell *matCellDef="let deporte"> {{ deporte.horario }} </td>
-          </ng-container>
-    
-          <!-- Header y Rows -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    
-        </table>
-    
-        <!-- Paginador -->
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" [showFirstLastButtons]="true"></mat-paginator>
-    
-      </div>
+      @if (deportes.length === 0) {
+        <div class="text-center text-danger my-4">No hay deportes disponibles.</div>
+      }
+
+      <table mat-table [dataSource]="dataSource" class="mat-table" matSort>
+        <!-- Columna Clase -->
+        <ng-container matColumnDef="clase">
+          <th mat-header-cell *matHeaderCellDef> Clase </th>
+          <td mat-cell *matCellDef="let deporte"> {{ deporte.nombre }} </td>
+        </ng-container>
+        <!-- Columna Descripción -->
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef> Descripción </th>
+          <td mat-cell *matCellDef="let deporte"> {{ deporte.bio }} </td>
+        </ng-container>
+        <!-- Columna Horario -->
+        <ng-container matColumnDef="horario">
+          <th mat-header-cell *matHeaderCellDef> Horario </th>
+          <td mat-cell *matCellDef="let deporte"> {{ deporte.horario }} </td>
+        </ng-container>
+        <!-- Header y Rows -->
+        <tr mat-header-row *matHeaderCellDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!-- Paginador -->
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" [showFirstLastButtons]="true"></mat-paginator>
     </div>
-  
-  
-  
+  </div>
 </div>
