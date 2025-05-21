@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc ,setDoc,getDoc} from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth';
+import { auth, db } from '../../firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -19,31 +22,92 @@ export class UsuarioService {
     const planes = JSON.parse(localStorage.getItem('planes') || '[]');
     const planesFiltrados = planes.filter((plan: any) => plan !== null);
     localStorage.setItem('planes', JSON.stringify(planesFiltrados));
+    
   }
 
   get user() {
     return this.userSubject.asObservable();
   }
 
-  login(userData: any): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
-    this.userSubject.next(userData);
-    if(userData.rol !== 'admin') {
-      this.route.navigate(['/perfil']);
-    }else{
-      this.route.navigate(['/perfil_admin']);
+  async login(email: string, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // Obtener datos extra de Firestore
+      const userDocRef = doc(db, 'usuarios', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (!userDocSnap.exists()) {
+        throw new Error('Datos de usuario no encontrados en Firestore');
+      }
+  
+      const datosExtra = userDocSnap.data();
+  
+      // Combinar Auth + Firestore
+      const usuarioCompleto = {
+        uid: user.uid,
+        email: user.email,
+        ...datosExtra
+      };
+  
+      this.userSubject.next(usuarioCompleto); // Emitimos el objeto combinado
+  
+      return {
+        success: true,
+        user: usuarioCompleto
+      };
+  
+    } catch (error: any) {
+      console.error('Error al iniciar sesión:', error);
+      return {
+        success: false,
+        error: error.message
+      };
     }
-    
   }
-
-  logout(): void {
-    localStorage.removeItem(this.USER_KEY);
-    this.userSubject.next(null);
-  }
-
+  
   isAuthenticated(): boolean {
-    return this.userSubject.value !== null;
+    if(this.userSubject.value){
+      return true;
+    }else{
+      return false;
+    }
   }
+  
+  async registrarUsuario(email: string, password: string, datosExtra: any) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      const uid = userCredential.user.uid;
+      const userRef = doc(db, 'usuarios', uid);
+
+      await setDoc(userRef, {
+        email,
+        ...datosExtra,
+        creadoEn: new Date()
+      });
+
+      return { success: true, uid };
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        return { success: false, error: 'El correo ya está registrado' };
+      }
+      return { success: false, error: error.message };
+    }
+  }
+
+  async logout(){
+    try {
+      await auth.signOut();
+      this.userSubject.next(null);
+      this.route.navigate(['/login']);
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  }
+
+    
 
   guardarUsuario(usuario: any): void {
     const usuarios = this.obtenerUsuarios();

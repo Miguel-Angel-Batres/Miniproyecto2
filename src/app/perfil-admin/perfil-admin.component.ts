@@ -324,18 +324,15 @@ export class PerfilAdminComponent implements OnInit {
   }
   
   guardarCambiosPlan() {
-    
-      localStorage.setItem('planes', JSON.stringify(this.planes));
-      Swal.fire({
-        icon: 'success',
-        title: 'Plan actualizado',
-        text: `El plan ${this.nuevoPlan.nombre} ha sido actualizado.`,
-        confirmButtonText: 'Aceptar'
-      });
-    
+    localStorage.setItem('planes', JSON.stringify(this.planes));
+    Swal.fire({
+      icon: 'success',
+      title: 'Plan actualizado',
+      text: `El plan ${this.nuevoPlan.nombre} ha sido actualizado.`,
+      confirmButtonText: 'Aceptar'
+    });
     this.planEditando = null;
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
-  
   }
   cancelarEdicionPlan() {
     this.planEditando = null;
