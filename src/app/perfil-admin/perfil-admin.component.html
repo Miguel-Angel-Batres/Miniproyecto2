@@ -168,7 +168,7 @@
       </tr>
     </thead>
     <tbody>
-      @if (usuarios.length === 0 || usuarios === null) {
+      @if (!hayUsuariosNormales) {
       <tr>
         <td colspan="6" class="text-center">No hay usuarios registrados.</td>
       </tr>
@@ -181,7 +181,7 @@
           <input [(ngModel)]="usuarioEditando.nombre" class="form-control" />
         </td>
         <td>
-          <input [(ngModel)]="usuarioEditando.email" class="form-control" />
+          <input [(ngModel)]="usuarioEditando.correo" class="form-control" />
         </td>
         <td>
           <input
@@ -214,7 +214,7 @@
         } @else {
         <!-- Modo normal -->
         <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.email }}</td>
+        <td>{{ usuario.correo }}</td>
         <td> ************ </td>
         <td>{{ usuario.telefono }}</td>
         <td>{{ usuario.genero }}</td>
@@ -343,12 +343,12 @@
       </div>
       <div class="col-md-2">
         <select
-          [(ngModel)]="nuevoPlan.tipo"
+          [(ngModel)]="nuevoPlan.tipoPago"
           class="form-select"
-          aria-placeholder="Tipo de Plan"
+          aria-placeholder="tipo de Plan"
         >
-          <option value="mensual">Mensual</option>
-          <option value="anual">Anual</option>
+          <option value="Mensual">Mensual</option>
+          <option value="Anual">Anual</option>
         </select>
       </div>
 
@@ -368,7 +368,7 @@
         <th>Nombre del Plan</th>
         <th>Precio</th>
         <th>Descripción</th>
-        <th>Tipo</th>
+        <th>tipo</th>
         <th>Beneficios</th>
         <!-- Nueva columna -->
         <th>Acciones</th>
@@ -394,7 +394,7 @@
           <input [(ngModel)]="planEditando.descripcion" class="form-control" />
         </td>
         <td>
-          <select [(ngModel)]="planEditando.tipo" class="form-select">
+          <select [(ngModel)]="planEditando.tipoPago" class="form-select">
             <option value="mensual">Mensual</option>
             <option value="anual">Anual</option>
           </select>
@@ -450,7 +450,7 @@
         <td>{{ plan.nombre }}</td>
         <td>${{ plan.precio }}</td>
         <td>{{ plan.descripcion }}</td>
-        <td>{{ plan.tipo }}</td>
+        <td>{{ plan.tipoPago }}</td>
         <td>{{ plan.beneficios }}</td>
 
         <td>

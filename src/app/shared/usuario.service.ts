@@ -17,6 +17,7 @@ export class UsuarioService {
   private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private pagosSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(private route: Router) {
     const storedUser = localStorage.getItem(this.USER_KEY);
@@ -33,6 +34,9 @@ export class UsuarioService {
   }
   get pagos(){
     return this.pagosSubject.asObservable();
+  }
+  get planes(){
+    return this.planesSubject.asObservable();
   }
 
   async login(email: string, password: string): Promise<boolean> {
@@ -114,6 +118,21 @@ export class UsuarioService {
       return [];
     }
   }
+  async obtenerPlanes(){
+    try {
+      const planes: any[] = [];
+      const querySnapshot = await getDocs(collection(db, 'planes'));
+      querySnapshot.forEach((doc) => {
+        planes.push({ id:doc.id , ...doc.data() });
+      });
+      this.planesSubject.next(planes);
+      console.log('Planes obtenidos:', planes);
+      return planes;
+    } catch (error) {
+      console.error('Error al obtener los planes:', error);
+      return [];
+    }
+  }
 
   async obtenerUsuarioLogeado(): Promise<any> {
     const usuarioActual = this.userSubject.value;
@@ -140,7 +159,6 @@ export class UsuarioService {
       const userActual = this.userSubject.value;
       if (userActual?.uid === usuario.uid) {
         this.userSubject.next(usuario);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(usuario));
       }
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
@@ -174,8 +192,17 @@ export class UsuarioService {
     try {
       const planesRef = collection(db, 'planes');
       await setDoc(doc(planesRef), plan);
+      this.obtenerPlanes();
     } catch (error) {
       console.error('Error al agregar el plan:', error);
+    }
+  }
+  async actualizarPlan(plan: any): Promise<void> {
+    try {
+      const planDocRef = doc(db, 'planes', plan.id);
+      await updateDoc(planDocRef, plan);
+    } catch (error) {
+      console.error('Error al actualizar el plan:', error);
     }
   }
 }
