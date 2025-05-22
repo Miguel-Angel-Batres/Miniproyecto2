@@ -127,8 +127,8 @@
         <label class="form-label">Género:</label>
         <div class="mb-3">
           <mat-radio-group formControlName="genero">
-            <mat-radio-button value="Masculino">Masculino</mat-radio-button>
-            <mat-radio-button value="Femenino">Femenino</mat-radio-button>
+            <mat-radio-button value="masculino">Masculino</mat-radio-button>
+            <mat-radio-button value="femenino">Femenino</mat-radio-button>
           </mat-radio-group>
           @if(registroForm.get('genero')?.invalid && registroForm.get('genero')?.touched){
             <div class="text-danger">

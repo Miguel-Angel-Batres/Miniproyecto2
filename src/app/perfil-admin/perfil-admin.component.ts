@@ -25,18 +25,9 @@ export class PerfilAdminComponent implements OnInit {
   nuevoBeneficio: string = '';
   beneficioSeleccionado: string = '';
   editandoPerfil: boolean = false;
-  nuevoPlan: Plan = {
-    nombre: '',
-    precio: 0,
-    beneficios: [],
-    fechaInicio: '',
-    fechaFin: '',
-    estado: '',
-    tipo: '',
-    descripcion: ''
-  };
+  nuevoPlan: any = {};
   UsuariosPorPlan: any = {};
- 
+  hayUsuariosNormales: boolean = false;
   
 
 
@@ -77,20 +68,21 @@ export class PerfilAdminComponent implements OnInit {
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
     });
-   this.usuarioService.users.subscribe(usuarios => {
+    this.usuarioService.obtenerUsuarios().then((usuarios) => {
       this.usuarios = usuarios;
-    }
-    );
+      this.hayUsuariosNormales = usuarios.some(u => u.rol === 'usuario');
+      console.log('Usuarios:', this.usuarios);
+      console.log('Hay usuarios normales:', this.hayUsuariosNormales);
+    });
     this.usuarioService.pagos.subscribe(pagos => {
       this.pagos = pagos;
     }
     );
-
-    this.usuarioService.obtenerUsuarios();
+    this.usuarioService.obtenerPlanes().then(planes => {
+      this.planes = planes;
+    }
+    );
     
-
-    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
-
     this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
       if (usuario.plan && usuario.plan.nombre) {
         const plan = usuario.plan.nombre;
@@ -226,6 +218,7 @@ export class PerfilAdminComponent implements OnInit {
   
   editarUsuario(usuario: any) {
     this.usuarioEditando = { ...usuario };
+    console.log(this.usuarioEditando);
   }
 
   cancelarEdicion() {
@@ -297,8 +290,8 @@ export class PerfilAdminComponent implements OnInit {
   guardarNuevoPlan() {
     if (!this.nuevoPlan || 
       !this.nuevoPlan.nombre || 
-      !this.nuevoPlan.descripcion?.trim() ||
-      !this.nuevoPlan.tipo?.trim() ||
+      !this.nuevoPlan.descripcion ||
+      !this.nuevoPlan.tipoPago ||
       this.nuevoPlan.precio <= 0) {     
          Swal.fire({
         icon: 'error',
@@ -308,9 +301,8 @@ export class PerfilAdminComponent implements OnInit {
       });
       return;
     }
-  
+    this.nuevoPlan.beneficios = this.nuevoPlan.beneficios || [];
     this.usuarioService.agregarPlan(this.nuevoPlan);
-    this.planes = JSON.parse(localStorage.getItem('planes') || '[]'); 
   
     Swal.fire({
       icon: 'success',
@@ -319,29 +311,21 @@ export class PerfilAdminComponent implements OnInit {
       confirmButtonText: 'Aceptar'
     });
   
-    this.nuevoPlan = {
-      nombre: '',
-      precio: 0,
-      beneficios: [],
-      estado: '',
-      descripcion: '',
-      tipo: ''
-    };
+    this.nuevoPlan = {};
     this.ventanas.nuevoplan = false;
   }
   
   guardarCambiosPlan() {
     
-      localStorage.setItem('planes', JSON.stringify(this.planes));
+    this.usuarioService.actualizarPlan(this.planEditando);
       Swal.fire({
         icon: 'success',
         title: 'Plan actualizado',
-        text: `El plan ${this.nuevoPlan.nombre} ha sido actualizado.`,
+        text: `El plan ${this.planEditando.nombre} ha sido actualizado.`,
         confirmButtonText: 'Aceptar'
       });
     
     this.planEditando = null;
-    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   
   }
   cancelarEdicionPlan() {

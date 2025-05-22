@@ -69,8 +69,10 @@ export class AppComponent implements OnInit {
       // Añadir usuariosAdmin al local storage
       localStorage.setItem('usuarios', JSON.stringify(usuariosAdmin));
     
-      // Añadir planes al local storage
-      localStorage.setItem('planes', JSON.stringify(this.planesGimnasio));
+      
+      
+
+
 
       // Añadir usuarios de assets/usuarios.json solo una vez
       fetch('assets/usuarios.json')
