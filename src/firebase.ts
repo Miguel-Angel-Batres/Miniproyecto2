@@ -1,7 +1,8 @@
+import { firebaseConfig } from './env';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { firebaseConfig } from './env';
+
 
 // Verifica si firebaseConfig está definido
 if (!firebaseConfig) {
