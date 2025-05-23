@@ -4,12 +4,15 @@
       {{deporte.nombre}}
     </h1>
   </div>
-  
   <div class="content-wrapper">
     <!-- Centered image -->
     <div class="image-section">
       <div class="image-container">
         <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="sport-image">
+        <div style="text-align: center; font-size: 0.9em; color: #666; margin-top: 0.5rem;">
+          Pasa este QR en la entrada
+        </div>
+        <qrcode style="text-align: center;" [qrdata]="currentUrl" [width]="128" [errorCorrectionLevel]="'M'"></qrcode>
       </div>
     </div>
 
