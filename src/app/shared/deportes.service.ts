@@ -8,7 +8,7 @@ import { Deporte } from '../deporte';
   providedIn: 'root'
 })
 export class DeportesService {
-  private apiUrl = 'https://santa-cruz-gym.free.beeceptor.com'; 
+  private apiUrl = 'http://localhost:4300/deportes';  //TODO: cambiar por la URL de la API real
 
   constructor(private http: HttpClient) {}
 
@@ -16,8 +16,8 @@ export class DeportesService {
     return this.http.get<Deporte[]>(this.apiUrl).pipe(
       catchError(err => {
         console.error(`Error con la URL principal (${this.apiUrl}):`, err);
-        return this.http.get<Deporte[]>('assets/deportes_de_api.json');// Fallback to local JSON file
-        // return of([]); // Fallback to empty array
+        // return this.http.get<Deporte[]>('assets/deportes_de_api.json');// Fallback to local JSON file
+        return of([]); // Fallback to empty array
       })
     );
   }
