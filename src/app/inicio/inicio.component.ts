@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { SecuredomPipe } from '../securedom.pipe';
 import { CommonModule } from '@angular/common';
 
@@ -14,7 +14,7 @@ interface Feature {
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
-export class InicioComponent implements OnInit {
+export class InicioComponent implements OnInit, OnDestroy {
   video: string = "gr8emAKZV7M";
 
   images = [
@@ -23,7 +23,7 @@ export class InicioComponent implements OnInit {
     'assets/inicio/inicio3.avif'
   ];
 
-  currentIndex = 0;
+  currentIndex = signal(0);
   intervalId: any;
   slideDirection = 'right'; // 'left' o 'right'
 
@@ -38,15 +38,15 @@ export class InicioComponent implements OnInit {
   }
 
   nextSlide() {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    this.currentIndex.update(idx => (idx + 1) % this.images.length);
   }
 
   prevSlide() {
-    this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+    this.currentIndex.update(idx => (idx - 1 + this.images.length) % this.images.length);
   }
 
   goToSlide(index: number) {
-    this.currentIndex = index;
+    this.currentIndex.set(index);
   }
 
   ngOnDestroy() {
@@ -103,7 +103,6 @@ export class InicioComponent implements OnInit {
       description: 'Implementación de protocolos de recuperación durante lesiones para garantizar un retorno seguro a la actividad física.'
     }
   ];
-
 
   constructor() { }
 }
