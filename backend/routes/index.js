@@ -1,6 +1,25 @@
 const express = require('express');
 const path = require('path'); 
+const admin = require('../firebase')
+const bodyParser = require('body-parser');
+const { messaging } = require('firebase-admin');
+
 const router = express.Router();
+router.use(bodyParser.json());
+const firestore=admin.firestore();
+
+router.post('/api/pago', async (req, res) => {
+  const pago = req.body;
+
+  try {
+    await firestore.collection('pagos').add(pago);
+    res.status(200).json({ message: 'Pago registrado correctamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al registrar el pago' });
+  }
+});
+
 router.use(express.urlencoded({ extended: false }));
 router.use(express.json());
 
