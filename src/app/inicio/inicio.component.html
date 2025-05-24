@@ -1,7 +1,7 @@
 <div class="hero-carousel">
   <div class="slides">
-    @for (image of images; track images) {
-      <div class="slide" [class.active]="images.indexOf(image) === currentIndex">
+    @for (image of images; track image) {
+      <div class="slide" [class.active]="images.indexOf(image) === currentIndex()">
         <img [src]="image" alt="Imagen del gimnasio">
         <div class="overlay">
           <div class="highlight-box">
@@ -17,9 +17,9 @@
   <button class="nav next" (click)="nextSlide()">&#10095;</button>
 
   <div class="dots">
-    @for (image of images; track images) {
+    @for (image of images; track image) {
       <span
-        [class.active]="images.indexOf(image) === currentIndex"
+        [class.active]="images.indexOf(image) === currentIndex()"
         (click)="goToSlide(images.indexOf(image))">
       </span>
     }
@@ -40,7 +40,7 @@
   </div>
 
   <div class="services-container">
-    @for (servicio of servicios; track servicios) {
+    @for (servicio of servicios; track servicio) {
       <div class="service-card">
         <div class="card-image-container">
           <img [src]="servicio.imagen" [alt]="servicio.titulo" class="card-image">
@@ -63,7 +63,7 @@
     <h4>Garantizando excelencia en cada etapa de tu transformación física</h4>
   </div>
   <div class="features-grid">
-    @for (feature of features; track features) {
+    @for (feature of features; track feature) {
       <div class="feature-card">
         <div class="feature-icon-container">
           <i class="feature-icon {{feature.icon}}"></i>
@@ -88,7 +88,7 @@
       [src]="video | securedom:'https://www.youtube-nocookie.com/embed/'"
       class="embed-responsive-item"
       frameborder="0"
-      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allow=""
       allowfullscreen
       title="YouTube video player"
       loading="lazy"

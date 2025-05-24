@@ -3,14 +3,18 @@ import { ActivatedRoute } from '@angular/router';
 import { Deporte } from '../deporte';
 import { DeportesService } from '../shared/deportes.service';
 import { RouterModule } from '@angular/router';
+import { QRCodeComponent } from 'angularx-qrcode';
 
 @Component({
-  imports: [RouterModule],
+  imports: [RouterModule, QRCodeComponent],
   selector: 'app-undeporte',
   templateUrl: './undeporte.component.html',
   styleUrls: ['./undeporte.component.css']
 })
 export class UndeporteComponent {
+  currentUrl = window.location.href;
+
+
   deporte!: Deporte; // Variable para almacenar el deporte actual
 
   constructor(
