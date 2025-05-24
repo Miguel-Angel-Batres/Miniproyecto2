@@ -26,4 +26,5 @@ export const routes: Routes = [
     { path: 'perfil', component: PerfilComponent },
     { path: 'pagos', component: PagosComponent },
     { path: 'perfil_admin',component: PerfilAdminComponent},
+    
 ];  

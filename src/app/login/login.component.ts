@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,7 +18,8 @@ imports: [
   RouterModule,
   MatFormFieldModule,
   MatInputModule,
-  MatButtonModule
+  MatButtonModule,
+  MatIcon
 ],  standalone: true
 })
 export class LoginComponent {
@@ -51,6 +53,7 @@ async onSubmit() {
         title: 'Éxito',
         text: 'Has iniciado sesión correctamente.',
       });
+      this.router.navigate(['/perfil']);
     }
     else {
       Swal.fire({
@@ -61,5 +64,63 @@ async onSubmit() {
     }
   }
 }
-  
+  async onGoogleLogin() {
+    try {
+      const googleUser = await this.usuarioService.loginWithGoogle();
+      if (googleUser) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Has iniciado sesión con Google correctamente.',
+        });
+        this.router.navigate(['/perfil']);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo iniciar sesión con Google.',
+      });
+    }
+  }
+
+  async onFacebookLogin() {
+    try {
+      const facebookUser = await this.usuarioService.loginWithFacebook();
+      if (facebookUser) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Has iniciado sesión con Facebook correctamente.',
+        });
+        this.router.navigate(['/perfil']);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo iniciar sesión con Facebook.',
+      });
+    }
+  }
+
+  async onPhoneLogin() {
+    try {
+      const phoneUser = await this.usuarioService.loginWithPhone();
+      if (phoneUser) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Has iniciado sesión con tu teléfono correctamente.',
+        });
+        this.router.navigate(['/perfil']);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo iniciar sesión con tu teléfono.',
+      });
+    }
+  }
 }

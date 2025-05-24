@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -13,6 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { UsuarioService } from '../shared/usuario.service';
+
+
 
 
 @Component({
@@ -52,13 +54,15 @@ export class RegistroComponent {
       correo: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       fechaNacimiento: ['', [Validators.required, this.validarFecha]],
-      contraseña: ['', [Validators.required, Validators.minLength(6)]],
+      contraseña: ['', [Validators.required, Validators.minLength(6),Validators.pattern(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d_]+$/)],
+    ],
+      confirmarContraseña: ['', [Validators.required, this.validarConfirmacionContraseña()] ],
       horario: ['', Validators.required],
       intereses: this.fb.group({
         pesas: [false],
         cardio: [false],
         yoga: [false],
-      }),
+      }, { validators: this.validarIntereses() }),
       genero: ['', Validators.required],
       imagenPerfil: [''],
       fechaRegistro: [this.today],
@@ -73,9 +77,39 @@ export class RegistroComponent {
       }),
       pagos: this.fb.array([]),
       rol: ['usuario'],
+
     });
   }
+ 
+  validarConfirmacionContraseña(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.parent) {
+        return null;
+      }
+  
+      const contraseña = control.parent.get('contraseña')?.value;
+      const confirmarContraseña = control.value;
+  
+    if (!contraseña || !confirmarContraseña) {
+      return null;
+    }
 
+    if (contraseña !== confirmarContraseña) {
+      return { isValid: false };
+    }
+    return null;
+  };
+}
+validarIntereses(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const intereses = control.value;
+    const algunoSeleccionado = Object.values(intereses).some((valor) => valor === true);
+
+    return algunoSeleccionado ? null : { noInteresSeleccionado: true };
+  };
+}
+
+  
 validarFecha(control: any) {
   const inputDate = new Date(control.value);
   const today = new Date();
@@ -98,7 +132,7 @@ validarFecha(control: any) {
 
   
 async onSubmit() {
-  if(this.registroForm.invalid && !this.interesesSeleccionados) {
+  if(this.registroForm.invalid && !this.interesesSeleccionados && this.registroForm.get('contraseña')?.value !== this.registroForm.get('confirmarContraseña')?.value){
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -107,6 +141,7 @@ async onSubmit() {
     return;
   }else{
     const formData = this.registroForm.value;
+    delete formData.confirmarContraseña;
     const dataExtra = { ...formData };
     delete dataExtra.correo;
     delete dataExtra.contraseña;
@@ -128,9 +163,6 @@ async onSubmit() {
     }
   }
 }
-
-
-
 
 onFileChange(event: any) {
   const file = event.target.files[0];

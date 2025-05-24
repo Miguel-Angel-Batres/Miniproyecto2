@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+  linkWithPopup,
+  unlink,
+  signOut
 } from 'firebase/auth';
 import { doc, getDoc, getDocs, setDoc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
@@ -18,12 +24,19 @@ export class UsuarioService {
   private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private pagosSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  private vinculacionesSubject = new BehaviorSubject<{ googleVinculado: boolean; facebookVinculado: boolean }>({
+    googleVinculado: false,
+    facebookVinculado: false,
+  });
+
+  vinculaciones$: Observable<{ googleVinculado: boolean; facebookVinculado: boolean }> = this.vinculacionesSubject.asObservable();
 
   constructor(private route: Router) {
     const storedUser = localStorage.getItem(this.USER_KEY);
     if (storedUser) {
       this.userSubject.next(JSON.parse(storedUser));
     }
+
   }
 
   get user() {
@@ -205,4 +218,187 @@ export class UsuarioService {
       console.error('Error al actualizar el plan:', error);
     }
   }
+  async loginWithGoogle(): Promise<boolean> {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+  
+      const existe = await this.verifyUserInDatabase(user);
+      
+      if (!existe) {
+       await user.delete(); 
+        await signOut(auth); 
+  
+        Swal.fire({
+          icon: 'warning',
+          title: 'Cuenta no registrada',
+          text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
+        });
+  
+        return false;
+      }
+  
+      return true;
+  
+    } catch (error) {
+      console.error('Error en loginWithGoogle:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al iniciar sesión con Google.',
+      });
+      return false;
+    }
+  }
+  
+  async loginWithFacebook(): Promise<boolean> {
+    const provider = new FacebookAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+  
+      const existe = await this.verifyUserInDatabase(user);
+      
+      if (!existe) {
+        // Usuario no existe en Firestore → eliminar de Firebase Auth
+        await user.delete(); // ⚠️ debe hacerse antes del signOut
+        await signOut(auth); // también limpia del lado del cliente
+  
+        Swal.fire({
+          icon: 'warning',
+          title: 'Cuenta no registrada',
+          text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
+        });
+  
+        return false;
+      }
+  
+      return true;
+  
+    } catch (error) {
+      console.error('Error en loginWithGoogle:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al iniciar sesión con Google.',
+      });
+      return false;
+    }
+  }
+  
+  async loginWithPhone(){
+    const user = auth.currentUser;
+    return await this.verifyUserInDatabase(user);
+  }
+  private async verifyUserInDatabase(user: any): Promise<boolean> {
+    if (!user) return false;
+  
+    const userRef = doc(db, 'usuarios', user.uid);
+    const userSnap = await getDoc(userRef);
+  
+    if (userSnap.exists()) {
+      const usuarioCompleto = userSnap.data();
+      this.userSubject.next(usuarioCompleto);
+      return true;
+    } else {
+      console.warn('Usuario autenticado, pero no existe en la colección usuarios');
+      this.userSubject.next(null);
+      return false;
+    }
+  }
+  
+  async vincularConGoogle(): Promise<void> {
+    const provider = new GoogleAuthProvider();
+    const currentUser = auth.currentUser;
+  
+    if (!currentUser) {
+      console.error('No hay usuario autenticado');
+      throw new Error('No hay usuario autenticado');
+    }
+  
+    try {
+      await linkWithPopup(currentUser, provider);
+      console.log('Cuenta de Google vinculada exitosamente');
+    } catch (error) {
+      console.error('Error al vincular cuenta de Google:', error);
+      throw error;
+    }
+  }
+  async vincularConFacebook(): Promise<void> {
+    const provider = new FacebookAuthProvider();
+    const currentUser = auth.currentUser;
+  
+    if (!currentUser) {
+      throw new Error('No hay usuario autenticado para vincular');
+    }
+  
+    try {
+      const result = await linkWithPopup(currentUser, provider);
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const facebookUser = result.user;
+  
+      console.log('Cuenta de Facebook vinculada con éxito:', facebookUser);
+  
+      // Opcional: actualizar Firestore si quieres guardar que se vinculó Facebook
+      const userRef = doc(db, 'usuarios', currentUser.uid);
+      await updateDoc(userRef, {
+        facebookVinculado: true,
+      });
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Tu cuenta de Facebook se ha vinculado correctamente.',
+      });
+    } catch (error: any) {
+      console.error('Error al vincular cuenta de Facebook:', error);
+  
+      if (error.code === 'auth/credential-already-in-use') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Cuenta ya vinculada',
+          text: 'Esta cuenta de Facebook ya está vinculada con otro usuario.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error al vincular la cuenta de Facebook.',
+        });
+      }
+  
+      throw error;
+    }
+  }
+  async desvincularProveedor(proveedor: 'google.com' | 'facebook.com' | 'phone') {
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error('No hay usuario autenticado');
+  
+    try {
+      const resultado = await unlink(currentUser, proveedor);
+      console.log(`Proveedor ${proveedor} desvinculado con éxito.`, resultado);
+    } catch (error) {
+      console.error(`Error al desvincular ${proveedor}:`, error);
+      throw error;
+    }
+  }
+
+  async obtenerProveedoresVinculados(): Promise<void> {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    const providers = currentUser.providerData.map((provider) => provider.providerId);
+    const vinculaciones = {
+      googleVinculado: providers.includes('google.com'),
+      facebookVinculado: providers.includes('facebook.com'),
+    };
+
+    this.vinculacionesSubject.next(vinculaciones);
+  }
+
 }

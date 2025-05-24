@@ -18,7 +18,7 @@
         <p class="d-flex justify-content-between"><strong>Nombre:</strong> {{ usuario.nombre }}</p>
         <p class="d-flex justify-content-between"><strong>Email:</strong> {{ usuario.correo }}</p>
         <p class="d-flex justify-content-between"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-        <p class="d-flex justify-content-between"><strong>Fecha de Nacimiento:</strong> {{ usuario.fechaNacimiento | date }}</p>
+        <p class="d-flex justify-content-between"><strong>Fecha de Nacimiento:</strong> {{ usuario.fechaNacimiento | date: 'longDate' }}</p>
         <p class="d-flex justify-content-between"><strong>Horario:</strong> {{ usuario.horario }}</p>
         <p class="d-flex justify-content-between"><strong>Género:</strong> {{ usuario.genero }}</p>
 
@@ -157,4 +157,23 @@
     </div>
   </div>
   }
+</div>
+<!-- Vincular cuentas -->
+<div class="container mt-5 p-4 border rounded shadow bg-light">
+  <h2 class="mb-4 text-center">Vincular Cuentas</h2>
+  <div class="row text-center">
+    <!-- Vincular Google -->
+    <div class="col-md-4 mb-3">
+      <button class="btn btn-danger w-100" (click)="vincularGoogle()">
+        <i class="fab fa-google"></i> Vincular con Google
+      </button>
+    </div>
+    <!-- Vincular Facebook -->
+    <div class="col-md-4 mb-3">
+      <button class="btn btn-primary w-100" (click)="vincularFacebook()">
+        <i class="fab fa-facebook"></i> Vincular con Facebook
+      </button>
+    </div>
+    
+  </div>
 </div>
