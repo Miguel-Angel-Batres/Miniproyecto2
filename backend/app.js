@@ -1,15 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const routes = require("./routes/index");
-const app = express();
-const port = process.env.PORT || 4300;
-
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use('/', routes);
-
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
-});
+const express=require('express');
+const morgan=require('morgan');
+const app=express()
+const {db}=require('./firebase')
+app.use(morgan('dev'));
+app.get('/',async (req,res)=>{
+   const querySnapshot=await  db.collection('pagos').get()
+   console.log(querySnapshot.docs[0].data())
+    res.send('hello')
+})
+module.exports=app;

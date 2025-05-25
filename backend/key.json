@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "proyecto-final-santa-cruz",
+  "private_key_id": "9f8c67d2ea994bd330b6a3ce49b94a5015b880e6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC0Dv3FI82YNK6R\nhJeDHzZooA046fqzFpoJNSiWjmnAJf4yU9oiMeZoJ5wBOotEM0qwYF02T0iLRUEK\nhuIUEEOTIi6N7uIp8GwYDAqdel1WjXRhXSpv65iI8LKaG7JyTx1h4PBn0uyEeQP7\nP6JimpzyXnxaW8mONF7QUhJIQeGnHZKdNhGdksEyk88qijvdsTgYVIKYa9UKimrv\nNySHk+alPcLSjgHF4hOnYvRyoC/0oZ5EII9NJIb9oKZYZuLpTwxkr/Ba8Xv8MwJO\ndlZAk+xyyMTYBX2ss6nTjvEfQ2BoGiJ5IrXo0sTBCIdv5zuX+FQfziZcBBMU9dAJ\nmK/3NM1/AgMBAAECggEAM3ZRa4XnHgh4mFioIS7Lky2jec/N+l+MWPNbjWRYrzVs\nqJ+0qa9PZhdkDCnaYfyy7SQtn/cbCcsaYtLYTNm1JplPavuKomf3zQusAQRXJwS4\n7Zb+KQzSBNmeglNGNkuMX0w2CcaMGPSpgabXV41PLCp7KiwvuDgZnTrHxOUnhGaA\nX/3reH762C5GpyvEiZdycjo54wYLp4fQdSGGsHFpHEfPC5str9OYqHsvm8m84zRe\nVh8LnJWSMNDmdBuWgFDztEqvX0uHVqlXe697FpFL8YNrlTAvAJfIjS6V8M1rL69J\nUj9y+5LcXj+GepCnNt8FRiLO/epXPlbin3h9VW1UuQKBgQD370XzWXsaicT8LZc3\nmUvlGY0+BTV9caYm1+Iro3wCMDKNJDK0wxnOrtjG4Vyl+9DvjcErOfnKGmwJNAHw\nDjXmIjEzty4kmWX6Z9VQHFeZihx22RRDYHscJ/nZpVCvaHsxx4coyy2srjCyO/EL\n2kXpWW4eJTN1B+kaQUvJTYGvwwKBgQC56ndERMwDHZ6izh6o86n5VExl+WcY8GHv\nlnNbWYw4S8GfAiWnM1aCxdYuEs9wz7plxxGWWQt07Kz2nwCHDOivcpWlzVcIsA1c\nPZ8BHIIn+5xeD2aZUKbp9xd5lndtXzPilPpe+Z7O1GYxpYU+cJHfoI6RLT5LWu/p\n8fhYR4FrlQKBgQCWpN+PuLK/sS3rO5hBw/cFQL09DdUuXzthJpLZiP/0JGzSrUfR\n5SltF3fHf27Xu2V76FmSdit7zQoPnXX/8eJ17hiPH6H9wubfeu91OYNQW0ZoQAW7\n2ody2CdLQtL/gTA5Us6gzrL11PDpmtofJYSNADWUQ248kY3k0f/GVD2UGQKBgHCI\niJqtHeQA6MXZB9vyaX8+1GOhPBNvZYh1Q+wWXvawfEl4LjxvqbzMbWFEB4ZcZpI2\nleGwkmu62tMI2XPlj26raAONMFJU5jFgJz+v9uSmuzaAEfVZST8zTmVNe4qbZreO\nv6H/bG37SMRiUS3DS7jV4ZXkkeFg8PllepJM7fylAoGARaPTYtJweOIE/C5Fq2/M\ne/uoUeSx7A6Pcfi/WrmzZmYhLwV5Ukb/R3Tp54IufnZkAmbj2s50zPYI44yyFN9O\nt+pic3IBoNEuZMIhzPoFvjcTHH0gOpHHHkNHYBfWomQ8rXTo95dzk3+/gIIzkv3j\n3v77gN2MfqVdzb9QOOZCWhk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@proyecto-final-santa-cruz.iam.gserviceaccount.com",
+  "client_id": "105024577674744809022",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40proyecto-final-santa-cruz.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
