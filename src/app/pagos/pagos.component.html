@@ -99,10 +99,18 @@
               <div class="text-danger">Selecciona un banco válido.</div>
             }
           </div>
+          <!-- BOTON PAYPAL -->
+          <div id="paypal-button-container">
+            <p>PAYPAL</p>
+          </div>
   
           <!-- Método de Pago -->
+          
           <div class="col-md-6 mb-3">
             <label class="form-label">Método de Pago:</label><br />
+           
+          
+
             <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
@@ -130,6 +138,7 @@
             @if (!pago.metodo && !metodo_marcado) {
               <div class="text-danger">Selecciona un método de pago.</div>
             }
+
             
           </div>
           
