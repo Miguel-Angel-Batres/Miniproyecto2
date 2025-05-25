@@ -3,12 +3,12 @@ import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../shared/usuario.service';
 import Swal from 'sweetalert2';
-
 //material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -83,10 +83,34 @@ async onSubmit() {
       });
     }
   }
+  phoneForm() {
+    // Lógica para mostrar el formulario de teléfono
+    this.usuarioService.inicializarRecaptcha('recaptcha-container', 'invisible');
 
-  async onPhoneLogin() {
+    Swal.fire({
+      title: 'Iniciar sesión con teléfono',
+      html: `
+        <input type="text" id="phone" class="swal2-input" placeholder="Número de teléfono">
+        <div id="recaptcha-container"></div>
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        const phoneNumber = (document.getElementById('phone') as HTMLInputElement).value;
+        if (!phoneNumber) {
+          Swal.showValidationMessage('Por favor, ingresa un número de teléfono válido.');
+        }
+        return { phoneNumber };
+      },
+    }).then((result) => {
+      if (result.isConfirmed && result.value?.phoneNumber) {
+        this.onPhoneLogin(result.value.phoneNumber);
+      }
+    });
+  }
+
+  async onPhoneLogin(phoneNumber: string) {
     try {
-      const phoneUser = await this.usuarioService.loginWithPhone();
+      const phoneUser = await this.usuarioService.loginWithPhone(phoneNumber);
       if (phoneUser) {
         Swal.fire({
           icon: 'success',
