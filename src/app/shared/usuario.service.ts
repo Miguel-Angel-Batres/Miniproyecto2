@@ -10,7 +10,9 @@ import {
   signInWithPopup,
   linkWithPopup,
   unlink,
-  signOut
+  signOut,
+  signInWithPhoneNumber,
+  RecaptchaVerifier
 } from 'firebase/auth';
 import { doc, getDoc, getDocs, setDoc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
@@ -28,6 +30,8 @@ export class UsuarioService {
     googleVinculado: false,
     facebookVinculado: false,
   });
+  private recaptchaVerifier: any;
+
 
   vinculaciones$: Observable<{ googleVinculado: boolean; facebookVinculado: boolean }> = this.vinculacionesSubject.asObservable();
 
@@ -223,7 +227,6 @@ export class UsuarioService {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-  
       const existe = await this.verifyUserInDatabase(user);
       
       if (!existe) {
@@ -251,45 +254,71 @@ export class UsuarioService {
       return false;
     }
   }
-  
-  async loginWithFacebook(): Promise<boolean> {
-    const provider = new FacebookAuthProvider();
+ inicializarRecaptcha(containerId: string, size: 'normal' | 'invisible' = 'invisible'): void {
+  if (this.recaptchaVerifier) {
+    console.warn('ReCAPTCHA ya está inicializado. Reinicializando...');
+    this.recaptchaVerifier.clear();
+  }
+
+  this.recaptchaVerifier = new RecaptchaVerifier(auth,containerId, {
+    size: size,
+    callback: (response: any) => {
+      console.log('reCAPTCHA resuelto:', response);
+    },
+    'expired-callback': () => {
+      console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
+    },
+  });
+
+  this.recaptchaVerifier.render();
+}
+  async loginWithPhone(phoneNumber: string): Promise<boolean> {
+    if (!this.recaptchaVerifier) {
+      throw new Error('reCAPTCHA no está inicializado.');
+    }    
     try {
-      const result = await signInWithPopup(auth, provider);
+      const confirmationResult = await signInWithPhoneNumber(auth,phoneNumber, this.recaptchaVerifier);
+      const verificationCode = await Swal.fire({
+        title: 'Código de verificación',
+        input: 'text',
+        inputLabel: 'Introduce el código enviado a tu teléfono',
+        inputPlaceholder: 'Código de verificación',
+        showCancelButton: true,
+      });
+
+      if (!verificationCode.value) {
+        throw new Error('El usuario canceló la verificación');
+      }
+
+      const result = await confirmationResult.confirm(verificationCode.value);
       const user = result.user;
-  
-      const existe = await this.verifyUserInDatabase(user);
       
+
+      const existe = await this.verifyUserInDatabase(user);
+
       if (!existe) {
-        // Usuario no existe en Firestore → eliminar de Firebase Auth
-        await user.delete(); // ⚠️ debe hacerse antes del signOut
-        await signOut(auth); // también limpia del lado del cliente
-  
+        await user.delete();
+        await signOut(auth);
+
         Swal.fire({
           icon: 'warning',
           title: 'Cuenta no registrada',
           text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
         });
-  
+
         return false;
       }
-  
+
       return true;
-  
     } catch (error) {
-      console.error('Error en loginWithGoogle:', error);
+      console.error('Error en loginWithPhone:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Ocurrió un error al iniciar sesión con Google.',
+        text: 'Ocurrió un error al iniciar sesión con el teléfono.',
       });
       return false;
     }
-  }
-  
-  async loginWithPhone(){
-    const user = auth.currentUser;
-    return await this.verifyUserInDatabase(user);
   }
   private async verifyUserInDatabase(user: any): Promise<boolean> {
     if (!user) return false;
