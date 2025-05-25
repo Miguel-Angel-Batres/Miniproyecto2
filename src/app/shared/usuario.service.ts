@@ -254,24 +254,24 @@ export class UsuarioService {
       return false;
     }
   }
- inicializarRecaptcha(containerId: string, size: 'normal' | 'invisible' = 'invisible'): void {
-  if (this.recaptchaVerifier) {
-    console.warn('ReCAPTCHA ya está inicializado. Reinicializando...');
-    this.recaptchaVerifier.clear();
+  inicializarRecaptcha(containerId: string, size: 'normal' | 'invisible' = 'invisible'): void {
+    if (this.recaptchaVerifier) {
+      console.warn('ReCAPTCHA ya está inicializado. Reinicializando...');
+      return; // No vuelvas a inicializar si ya está activo
+    }
+  
+    this.recaptchaVerifier = new RecaptchaVerifier(auth,containerId, {
+      size: size,
+      callback: (response: any) => {
+        console.log('reCAPTCHA resuelto:', response);
+      },
+      'expired-callback': () => {
+        console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
+      },
+    });
+  
+    this.recaptchaVerifier.render();
   }
-
-  this.recaptchaVerifier = new RecaptchaVerifier(auth,containerId, {
-    size: size,
-    callback: (response: any) => {
-      console.log('reCAPTCHA resuelto:', response);
-    },
-    'expired-callback': () => {
-      console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
-    },
-  });
-
-  this.recaptchaVerifier.render();
-}
   async loginWithPhone(phoneNumber: string): Promise<boolean> {
     if (!this.recaptchaVerifier) {
       throw new Error('reCAPTCHA no está inicializado.');
@@ -312,6 +312,10 @@ export class UsuarioService {
       return true;
     } catch (error) {
       console.error('Error en loginWithPhone:', error);
+      // reiniciar reCAPTCHA
+      if (this.recaptchaVerifier) {
+        this.recaptchaVerifier.reset();
+      }
       Swal.fire({
         icon: 'error',
         title: 'Error',
