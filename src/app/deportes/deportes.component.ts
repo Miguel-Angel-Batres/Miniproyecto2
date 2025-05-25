@@ -3,11 +3,12 @@ import { DeportesService } from '../shared/deportes.service';
 import { Deporte } from '../deporte';
 import { RouterModule } from '@angular/router';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-deportes',
   standalone: true,
-  imports: [RouterModule, SearchBarComponent],
+  imports: [RouterModule, SearchBarComponent,HttpClientModule],
   templateUrl: './deportes.component.html',
   styleUrls: ['./deportes.component.css']
 })
