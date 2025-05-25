@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PagoService } from '../pagosServicio/pagos.service';
 
+
+declare var paypal: any;
 @Component({
   selector: 'app-pagos',
   templateUrl: './pagos.component.html',
@@ -18,6 +20,7 @@ import { PagoService } from '../pagosServicio/pagos.service';
 export class PagosComponent implements OnInit {
   @ViewChild('formPago') formPago!: NgForm;
 
+  
   today: string;
   planSeleccionado = JSON.parse(localStorage.getItem('planSeleccionado') || '""');
   planes: any[] = [];
@@ -30,6 +33,7 @@ export class PagosComponent implements OnInit {
     Citibanamex: 'assets/citibanamex.png'
   };
 
+  
   pago: Pago = {
     titular: '',
     tarjeta: '',
@@ -51,8 +55,10 @@ export class PagosComponent implements OnInit {
     this.pago.fechaPago = this.today;
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   }
+ 
 
   ngOnInit(): void {
+    
     this.usuarioService.user.subscribe((user) => {
       if (user) {
         this.pago.titular = user.nombre;
@@ -60,6 +66,47 @@ export class PagosComponent implements OnInit {
       }
     }
     );
+
+    paypal.Buttons({
+      createOrder: (data: any, actions: any) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '99.00' 
+            }
+          }]
+        });
+      },
+      onApprove: (data: any, actions: any) => {
+        return actions.order.capture().then((details: any) => {
+          Swal.fire(
+            '¡Pago completado!',
+            `Gracias, ${details.payer.name.given_name}`,
+            'success'
+          );
+          console.log('Detalles del pago:', details);
+          this.pago.fechaPago=this.today;
+          this.pago.metodo='paypal';
+          this.pago.terminos=true;
+          this.pago.monto=parseFloat(details.purchase_units[0].amount.value);
+          this.pago.tarjeta='paypal';
+          this.pago.banco='paypal';
+          this.pagoServicio.registrarPago(this.pago)
+          .then(() => {
+            this.route.navigate(['/horarioscostos']);
+          })
+          .catch(err => {
+            console.error(err);
+            Swal.fire('Error', 'No se pudo guardar el pago', 'error');
+          }); 
+        });
+      },
+      onError: (err: any) => {
+        console.error('Error en el pago:', err);
+        Swal.fire('Error', 'Hubo un problema con el pago.', 'error');
+      }
+    }).render('#paypal-button-container'); 
+
   }
   onSubmit(): void {
     if (this.formPago.valid) {

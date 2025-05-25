@@ -5,3 +5,8 @@ h1{
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
 }
+
+#paypal-button-container{
+    width: 47%;
+    margin: auto auto;
+}
