@@ -87,21 +87,5 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  async vincularFacebook() {
-    try {
-      await this.usuarioService.vincularConFacebook();
-      Swal.fire({
-        icon: 'success',
-        title: 'Éxito',
-        text: 'Cuenta de Facebook vinculada correctamente.',
-      });
-
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo vincular la cuenta de Google.',
-      });
-    }
-  }
+ 
 }

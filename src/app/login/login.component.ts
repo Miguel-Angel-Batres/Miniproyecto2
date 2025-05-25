@@ -84,26 +84,6 @@ async onSubmit() {
     }
   }
 
-  async onFacebookLogin() {
-    try {
-      const facebookUser = await this.usuarioService.loginWithFacebook();
-      if (facebookUser) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Has iniciado sesión con Facebook correctamente.',
-        });
-        this.router.navigate(['/perfil']);
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo iniciar sesión con Facebook.',
-      });
-    }
-  }
-
   async onPhoneLogin() {
     try {
       const phoneUser = await this.usuarioService.loginWithPhone();
