@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { UsuarioService } from '../shared/usuario.service';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 
 
@@ -31,6 +32,7 @@ import { UsuarioService } from '../shared/usuario.service';
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    RecaptchaModule
   ],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css',
@@ -40,6 +42,7 @@ export class RegistroComponent {
   today = new Date().toISOString().split('T')[0];
   minDate = new Date(new Date().getFullYear() - 150, new Date().getMonth(), new Date().getDate());
 
+  captchaToken: string | null = null;
 
   horariosDisponibles = ['Mañana', 'Tarde', 'Noche'];
   intereses = ['Pesas', 'Cardio', 'Yoga'];
@@ -130,6 +133,9 @@ validarFecha(control: any) {
     return Object.values(intereses).some(val => val);
   }
 
+  onCaptchaResolved(token: string | null) {
+  this.captchaToken = token;
+}
   
 async onSubmit() {
   if(this.registroForm.invalid && !this.interesesSeleccionados && this.registroForm.get('contraseña')?.value !== this.registroForm.get('confirmarContraseña')?.value){

@@ -222,6 +222,11 @@
         </div>
       </div>
     </div>
+    <!--Captcha-->
+    <re-captcha 
+      (resolved)="onCaptchaResolved($event)" 
+      siteKey="6LcBwUgrAAAAAKcqKwmS8qCLh_Uw0E5ac8ADe_aI">
+    </re-captcha>
     
     <!-- Botón de Envío -->
     <div class="mt-3">
@@ -230,7 +235,7 @@
         color="primary"
         type="submit"
         class="w-100"
-        [disabled]="registroForm.invalid || !interesesSeleccionados"
+        [disabled]="registroForm.invalid || !interesesSeleccionados || !captchaToken"
       >
         Registrarse
       </button>
