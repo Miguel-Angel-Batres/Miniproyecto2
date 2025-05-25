@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';  
-import { Pago } from '../models/pago.model';
+import { Pago, PagoConId } from '../models/pago.model';
+import { from, Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,4 +16,21 @@ export class PagoService {
       fechaRegistro: new Date()
     });
   }
+  obtenerPagos(): Observable<PagoConId[]> {
+    const pagosRef = collection(db, 'pagos');
+    const promesa = getDocs(pagosRef).then(snapshot => {
+      const pagos: PagoConId[] = [];
+      snapshot.forEach(doc => {
+        pagos.push({ id: doc.id, ...(doc.data() as Pago) });
+      });
+      return pagos;
+    });
+  
+    return from(promesa);
+  }
+  eliminarPago(id: string): Promise<void> {
+    const pagoRef = doc(db, 'pagos', id);
+    return deleteDoc(pagoRef);
+  }
+  
 }

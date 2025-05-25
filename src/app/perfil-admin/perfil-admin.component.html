@@ -265,11 +265,11 @@
       </tr>
     </thead>
     <tbody>
-      @if (pagos.length === 0 || pagos == null) {
+      @if ( pagos == null) {
       <tr>
         <td colspan="6" class="text-center">No hay pagos registrados.</td>
       </tr>
-      } @else { @for (pago of pagos; track pago) {
+      } @else { @for (pago of pagos; track pago.id) {
       <tr>
         <td>{{ pago.titular }}</td>
         <td>{{ pago.tarjeta }}</td>
