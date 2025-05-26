@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
@@ -12,9 +11,17 @@ import {
   unlink,
   signOut,
   signInWithPhoneNumber,
-  RecaptchaVerifier
+  RecaptchaVerifier,
 } from 'firebase/auth';
-import { doc, getDoc, getDocs, setDoc, collection, deleteDoc, updateDoc } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  collection,
+  deleteDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { auth, db } from '../../firebase';
 
 @Injectable({
@@ -25,89 +32,230 @@ export class UsuarioService {
   private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private pagosSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  private vinculacionesSubject = new BehaviorSubject<{ googleVinculado: boolean; facebookVinculado: boolean }>({
+  private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(
+    []
+  );
+  private vinculacionesSubject = new BehaviorSubject<{
+    googleVinculado: boolean;
+    facebookVinculado: boolean;
+  }>({
     googleVinculado: false,
     facebookVinculado: false,
   });
   private recaptchaVerifier: any;
 
-
-  vinculaciones$: Observable<{ googleVinculado: boolean; facebookVinculado: boolean }> = this.vinculacionesSubject.asObservable();
+  vinculaciones$: Observable<{
+    googleVinculado: boolean;
+    facebookVinculado: boolean;
+  }> = this.vinculacionesSubject.asObservable();
 
   constructor(private route: Router) {
     const storedUser = localStorage.getItem(this.USER_KEY);
     if (storedUser) {
       this.userSubject.next(JSON.parse(storedUser));
     }
-
   }
 
   get user() {
     return this.userSubject.asObservable();
   }
-  get users(){
+  get users() {
     return this.usersSubject.asObservable();
   }
-  get pagos(){
+  get pagos() {
     return this.pagosSubject.asObservable();
   }
-  get planes(){
+  get planes() {
     return this.planesSubject.asObservable();
   }
 
-  async login(email: string, password: string): Promise<boolean> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+  isAdmin(): boolean {
+    const user = this.userSubject.value;
+    return user && user.rol === 'admin';
+  }
 
+  async manageAttemps(email: string): Promise<void> {
+    const verificarAttemps = await fetch(
+      'http://localhost:3000/api/verificar-attemps',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      }
+    );
+    const result = await verificarAttemps.json();
+
+    if (result.bloqueo) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cuenta bloqueada',
+        html: 'Usuario o contraseña incorrectos. Intenta nuevamente. <a href="#" id="recuperar-link">¿Olvidaste tu contraseña?</a>',
+        didRender: () => {
+          const link = document.getElementById('recuperar-link');
+          if (link) {
+            link.addEventListener('click', async (event) => {
+              event.preventDefault();
+              try {
+                const capturedEmail = email; // Capture the email in the current scope
+                console.log(capturedEmail);
+                const response = await fetch(
+                  'http://localhost:3000/api/recuperar-cuenta',
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: capturedEmail }),
+                  }
+                );
+                let result;
+                try {
+                  result = await response.json();
+                } catch (parseError) {
+                  console.error('Error al parsear la respuesta:', parseError);
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Respuesta inválida del servidor.',
+                  });
+                  return;
+                }
+                if (response.ok) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Correo enviado',
+                    text: 'Se ha enviado un correo para recuperar tu cuenta.',
+                  });
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text:
+                      result.message ||
+                      'No se pudo enviar el correo de recuperación.',
+                  });
+                }
+              } catch (error) {
+                console.error(
+                  'Error al enviar el correo de recuperación:',
+                  error
+                );
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Ocurrió un error al intentar enviar el correo de recuperación.',
+                });
+              }
+            });
+          }
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario o contraseña incorrectos. Intenta nuevamente.',
+      });
+    }
+  }
+
+  async login(email: string, password: string): Promise<any> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
       const userDocRef = doc(db, 'usuarios', user.uid);
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
         const usuarioCompleto = userSnapshot.data();
+        if (usuarioCompleto['Bloqueado']) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Cuenta bloqueada',
+            text: 'Tu cuenta ha sido bloqueada. Por favor, contacta al soporte.',
+          });
+          this.route.navigate(['/']);
+          return false;
+        }
         this.userSubject.next(usuarioCompleto);
         localStorage.setItem(this.USER_KEY, JSON.stringify(usuarioCompleto));
       } else {
-        console.warn('No se encontró el documento del usuario en Firestore');
         this.userSubject.next(null);
       }
       return true;
     } catch (error: any) {
-      console.error('Error al iniciar sesión:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Usuario o contraseña incorrectos.',
-      });
+      this.manageAttemps(email);
       return false;
     }
   }
 
-  async registrarUsuario(email: string, password: string, extraData: any): Promise<boolean> {
+  async registrarUsuario(
+    email: string,
+    password: string,
+    extraData: any
+  ): Promise<any> {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      const usuario = {
-        ...extraData,
-        uid: user.uid,
-        correo: email,
-        fechaRegistro: new Date().toISOString().split('T')[0],
-      };
-
-      await setDoc(doc(db, 'usuarios', user.uid), usuario);
-      return true;
-    } catch (error: any) {
-      console.error('Error al registrar el usuario:', error);
-
-      if (error.code === 'auth/email-already-in-use') {
+      const verificarEmail = await fetch(
+        'http://localhost:3000/api/verificar-email',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const emailResult = await verificarEmail.json();
+      if (emailResult.exists) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'El correo ya está en uso.',
+          text: 'El correo electrónico ya está registrado.',
         });
+        return;
       }
-      return false;
+
+      const response = await fetch('http://localhost:3000/api/registro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          extraData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: result.message || 'Ocurrió un error al registrar el usuario.',
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Registro exitoso',
+        text: 'Por favor, revisa tu correo para confirmar tu cuenta.',
+      });
+    } catch (error: any) {
+      console.error('Error al registrar el usuario:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message || 'Ocurrió un error al registrar el usuario.',
+      });
     }
   }
 
@@ -125,7 +273,7 @@ export class UsuarioService {
       const usuarios: any[] = [];
       const querySnapshot = await getDocs(collection(db, 'usuarios'));
       querySnapshot.forEach((doc) => {
-        usuarios.push({ uid:doc.id , ...doc.data() });
+        usuarios.push({ uid: doc.id, ...doc.data() });
       });
       this.usersSubject.next(usuarios);
       console.log('Usuarios obtenidos:', usuarios);
@@ -135,12 +283,12 @@ export class UsuarioService {
       return [];
     }
   }
-  async obtenerPlanes(){
+  async obtenerPlanes() {
     try {
       const planes: any[] = [];
       const querySnapshot = await getDocs(collection(db, 'planes'));
       querySnapshot.forEach((doc) => {
-        planes.push({ id:doc.id , ...doc.data() });
+        planes.push({ id: doc.id, ...doc.data() });
       });
       this.planesSubject.next(planes);
       console.log('Planes obtenidos:', planes);
@@ -159,7 +307,7 @@ export class UsuarioService {
       const userDocRef = doc(db, 'usuarios', usuarioActual.uid);
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
-        return {...userSnapshot.data() };
+        return { ...userSnapshot.data() };
       }
       return null;
     } catch (error) {
@@ -228,22 +376,21 @@ export class UsuarioService {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const existe = await this.verifyUserInDatabase(user);
-      
+
       if (!existe) {
-       await user.delete(); 
-        await signOut(auth); 
-  
+        await user.delete();
+        await signOut(auth);
+
         Swal.fire({
           icon: 'warning',
           title: 'Cuenta no registrada',
           text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
         });
-  
+
         return false;
       }
-  
+
       return true;
-  
     } catch (error) {
       console.error('Error en loginWithGoogle:', error);
       Swal.fire({
@@ -254,13 +401,16 @@ export class UsuarioService {
       return false;
     }
   }
-  inicializarRecaptcha(containerId: string, size: 'normal' | 'invisible' = 'invisible'): void {
+  inicializarRecaptcha(
+    containerId: string,
+    size: 'normal' | 'invisible' = 'invisible'
+  ): void {
     if (this.recaptchaVerifier) {
       console.warn('ReCAPTCHA ya está inicializado. Reinicializando...');
       return; // No vuelvas a inicializar si ya está activo
     }
-  
-    this.recaptchaVerifier = new RecaptchaVerifier(auth,containerId, {
+
+    this.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
       size: size,
       callback: (response: any) => {
         console.log('reCAPTCHA resuelto:', response);
@@ -269,15 +419,19 @@ export class UsuarioService {
         console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
       },
     });
-  
+
     this.recaptchaVerifier.render();
   }
   async loginWithPhone(phoneNumber: string): Promise<boolean> {
     if (!this.recaptchaVerifier) {
       throw new Error('reCAPTCHA no está inicializado.');
-    }    
+    }
     try {
-      const confirmationResult = await signInWithPhoneNumber(auth,phoneNumber, this.recaptchaVerifier);
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        this.recaptchaVerifier
+      );
       const verificationCode = await Swal.fire({
         title: 'Código de verificación',
         input: 'text',
@@ -292,7 +446,6 @@ export class UsuarioService {
 
       const result = await confirmationResult.confirm(verificationCode.value);
       const user = result.user;
-      
 
       const existe = await this.verifyUserInDatabase(user);
 
@@ -326,30 +479,32 @@ export class UsuarioService {
   }
   private async verifyUserInDatabase(user: any): Promise<boolean> {
     if (!user) return false;
-  
+
     const userRef = doc(db, 'usuarios', user.uid);
     const userSnap = await getDoc(userRef);
-  
+
     if (userSnap.exists()) {
       const usuarioCompleto = userSnap.data();
       this.userSubject.next(usuarioCompleto);
       return true;
     } else {
-      console.warn('Usuario autenticado, pero no existe en la colección usuarios');
+      console.warn(
+        'Usuario autenticado, pero no existe en la colección usuarios'
+      );
       this.userSubject.next(null);
       return false;
     }
   }
-  
+
   async vincularConGoogle(): Promise<void> {
     const provider = new GoogleAuthProvider();
     const currentUser = auth.currentUser;
-  
+
     if (!currentUser) {
       console.error('No hay usuario autenticado');
       throw new Error('No hay usuario autenticado');
     }
-  
+
     try {
       await linkWithPopup(currentUser, provider);
       console.log('Cuenta de Google vinculada exitosamente');
@@ -361,24 +516,24 @@ export class UsuarioService {
   async vincularConFacebook(): Promise<void> {
     const provider = new FacebookAuthProvider();
     const currentUser = auth.currentUser;
-  
+
     if (!currentUser) {
       throw new Error('No hay usuario autenticado para vincular');
     }
-  
+
     try {
       const result = await linkWithPopup(currentUser, provider);
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const facebookUser = result.user;
-  
+
       console.log('Cuenta de Facebook vinculada con éxito:', facebookUser);
-  
+
       // Opcional: actualizar Firestore si quieres guardar que se vinculó Facebook
       const userRef = doc(db, 'usuarios', currentUser.uid);
       await updateDoc(userRef, {
         facebookVinculado: true,
       });
-  
+
       Swal.fire({
         icon: 'success',
         title: 'Éxito',
@@ -386,7 +541,7 @@ export class UsuarioService {
       });
     } catch (error: any) {
       console.error('Error al vincular cuenta de Facebook:', error);
-  
+
       if (error.code === 'auth/credential-already-in-use') {
         Swal.fire({
           icon: 'error',
@@ -400,14 +555,16 @@ export class UsuarioService {
           text: 'Ocurrió un error al vincular la cuenta de Facebook.',
         });
       }
-  
+
       throw error;
     }
   }
-  async desvincularProveedor(proveedor: 'google.com' | 'facebook.com' | 'phone') {
+  async desvincularProveedor(
+    proveedor: 'google.com' | 'facebook.com' | 'phone'
+  ) {
     const currentUser = auth.currentUser;
     if (!currentUser) throw new Error('No hay usuario autenticado');
-  
+
     try {
       const resultado = await unlink(currentUser, proveedor);
       console.log(`Proveedor ${proveedor} desvinculado con éxito.`, resultado);
@@ -425,7 +582,9 @@ export class UsuarioService {
       return;
     }
 
-    const providers = currentUser.providerData.map((provider) => provider.providerId);
+    const providers = currentUser.providerData.map(
+      (provider) => provider.providerId
+    );
     const vinculaciones = {
       googleVinculado: providers.includes('google.com'),
       facebookVinculado: providers.includes('facebook.com'),
@@ -433,5 +592,4 @@ export class UsuarioService {
 
     this.vinculacionesSubject.next(vinculaciones);
   }
-
 }

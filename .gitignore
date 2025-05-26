@@ -42,5 +42,6 @@ testem.log
 Thumbs.db
 
 /src/env.ts
+/backend/key.json
 
 /backend/node_modules/

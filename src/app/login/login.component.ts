@@ -24,6 +24,7 @@ imports: [
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  loginAttemps: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -53,15 +54,13 @@ async onSubmit() {
         title: 'Éxito',
         text: 'Has iniciado sesión correctamente.',
       });
-      this.router.navigate(['/perfil']);
+      if(this.usuarioService.isAdmin()) {
+        this.router.navigate(['/perfil_admin']);
+      }else{
+        this.router.navigate(['/perfil']);
+      }
     }
-    else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Usuario o contraseña incorrectos.',
-      });
-    }
+  
   }
 }
   async onGoogleLogin() {

@@ -142,25 +142,26 @@ async onSubmit() {
   }else{
     const formData = this.registroForm.value;
     delete formData.confirmarContraseña;
-    const dataExtra = { ...formData };
+    const  dataExtra = {...formData, Bloqueado: false, IntentosFallidos: 0 };
     delete dataExtra.correo;
     delete dataExtra.contraseña;
 
-    const reg = await this.usuarioService.registrarUsuario(formData.correo, formData.contraseña, dataExtra);
-    if (reg) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Registro exitoso',
-        text: 'Usuario registrado correctamente.',
-      });
-      this.router.navigate(['/login']);
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'El correo ya está registrado.',
-      });
-    }
+    await this.usuarioService.registrarUsuario(formData.correo, formData.contraseña, dataExtra);
+
+    // if (reg) {
+    //   Swal.fire({
+    //     icon: 'success',
+    //     title: 'Registro exitoso',
+    //     text: 'Usuario registrado correctamente.',
+    //   });
+    //   this.router.navigate(['/login']);
+    // } else {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Error',
+    //     text: 'El correo ya está registrado.',
+    //   });
+    // }
   }
 }
 

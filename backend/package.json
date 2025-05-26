@@ -14,10 +14,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase-admin": "^13.4.0",
-<<<<<<< HEAD
-=======
     "morgan": "^1.10.0",
->>>>>>> 05ad3fa (ya conexion con backend)
+    "nodemailer": "^7.0.3",
     "nodemon": "^3.1.10",
     "uuid": "^11.1.0"
   }
