@@ -248,6 +248,7 @@ export class UsuarioService {
         title: 'Registro exitoso',
         text: 'Por favor, revisa tu correo para confirmar tu cuenta.',
       });
+      this.route.navigate(['/login']);
     } catch (error: any) {
       console.error('Error al registrar el usuario:', error);
 
@@ -268,20 +269,31 @@ export class UsuarioService {
     return this.userSubject.value !== null;
   }
 
-  async obtenerUsuarios(): Promise<any[]> {
-    try {
-      const usuarios: any[] = [];
-      const querySnapshot = await getDocs(collection(db, 'usuarios'));
-      querySnapshot.forEach((doc) => {
-        usuarios.push({ uid: doc.id, ...doc.data() });
+  async obtenerUsuarios(){
+    // try {
+    //   const usuarios: any[] = [];
+    //   const querySnapshot = await getDocs(collection(db, 'usuarios'));
+    //   querySnapshot.forEach((doc) => {
+    //     usuarios.push({ uid: doc.id, ...doc.data() });
+    //   });
+    //   this.usersSubject.next(usuarios);
+    //   console.log('Usuarios obtenidos:', usuarios);
+    //   return usuarios;
+    // } catch (error) {
+    //   console.error('Error al obtener los usuarios:', error);
+    //   return [];
+    // }
+    fetch('http://localhost:3000/api/usuarios')
+      .then((response) => response.json())
+      .then((data) => {
+        this.usersSubject.next(data);
+        console.log('Usuarios obtenidos:', data);
+        return data;
+      })
+      .catch((error) => {
+        console.error('Error al obtener los usuarios:', error);
+        return [];
       });
-      this.usersSubject.next(usuarios);
-      console.log('Usuarios obtenidos:', usuarios);
-      return usuarios;
-    } catch (error) {
-      console.error('Error al obtener los usuarios:', error);
-      return [];
-    }
   }
   async obtenerPlanes() {
     try {
@@ -315,16 +327,16 @@ export class UsuarioService {
       return null;
     }
   }
-
   async actualizarUsuario(usuario: any): Promise<void> {
     try {
+      console.log('Actualizando usuario:', usuario);
       const userDocRef = doc(db, 'usuarios', usuario.uid);
       await updateDoc(userDocRef, usuario);
+      const usuarios = this.usersSubject.value.map((u) =>
+        u.uid === usuario.uid ? { ...u, ...usuario } : u
+      );
 
-      const userActual = this.userSubject.value;
-      if (userActual?.uid === usuario.uid) {
-        this.userSubject.next(usuario);
-      }
+      this.usersSubject.next(usuarios);
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
     }

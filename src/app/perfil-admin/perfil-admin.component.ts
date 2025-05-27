@@ -68,12 +68,14 @@ export class PerfilAdminComponent implements OnInit {
     this.usuarioService.user.subscribe(user => {
       this.usuario = user;
     });
-    this.usuarioService.obtenerUsuarios().then((usuarios) => {
-      this.usuarios = usuarios;
-      this.hayUsuariosNormales = usuarios.some(u => u.rol === 'usuario');
-      console.log('Usuarios:', this.usuarios);
-      console.log('Hay usuarios normales:', this.hayUsuariosNormales);
+    this.usuarioService.users.subscribe((usuarios) => {
+        this.usuarios = usuarios;
+        this.hayUsuariosNormales = usuarios.some(u => u.rol === 'usuario');
+
     });
+  
+    this.usuarioService.obtenerUsuarios();
+
     this.usuarioService.pagos.subscribe(pagos => {
       this.pagos = pagos;
     }
@@ -218,7 +220,6 @@ export class PerfilAdminComponent implements OnInit {
   
   editarUsuario(usuario: any) {
     this.usuarioEditando = { ...usuario };
-    console.log(this.usuarioEditando);
   }
 
   cancelarEdicion() {

@@ -208,4 +208,14 @@ app.post('/api/verificar-email', async (req, res) => {
         res.status(500).json({ message: 'Error al verificar el correo electrónico' });
     }
 });
+app.get('/api/usuarios', async (_, res) => {
+    try {
+        const querySnapshot = await db.collection('usuarios').get();
+        const usuarios = querySnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
+        res.status(200).json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ message: 'Error al obtener los usuarios' });
+    }
+});
 module.exports=app;
