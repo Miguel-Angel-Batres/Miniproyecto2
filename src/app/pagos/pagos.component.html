@@ -79,6 +79,7 @@
         </div>
   
         <div class="row">
+          
           <!-- Banco -->
           <div class="col-md-6 mb-3">
             <label for="banco" class="form-label">Banco:</label>
@@ -101,7 +102,7 @@
           </div>
           <!-- BOTON PAYPAL -->
           <div id="paypal-button-container">
-            <p>PAYPAL</p>
+            
           </div>
   
           <!-- Método de Pago -->
@@ -135,6 +136,7 @@
               />
               <label class="form-check-label" for="debito">Débito</label>
             </div>
+            
             @if (!pago.metodo && !metodo_marcado) {
               <div class="text-danger">Selecciona un método de pago.</div>
             }

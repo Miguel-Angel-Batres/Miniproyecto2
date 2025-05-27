@@ -29,4 +29,5 @@ export class DeportesComponent implements OnInit {
       deporte.nombre.toLowerCase().includes(query.toLowerCase())
     );
   }
+
 }

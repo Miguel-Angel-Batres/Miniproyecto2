@@ -7,7 +7,10 @@ import { UsuarioService } from '../shared/usuario.service';
 // modelo de planes
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { PagoService } from '../pagosServicio/pagos.service';
 
+
+declare var paypal: any;
 @Component({
   selector: 'app-pagos',
   templateUrl: './pagos.component.html',
@@ -17,6 +20,7 @@ import Swal from 'sweetalert2';
 export class PagosComponent implements OnInit {
   @ViewChild('formPago') formPago!: NgForm;
 
+  
   today: string;
   planSeleccionado = JSON.parse(localStorage.getItem('planSeleccionado') || '""');
   planes: any[] = [];
@@ -29,6 +33,7 @@ export class PagosComponent implements OnInit {
     Citibanamex: 'assets/citibanamex.png'
   };
 
+  
   pago: Pago = {
     titular: '',
     tarjeta: '',
@@ -44,14 +49,16 @@ export class PagosComponent implements OnInit {
 
   metodo_marcado = true; 
 
-  constructor(private usuarioService: UsuarioService,private route: Router) {
+  constructor(private usuarioService: UsuarioService,private route: Router,private pagoServicio:PagoService) {
     const fecha = new Date();
     this.today = fecha.toISOString().split('T')[0];
     this.pago.fechaPago = this.today;
     this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   }
+ 
 
   ngOnInit(): void {
+    
     this.usuarioService.user.subscribe((user) => {
       if (user) {
         this.pago.titular = user.nombre;
@@ -59,40 +66,67 @@ export class PagosComponent implements OnInit {
       }
     }
     );
+
+    paypal.Buttons({
+      createOrder: (data: any, actions: any) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '99.00' 
+            }
+          }]
+        });
+      },
+      onApprove: (data: any, actions: any) => {
+        return actions.order.capture().then((details: any) => {
+          Swal.fire(
+            '¡Pago completado!',
+            `Gracias, ${details.payer.name.given_name}`,
+            'success'
+          );
+          console.log('Detalles del pago:', details);
+          this.pago.fechaPago=this.today;
+          this.pago.metodo='paypal';
+          this.pago.terminos=true;
+          this.pago.monto=parseFloat(details.purchase_units[0].amount.value);
+          this.pago.tarjeta='paypal';
+          this.pago.banco='paypal';
+          this.pagoServicio.registrarPago(this.pago)
+          .then(() => {
+            this.route.navigate(['/horarioscostos']);
+          })
+          .catch(err => {
+            console.error(err);
+            Swal.fire('Error', 'No se pudo guardar el pago', 'error');
+          }); 
+        });
+      },
+      onError: (err: any) => {
+        console.error('Error en el pago:', err);
+        Swal.fire('Error', 'Hubo un problema con el pago.', 'error');
+      }
+    }).render('#paypal-button-container'); 
+
   }
   onSubmit(): void {
-    // if (this.formPago.valid) {
-    
-    //   if (usuario) {
-    //     usuario.plan = this.planes.find((plan) => plan.nombre === this.planSeleccionado);
-    //     usuario.plan.fechaInicio = this.today;
-    //     // calcular fecha fin segun duracion
-    //     usuario.plan.fechaFin = new Date();
-    //     usuario.plan.fechaFin.setMonth(usuario.plan.fechaFin.getMonth() + usuario.plan.duracion);
-    //     usuario.plan.estado = 'Activo';
-    //     this.pago.monto = usuario.plan.precio * this.pago.duracion;
-    //     usuario.pagos.push(this.pago);
-    //     this.usuarioService.actualizarUsuario(usuario);
-    //     // guardar pago en local storage
-    //     const pagos = JSON.parse(localStorage.getItem('pagos') || '[]');
-    //     pagos.push(this.pago);
-    //     localStorage.setItem('pagos', JSON.stringify(pagos));
-        
-    //     // mostrar mensaje de éxito con sweetalert
-    //     Swal.fire({
-    //       icon: 'success',
-    //       title: 'Pago realizado con éxito',
-    //       text: `Plan ${this.planSeleccionado} contratado`,
-    //       confirmButtonText: 'Aceptar'
-    //     }).then(() => {
-    //       this.route.navigate(['/horarioscostos']);
-    //     });
-    //   } else {
-    //     console.error('Usuario no encontrado');
-    //   }
-    // } else {
-    //   console.warn('Formulario inválido');
-    // }
+    if (this.formPago.valid) {
+      this.pagoServicio.registrarPago(this.pago)
+        .then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Pago realizado con éxito',
+            confirmButtonText: 'Aceptar'
+          }).then(() => {
+            this.route.navigate(['/horarioscostos']);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudo guardar el pago', 'error');
+        });
+    } else {
+      Swal.fire('Atención', 'Completa el formulario correctamente', 'warning');
+    }
   }
   
   

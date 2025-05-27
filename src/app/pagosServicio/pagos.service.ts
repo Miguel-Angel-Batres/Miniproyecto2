@@ -1,22 +1,36 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, Firestore } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase';  
+import { Pago, PagoConId } from '../models/pago.model';
+import { from, Observable } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class PagosService {
-
-  constructor(private firestore:Firestore) { }
-
-  async registrarPago(pago:any):Promise<void>{
-    try{
-      const pagosRef=collection(this.firestore,'pagos');
-      await addDoc(pagosRef,pago);
-    }catch(error){
-      console.error('error registradno el pago',error)
-      throw error;
-    }
+export class PagoService {
+  async registrarPago(pago: Pago) {
+    const pagosRef = collection(db, 'pagos'); 
+    return await addDoc(pagosRef, {
+      ...pago,
+      fechaRegistro: new Date()
+    });
   }
-
+  obtenerPagos(): Observable<PagoConId[]> {
+    const pagosRef = collection(db, 'pagos');
+    const promesa = getDocs(pagosRef).then(snapshot => {
+      const pagos: PagoConId[] = [];
+      snapshot.forEach(doc => {
+        pagos.push({ id: doc.id, ...(doc.data() as Pago) });
+      });
+      return pagos;
+    });
+  
+    return from(promesa);
+  }
+  eliminarPago(id: string): Promise<void> {
+    const pagoRef = doc(db, 'pagos', id);
+    return deleteDoc(pagoRef);
+  }
+  
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../shared/usuario.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { Plan } from '../models/planes.model';
 import { ChartData } from 'chart.js';
 import { GraficoComponent } from '../grafico/grafico.component';
+import { PagoService } from '../pagosServicio/pagos.service';
+import { Pago, PagoConId } from '../models/pago.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-perfil-admin',
@@ -33,7 +36,9 @@ export class PerfilAdminComponent implements OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private router: Router
+    private router: Router,
+    private pagoService:PagoService,
+    private cdr: ChangeDetectorRef
   ) {}
   ventanas = {
     usuarios: false,
@@ -174,7 +179,30 @@ export class PerfilAdminComponent implements OnInit {
   }
 
 
- 
+  eliminarPago(pago: PagoConId): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `Vas a eliminar el pago de ${pago.titular}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pagoService.eliminarPago(pago.id)
+          .then(() => {
+            // Quitar el pago de la lista actual
+            this.pagos = this.pagos.filter(p => p.id !== pago.id);
+            Swal.fire('Eliminado', 'El pago ha sido eliminado.', 'success');
+          })
+          .catch(error => {
+            console.error('Error al eliminar pago:', error);
+            Swal.fire('Error', 'No se pudo eliminar el pago.', 'error');
+          });
+      }
+    });
+  }
+
 
 
   editarPerfil(): void {
@@ -233,29 +261,7 @@ export class PerfilAdminComponent implements OnInit {
 
 
 
-  eliminarPago(pago: any) {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: `¿Quieres eliminar el pago de ${pago.usuario}?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const index = this.pagos.indexOf(pago);
-        if (index > -1) {
-          this.pagos.splice(index, 1);
-          localStorage.setItem('pagos', JSON.stringify(this.pagos));
-          Swal.fire(
-            'Eliminado!',
-            `El pago de ${pago.usuario} ha sido eliminado.`,
-            'success'
-          );
-        }
-      }
-    });
-  }
+  
   editarPlan(plan: any) {
     this.planEditando = plan;
   }

@@ -9,4 +9,6 @@ export interface Pago {
     duracion: number;
     plan: string;
   }
-  
+  export interface PagoConId extends Pago {
+    id: string;
+  }
