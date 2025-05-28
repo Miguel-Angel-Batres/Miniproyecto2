@@ -23,10 +23,15 @@
       />
     </mat-form-field>
     <div id="recaptcha-container" style="display: none;"></div>
+ <div class="d-flex justify-content-center my-3">
+    <div sc-checkbox-re-captcha [siteKey]="siteKey" formControlName="captcha"></div>
+  </div>
     <button mat-raised-button color="primary" type="submit" class="w-100">
       Iniciar sesión
     </button>
   </form>
+
+
 
   <div class="social-login mt-4 text-center">
     <p>O inicia sesión con:</p>

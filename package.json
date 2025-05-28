@@ -24,6 +24,7 @@
     "@angular/router": "^19.2.12",
     "@angular/service-worker": "^19.2.13",
     "@popperjs/core": "^2.11.8",
+    "@semantic-components/re-captcha": "^0.40.0",
     "angular-cli-ghpages": "^2.0.3",
     "angularx-qrcode": "^19.0.0",
     "bootstrap": "^5.3.6",

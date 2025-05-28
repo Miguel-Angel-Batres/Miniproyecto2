@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../shared/usuario.service';
 import Swal from 'sweetalert2';
+import { ScCheckboxReCaptcha } from '@semantic-components/re-captcha';
+import { recaptchav2Config } from '../../env';
 //material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +18,7 @@ import { MatIcon } from '@angular/material/icon';
   styleUrls: ['./login.component.css'],
 imports: [
   ReactiveFormsModule,
+  ScCheckboxReCaptcha,
   RouterModule,
   MatFormFieldModule,
   MatInputModule,
@@ -24,6 +27,8 @@ imports: [
 ],  standalone: true
 })
 export class LoginComponent {
+
+  siteKey = recaptchav2Config.v2SiteKey;
   loginForm: FormGroup;
   loginAttemps: number = 0;
 
@@ -34,12 +39,23 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       correo: ['',Validators.required],
-      contraseña: ['', [Validators.required]]
-    });
+      contraseña: ['', [Validators.required]]      ,
+      captcha: ['', Validators.required] // <-- agrega captcha aquí
+   });
    
   }
 
 async onSubmit() {
+  if (!this.loginForm.value.captcha) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Captcha requerido',
+      text: 'Por favor, resuelve el reCAPTCHA antes de iniciar sesión.',
+    });
+    return;
+  }
+
+  // Aquí puedes validar los otros campos si quieres
   if (this.loginForm.invalid) {
     Swal.fire({
       icon: 'error',
@@ -47,7 +63,7 @@ async onSubmit() {
       text: 'Por favor, completa todos los campos requeridos.',
     });
     return;
-  }else{
+  }
     const log = await this.usuarioService.login(this.loginForm.value.correo, this.loginForm.value.contraseña);
     if (log) {
       Swal.fire({
@@ -62,7 +78,7 @@ async onSubmit() {
       }
     }
   
-  }
+
 }
   async onGoogleLogin() {
     try {
