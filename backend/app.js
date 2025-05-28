@@ -1,8 +1,10 @@
 const express=require('express');
 const morgan=require('morgan');
+const cors = require('cors');
 const nodemailer=require('nodemailer');
 const app=express()
 const {db,auth}=require('./firebase');
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.get('/', async (req, res) => {
@@ -46,9 +48,17 @@ const transporter=nodemailer.createTransport({
     }
 })
 
+app.get('/deportes', async (req, res) => {
+    try {
+      const snapshot = await db.collection('deportes').get();
+      const deportes = snapshot.docs.map(doc => doc.data());
+      res.json(deportes);
+    } catch (error) {
+      console.error("Error al obtener deportes:", error);
+      res.status(500).send("Error al obtener deportes");
+    }
+  });
 
-
-app.post
 app.post('/api/verificar-attemps', async (req, res) => {
     const { email } = req.body;
     try {
@@ -194,6 +204,8 @@ app.get('/api/reset-password', async (req, res) => {
         res.status(500).json({ message: 'Error al restablecer la contraseña' });
     }
 });
+
+
 app.get('/api/confirmacion', async (req, res) => {
     const { token } = req.query;
     try {

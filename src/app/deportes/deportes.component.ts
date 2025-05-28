@@ -20,7 +20,7 @@ export class DeportesComponent implements OnInit {
     this.deportesService.getDeportes().subscribe({
       next: (data) => {
         this.deportes_de_api = data;
-        this.filteredDeportes = data; // Inicialmente, mostrar todos los deportes
+        this.filteredDeportes = data; 
       }
     });
   }

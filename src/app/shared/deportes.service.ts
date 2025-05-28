@@ -8,7 +8,7 @@ import { Deporte } from '../deporte';
   providedIn: 'root'
 })
 export class DeportesService {
-  private apiUrl = 'http://localhost:3000/deportes';  //TODO: cambiar por la URL de la API real
+  private apiUrl = 'http://localhost:3000/deportes';  
 
   constructor(private http: HttpClient) {}
 
