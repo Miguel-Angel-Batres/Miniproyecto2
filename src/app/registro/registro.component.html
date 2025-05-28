@@ -44,8 +44,11 @@
             @if (registroForm.get('contraseña')?.errors?.['minlength']) {
               <mat-error>La contraseña debe tener al menos 6 caracteres.</mat-error>
             }
+            @if (registroForm.get('contraseña')?.errors?.['maxlength']) {
+              <mat-error>La contraseña debe tener al maximo 12 caracteres.</mat-error>
+            }
             @if (registroForm.get('contraseña')?.errors?.['pattern']) {
-              <mat-error>La contraseña debe contener al menos una letra mayúscula y 1 simbolo</mat-error>
+              <mat-error>La contraseña debe contener al menos una letra mayúscula y no conetener simbolos</mat-error>
             }
             
           
