@@ -29,6 +29,12 @@ import { auth, db } from '../../firebase';
 })
 export class UsuarioService {
   private readonly USER_KEY = 'user';
+  private readonly predefinedNumbers: Record<string, string> = {
+    '+521111111111': '123456',
+    '+521222222222': '654321',
+    '+521333333333': '111222',
+  };
+
   private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private pagosSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
@@ -269,7 +275,7 @@ export class UsuarioService {
     return this.userSubject.value !== null;
   }
 
-  async obtenerUsuarios(){
+  async obtenerUsuarios() {
     // try {
     //   const usuarios: any[] = [];
     //   const querySnapshot = await getDocs(collection(db, 'usuarios'));
@@ -436,58 +442,98 @@ export class UsuarioService {
   }
   async loginWithPhone(phoneNumber: string): Promise<boolean> {
     if (!this.recaptchaVerifier) {
+      this.inicializarRecaptcha('recaptcha-container');
       throw new Error('reCAPTCHA no está inicializado.');
     }
+
     try {
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        this.recaptchaVerifier
-      );
-      const verificationCode = await Swal.fire({
-        title: 'Código de verificación',
-        input: 'text',
-        inputLabel: 'Introduce el código enviado a tu teléfono',
-        inputPlaceholder: 'Código de verificación',
-        showCancelButton: true,
-      });
+      if (this.predefinedNumbers[phoneNumber]) {
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          phoneNumber,
+          this.recaptchaVerifier
+        );
 
-      if (!verificationCode.value) {
-        throw new Error('El usuario canceló la verificación');
-      }
+        const predefinedCode = this.predefinedNumbers[phoneNumber];
+        let code: string | null = null;
 
-      const result = await confirmationResult.confirm(verificationCode.value);
-      const user = result.user;
+        do {
+          const verificationCode = await Swal.fire({
+            title: 'Código de verificación',
+            text: 'Por favor, ingresa el código de verificación enviado a tu teléfono:',
+            input: 'text',
+            inputValidator: (value) => {
+              if (!value) {
+                return 'Debes ingresar un código.';
+              }
+              return null;
+            },
+            showCancelButton: false,
+            confirmButtonText: 'Verificar',
+          });
 
-      const existe = await this.verifyUserInDatabase(user);
+          if (verificationCode.dismiss === Swal.DismissReason.cancel) {
+            console.warn('El usuario canceló el código de verificación.');
+            this.recaptchaVerifier = null;
+            return false;
+          }
 
-      if (!existe) {
-        await user.delete();
-        await signOut(auth);
+          code = verificationCode.value;
 
+          if (code === predefinedCode) {
+            const result = await confirmationResult.confirm(code);
+            const user = result.user;
+            const log = await this.verifyUserInDatabase(user);
+            if (!log) {
+              await user.delete();
+              await signOut(auth);
+
+              Swal.fire({
+                icon: 'warning',
+                title: 'Cuenta no registrada',
+                text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
+              });
+              this.recaptchaVerifier = null;
+              return false;
+            }
+            this.recaptchaVerifier = null;
+            return true;
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'El código ingresado es incorrecto. Inténtalo nuevamente.',
+            });
+          }
+        } while (code !== predefinedCode);
+      } else {
         Swal.fire({
-          icon: 'warning',
-          title: 'Cuenta no registrada',
-          text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
+          icon: 'error',
+          title: 'Error',
+          text: 'Ingrese un número válido.',
         });
-
+        this.recaptchaVerifier = null;
         return false;
       }
-
-      return true;
     } catch (error) {
       console.error('Error en loginWithPhone:', error);
-      // reiniciar reCAPTCHA
+
       if (this.recaptchaVerifier) {
-        this.recaptchaVerifier.reset();
+        this.recaptchaVerifier = null;
       }
+
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Ocurrió un error al iniciar sesión con el teléfono.',
       });
+
       return false;
+    } finally {
+      this.recaptchaVerifier = null;
     }
+
+    return false; 
   }
   private async verifyUserInDatabase(user: any): Promise<boolean> {
     if (!user) return false;

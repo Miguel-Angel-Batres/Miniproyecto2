@@ -9,7 +9,30 @@ app.get('/', async (req, res) => {
     try {
       const snapshot = await db.collection('pagos').get();
       const data = snapshot.docs.map(doc => doc.data());
-      res.json(data);
+      // obtener usuarios de auth
+    const users = await auth.listUsers();
+    
+    // prueba, cambiar telefono de usuario en especifico y de su auth
+    const user = users.users.find(user => user.email === 'maesito50@gmail.com');
+    const user2 = users.users.find(user => user.email === 'prueba2@hotmail.com');
+    const user3 = users.users.find(user => user.email === 'ariel@hotmail.com');
+    
+    if (user2) {
+        await auth.updateUser(user2.uid, { phoneNumber: '+521222222222' });
+        console.log(`Teléfono actualizado para el usuario ${user2.email}`);
+    }
+    if (user) {
+        await auth.updateUser(user.uid, { phoneNumber: '+521111111111' });
+        console.log(`Teléfono actualizado para el usuario ${user.email}`);
+    }
+    if (user3) {
+        await auth.updateUser(user3.uid, { phoneNumber: '+521333333333' });
+        console.log(`Teléfono actualizado para el usuario ${user3.email}`);
+    }
+    
+      res.json({ pagos: data, usuarios: users.users });
+
+
     } catch (err) {
       console.error('Error al obtener pagos:', err);
       res.status(500).send('Error al obtener pagos');
@@ -22,6 +45,9 @@ const transporter=nodemailer.createTransport({
         pass:`dhqe gouj qnad uuzl`
     }
 })
+
+
+
 app.post
 app.post('/api/verificar-attemps', async (req, res) => {
     const { email } = req.body;
@@ -180,6 +206,7 @@ app.get('/api/confirmacion', async (req, res) => {
         const userCredential = await auth.createUser({
             email,
             password,
+            phoneNumber: extraData.telefono, // Guardar el teléfono de extraData
         });
         const user = userCredential;
         await db.collection('usuarios').doc(user.uid).set({
