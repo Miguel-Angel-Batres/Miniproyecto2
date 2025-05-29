@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./perfil-admin.component.css'],
   standalone: true,
 
-  imports: [FormsModule,GraficoComponent]
+  imports: [FormsModule, GraficoComponent],
 })
 export class PerfilAdminComponent implements OnInit {
   usuario: any = null;
@@ -31,13 +31,11 @@ export class PerfilAdminComponent implements OnInit {
   nuevoPlan: any = {};
   UsuariosPorPlan: any = {};
   hayUsuariosNormales: boolean = false;
-  
-
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
-    private pagoService:PagoService,
+    private pagoService: PagoService,
     private cdr: ChangeDetectorRef
   ) {}
   ventanas = {
@@ -45,50 +43,86 @@ export class PerfilAdminComponent implements OnInit {
     pagos: false,
     planes: false,
     estadisticas: false,
-    nuevoplan: false
+    nuevoplan: false,
   };
-  
 
   GraficaPastel: ChartData<'pie'> = {
     labels: [],
     datasets: [
       {
         data: [],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-      }
-    ]
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+        ],
+        hoverBackgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+        ],
+      },
+    ],
   };
   graficaUsuariosPorFecha: ChartData<'line'> = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
   graficaIngresosPorMes: ChartData<'bar'> = {
     labels: [],
-    datasets: []
+    datasets: [],
   };
-  
-  
+
   ngOnInit(): void {
-    this.usuarioService.user.subscribe(user => {
+    this.usuarioService.user.subscribe((user) => {
       this.usuario = user;
     });
     this.usuarioService.users.subscribe((usuarios) => {
-        this.usuarios = usuarios;
-        this.hayUsuariosNormales = usuarios.some(u => u.rol === 'usuario');
+      this.usuarios = usuarios;
+      this.hayUsuariosNormales = usuarios.some((u) => u.rol === 'usuario');
 
+      const registrosPorFecha: { [key: string]: number } = {};
+      this.usuarios.forEach((usuario) => {
+        const fecha = new Date(usuario.fechaRegistro)
+          .toISOString()
+          .split('T')[0]; // YYYY-MM-DD
+        registrosPorFecha[fecha] = (registrosPorFecha[fecha] || 0) + 1;
+      });
+
+      const fechas = Object.keys(registrosPorFecha).sort();
+      const registros = fechas.map((fecha) => registrosPorFecha[fecha]);
+
+      this.graficaUsuariosPorFecha = {
+        labels: fechas,
+        datasets: [
+          {
+            label: 'Usuarios Registrados',
+            data: registros,
+            fill: false,
+            borderColor: '#42A5F5',
+            backgroundColor: '#42A5F5',
+            tension: 0.4,
+          },
+        ],
+      };
+      
     });
-  
     this.usuarioService.obtenerUsuarios();
 
-    this.usuarioService.pagos.subscribe(pagos => {
+
+    this.usuarioService.pagos.subscribe((pagos) => {
       this.pagos = pagos;
-    }
-    );
-    this.usuarioService.obtenerPlanes().then(planes => {
+    });
+    this.usuarioService.planes.subscribe((planes) => {
       this.planes = planes;
-    }
-    );
+    });
+    this.usuarioService.obtenerPlanes();
+
+
     
     this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
       if (usuario.plan && usuario.plan.nombre) {
@@ -108,23 +142,34 @@ export class PerfilAdminComponent implements OnInit {
     this.GraficaPastel = {
       labels: chartLabels,
       datasets: [
-      {
-        data: chartData,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-      }
-      ]
+        {
+          data: chartData,
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+          ],
+          hoverBackgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+          ],
+        },
+      ],
     };
 
     const registrosPorFecha: { [key: string]: number } = {};
-
-    this.usuarios.forEach(usuario => {
+    this.usuarios.forEach((usuario) => {
       const fecha = new Date(usuario.fechaRegistro).toISOString().split('T')[0]; // YYYY-MM-DD
       registrosPorFecha[fecha] = (registrosPorFecha[fecha] || 0) + 1;
     });
 
     const fechas = Object.keys(registrosPorFecha).sort();
-    const registros = fechas.map(fecha => registrosPorFecha[fecha]);
+    const registros = fechas.map((fecha) => registrosPorFecha[fecha]);
 
     this.graficaUsuariosPorFecha = {
       labels: fechas,
@@ -135,20 +180,22 @@ export class PerfilAdminComponent implements OnInit {
           fill: false,
           borderColor: '#42A5F5',
           backgroundColor: '#42A5F5',
-          tension: 0.4
-        }
-      ]
+          tension: 0.4,
+        },
+      ],
     };
     const ingresosPorMes: { [key: string]: number } = {};
 
-    this.pagos.forEach(pago => {
+    this.pagos.forEach((pago) => {
       const fecha = new Date(pago.fechaPago);
-      const mes = `${fecha.getFullYear()}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}`; // Formato YYYY-MM
+      const mes = `${fecha.getFullYear()}-${(fecha.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}`; // Formato YYYY-MM
       ingresosPorMes[mes] = (ingresosPorMes[mes] || 0) + pago.monto;
     });
 
     const meses = Object.keys(ingresosPorMes).sort();
-    const ingresos = meses.map(mes => ingresosPorMes[mes]);
+    const ingresos = meses.map((mes) => ingresosPorMes[mes]);
 
     this.graficaIngresosPorMes = {
       labels: meses,
@@ -158,12 +205,11 @@ export class PerfilAdminComponent implements OnInit {
           data: ingresos,
           backgroundColor: '#4CAF50',
           borderColor: '#388E3C',
-          borderWidth: 1
-        }
-      ]
+          borderWidth: 1,
+        },
+      ],
     };
-
-     }
+  }
 
   logout(): void {
     this.usuarioService.logout();
@@ -171,13 +217,11 @@ export class PerfilAdminComponent implements OnInit {
       icon: 'success',
       title: 'Sesión cerrada',
       showConfirmButton: false,
-      timer: 3000
+      timer: 3000,
     });
 
     this.router.navigate(['/inicio']);
-    
   }
-
 
   eliminarPago(pago: PagoConId): void {
     Swal.fire({
@@ -186,24 +230,23 @@ export class PerfilAdminComponent implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.pagoService.eliminarPago(pago.id)
+        this.pagoService
+          .eliminarPago(pago.id)
           .then(() => {
             // Quitar el pago de la lista actual
-            this.pagos = this.pagos.filter(p => p.id !== pago.id);
+            this.pagos = this.pagos.filter((p) => p.id !== pago.id);
             Swal.fire('Eliminado', 'El pago ha sido eliminado.', 'success');
           })
-          .catch(error => {
+          .catch((error) => {
             console.error('Error al eliminar pago:', error);
             Swal.fire('Error', 'No se pudo eliminar el pago.', 'error');
           });
       }
     });
   }
-
-
 
   editarPerfil(): void {
     console.log('Editar perfil');
@@ -232,7 +275,7 @@ export class PerfilAdminComponent implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         const usuario = this.usuarios.find((u) => u.nombre === nombre);
@@ -245,9 +288,9 @@ export class PerfilAdminComponent implements OnInit {
       }
     });
   }
-  
+
   editarUsuario(usuario: any) {
-    this.usuarioEditando = { ...usuario };
+    this.usuarioEditando = { ...usuario, contraseña: '' };
   }
 
   cancelarEdicion() {
@@ -255,17 +298,19 @@ export class PerfilAdminComponent implements OnInit {
   }
 
   guardarCambios() {
+
+    if(this.usuarioEditando.Bloqueado === false){
+      this.usuarioEditando.IntentosFallidos = 0;
+    }
     this.usuarioService.actualizarUsuario(this.usuarioEditando);
+    
     this.usuarioEditando = null;
   }
 
-
-
-  
   editarPlan(plan: any) {
     this.planEditando = plan;
   }
-  
+
   eliminarPlan(plan: any) {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -273,12 +318,12 @@ export class PerfilAdminComponent implements OnInit {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         this.usuarioService.eliminarPlan(plan);
         this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
-        
+
         Swal.fire(
           'Eliminado!',
           `El plan de ${plan.usuario} ha sido eliminado.`,
@@ -286,7 +331,6 @@ export class PerfilAdminComponent implements OnInit {
         );
       }
     });
-
   }
   agregarBeneficio() {
     if (this.nuevoBeneficio.trim()) {
@@ -295,51 +339,51 @@ export class PerfilAdminComponent implements OnInit {
     }
   }
   guardarNuevoPlan() {
-    if (!this.nuevoPlan || 
-      !this.nuevoPlan.nombre || 
+    if (
+      !this.nuevoPlan ||
+      !this.nuevoPlan.nombre ||
       !this.nuevoPlan.descripcion ||
       !this.nuevoPlan.tipoPago ||
-      this.nuevoPlan.precio <= 0) {     
-         Swal.fire({
+      this.nuevoPlan.precio <= 0
+    ) {
+      Swal.fire({
         icon: 'error',
         title: 'Campos incompletos o inválidos',
         text: 'Por favor completa todos los campos requeridos con valores válidos.',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       return;
     }
     this.nuevoPlan.beneficios = this.nuevoPlan.beneficios || [];
     this.usuarioService.agregarPlan(this.nuevoPlan);
-  
+
     Swal.fire({
       icon: 'success',
       title: 'Plan agregado',
       text: `El plan ${this.nuevoPlan.nombre} ha sido agregado.`,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
     });
-  
+
     this.nuevoPlan = {};
     this.ventanas.nuevoplan = false;
   }
-  
+
   guardarCambiosPlan() {
-    
     this.usuarioService.actualizarPlan(this.planEditando);
-      Swal.fire({
-        icon: 'success',
-        title: 'Plan actualizado',
-        text: `El plan ${this.planEditando.nombre} ha sido actualizado.`,
-        confirmButtonText: 'Aceptar'
-      });
-    
+    Swal.fire({
+      icon: 'success',
+      title: 'Plan actualizado',
+      text: `El plan ${this.planEditando.nombre} ha sido actualizado.`,
+      confirmButtonText: 'Aceptar',
+    });
+
     this.planEditando = null;
-  
   }
   cancelarEdicionPlan() {
     this.planEditando = null;
   }
   eliminarBeneficio(beneficio: string) {
-    if(beneficio){
+    if (beneficio) {
       const index = this.planEditando.beneficios.indexOf(beneficio);
       if (index > -1) {
         this.planEditando.beneficios.splice(index, 1);
@@ -348,32 +392,32 @@ export class PerfilAdminComponent implements OnInit {
         icon: 'success',
         title: 'Beneficio eliminado',
         text: `El beneficio ${beneficio} ha sido eliminado.`,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       this.beneficioSeleccionado = '';
-    }else{
+    } else {
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'No se ha seleccionado ningún beneficio para eliminar.',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       return;
     }
   }
-  guardarEdicionPerfil(){
-    if(this.editandoPerfil){
+  guardarEdicionPerfil() {
+    if (this.editandoPerfil) {
       this.usuarioService.actualizarUsuario(this.usuario);
       this.editandoPerfil = false;
       Swal.fire({
         icon: 'success',
         title: 'Perfil actualizado',
         text: `Tu perfil ha sido actualizado.`,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
-  cancelarEdicionPerfil(){
+  cancelarEdicionPerfil() {
     this.editandoPerfil = false;
     this.usuario = this.usuarioService.obtenerUsuarioLogeado();
   }
@@ -388,4 +432,3 @@ export class PerfilAdminComponent implements OnInit {
     }
   }
 }
-

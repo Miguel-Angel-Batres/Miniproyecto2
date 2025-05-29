@@ -46,11 +46,14 @@ export class HorarioscostosComponent implements OnInit{
       this.usuario = user;
     });
 
-    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
-    if(!this.planes || this.planes.length === 0){
-      this.planes = this.planesGimnasio;
-      localStorage.setItem('planes', JSON.stringify(this.planes));
+    // Init
+
+    this.usuarioService.planes.subscribe((planes: any) => {
+      this.planes = planes;
+      console.log('Planes obtenidos:', this.planes);
     }
+    );
+    this.usuarioService.obtenerPlanes();
 
   }
 

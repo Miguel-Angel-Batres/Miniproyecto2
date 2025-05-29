@@ -14,23 +14,6 @@ app.get('/', async (req, res) => {
       // obtener usuarios de auth
     const users = await auth.listUsers();
     
-    // prueba, cambiar telefono de usuario en especifico y de su auth
-    const user = users.users.find(user => user.email === 'maesito50@gmail.com');
-    const user2 = users.users.find(user => user.email === 'prueba2@hotmail.com');
-    const user3 = users.users.find(user => user.email === 'ariel@hotmail.com');
-    
-    if (user2) {
-        await auth.updateUser(user2.uid, { phoneNumber: '+521222222222' });
-        console.log(`Teléfono actualizado para el usuario ${user2.email}`);
-    }
-    if (user) {
-        await auth.updateUser(user.uid, { phoneNumber: '+521111111111' });
-        console.log(`Teléfono actualizado para el usuario ${user.email}`);
-    }
-    if (user3) {
-        await auth.updateUser(user3.uid, { phoneNumber: '+521333333333' });
-        console.log(`Teléfono actualizado para el usuario ${user3.email}`);
-    }
     
       res.json({ pagos: data, usuarios: users.users });
 
@@ -218,7 +201,7 @@ app.get('/api/confirmacion', async (req, res) => {
         const userCredential = await auth.createUser({
             email,
             password,
-            phoneNumber: extraData.telefono, // Guardar el teléfono de extraData
+            phoneNumber: extraData.telefono, 
         });
         const user = userCredential;
         await db.collection('usuarios').doc(user.uid).set({
@@ -247,6 +230,32 @@ app.post('/api/verificar-email', async (req, res) => {
         res.status(500).json({ message: 'Error al verificar el correo electrónico' });
     }
 });
+app.put('/api/actualizar-contrasena', async (req, res) => {
+    const { uid, contraseña } = req.body;
+    try {
+        console.log('Actualizando contraseña para UID:', uid);
+        if (!uid || !contraseña) {
+            return res.status(400).json({ message: 'UID y contraseña son requeridos' });
+        }
+
+        await auth.updateUser(uid, { password: contraseña });
+
+        res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+
+        if (error.code === 'auth/user-not-found') {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        if (error.code === 'auth/invalid-password') {
+            return res.status(400).json({ message: 'La contraseña no cumple con los requisitos' });
+        }
+
+        res.status(500).json({ message: 'Error al actualizar la contraseña', error: error.message });
+    }
+});
+
 app.get('/api/usuarios', async (_, res) => {
     try {
         const querySnapshot = await db.collection('usuarios').get();
@@ -257,4 +266,19 @@ app.get('/api/usuarios', async (_, res) => {
         res.status(500).json({ message: 'Error al obtener los usuarios' });
     }
 });
+
+app.get('/api/planes', async (req, res) => {
+    try {
+        const snapshot = await db.collection('planes').get();
+        const planes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.status(200).json(planes);
+        console.log('Planes obtenidos:', planes);
+    } catch (error) {
+        console.error('Error al obtener los planes:', error);
+        res.status(500).json({ message: 'Error al obtener los planes' });
+    }
+}
+);
+
+
 module.exports=app;

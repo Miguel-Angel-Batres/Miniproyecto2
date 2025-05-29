@@ -163,7 +163,8 @@
         <th>Correo</th>
         <th>Contraseña</th>
         <th>Teléfono</th>
-        <th>Género</th>
+        <th>Plan</th>
+        <th>Estado</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -192,14 +193,15 @@
         <td>
           <input [(ngModel)]="usuarioEditando.telefono" class="form-control" />
         </td>
+        <td>{{ usuario.plan?.nombre || 'ninguno' }}</td>
         <td>
-          <select [(ngModel)]="usuarioEditando.genero" class="form-select">
-            <option value="masculino">Masculino</option>
-            <option value="femenino">Femenino</option>
-            <option value="no-binario">No Binario</option>
-            <option value="otro">Otro</option>
-          </select>
-        </td>
+            <select
+            [(ngModel)]="usuarioEditando.Bloqueado"
+            class="form-select"
+            >
+            <option [ngValue]="false">Libre</option>
+            <option [ngValue]="true">Bloqueado</option>
+            </select>
         <td>
           <button
             class="btn btn-success btn-sm me-1"
@@ -217,7 +219,12 @@
         <td>{{ usuario.correo }}</td>
         <td> ************ </td>
         <td>{{ usuario.telefono }}</td>
-        <td>{{ usuario.genero }}</td>
+        <td>{{ usuario.plan?.nombre || 'ninguno' }}</td>
+        @if (usuario.Bloqueado === true) {
+        <td class="text-danger">Bloqueado</td>
+        } @else {
+        <td class="text-success">Libre</td>
+        }
         <td>
           <button
             class="btn btn-outline-warning btn-sm me-1"
@@ -492,7 +499,7 @@
     </button>
   </div>
 
-  <!-- Aquí puedes agregar gráficos o estadísticas -->
+  Aquí puedes agregar gráficos o estadísticas
   <p>Gráficos y estadísticas vendrán aquí.</p>
   <app-grafico
     [GraficaPastel]="GraficaPastel"

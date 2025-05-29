@@ -301,20 +301,22 @@ export class UsuarioService {
         return [];
       });
   }
-  async obtenerPlanes() {
-    try {
-      const planes: any[] = [];
-      const querySnapshot = await getDocs(collection(db, 'planes'));
-      querySnapshot.forEach((doc) => {
-        planes.push({ id: doc.id, ...doc.data() });
+  obtenerPlanes(): void {
+    fetch('http://localhost:3000/api/planes')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al obtener los planes');
+        }
+        return response.json();
+      })
+      .then((planes) => {
+        this.planesSubject.next(planes);
+        console.log('Planes obtenidos:', planes);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los planes:', error);
+        this.planesSubject.next([]); // Emitir un array vacío en caso de error
       });
-      this.planesSubject.next(planes);
-      console.log('Planes obtenidos:', planes);
-      return planes;
-    } catch (error) {
-      console.error('Error al obtener los planes:', error);
-      return [];
-    }
   }
 
   async obtenerUsuarioLogeado(): Promise<any> {
@@ -335,7 +337,26 @@ export class UsuarioService {
   }
   async actualizarUsuario(usuario: any): Promise<void> {
     try {
-      console.log('Actualizando usuario:', usuario);
+      if(usuario.contraseña!== '') {
+        const response = await fetch('http://localhost:3000/api/actualizar-contrasena', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: usuario.uid,
+            contraseña: usuario.contraseña,
+          }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => null);
+          throw new Error(errorData?.message || 'Error al actualizar la contraseña');
+        }
+        const data = await response.json(); // Procesa la respuesta JSON
+        console.log('Respuesta del servidor:', data.message); // Muestra el mensaje en la consola
+      }else{
+        delete usuario.contraseña; 
+      }      
       const userDocRef = doc(db, 'usuarios', usuario.uid);
       await updateDoc(userDocRef, usuario);
       const usuarios = this.usersSubject.value.map((u) =>
