@@ -1,5 +1,4 @@
 
-/* Estilos originales del componente */
 .team-carousel-container {
   padding: 3rem 1rem;
   font-size: var(--accessibility-font-size, 16px);
@@ -140,7 +139,7 @@
   transition: background-color 0.3s ease;
 }
 
-/* Estilos para el widget de accesibilidad */
+/* Estilos para el widget de accesibilidad - MEJORADOS */
 .accessibility-widget {
   position: fixed;
   bottom: 20px;
@@ -152,7 +151,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #007bff;
+  background: #0056b3; /* Color más oscuro para mejor contraste */
   color: white;
   border: none;
   cursor: pointer;
@@ -164,12 +163,12 @@
 }
 
 .accessibility-toggle:hover {
-  background: #0056b3;
+  background: #004494;
   transform: scale(1.1);
 }
 
 .accessibility-toggle:focus {
-  outline: 2px solid #fff;
+  outline: 3px solid #fff;
   outline-offset: 2px;
 }
 
@@ -261,6 +260,7 @@
   gap: 0.5rem;
 }
 
+/* Botones de opciones mejorados */
 .option-btn {
   padding: 0.5rem 0.75rem;
   border: 1px solid #ddd;
@@ -272,6 +272,10 @@
   flex: 1;
   min-width: 70px;
   font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .option-btn:hover {
@@ -292,6 +296,47 @@
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
+/* Estilos para opciones de fuente */
+.font-option {
+  height: auto;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.font-preview {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Previsualización de tamaño de fuente */
+.font-size-preview {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.preview-text {
+  font-size: var(--accessibility-font-size, 16px);
+  font-weight: bold;
+}
+
+/* Controles del lector de pantalla mejorados */
 .reader-controls {
   display: flex;
   gap: 0.5rem;
@@ -307,6 +352,14 @@
   transition: all 0.2s ease;
   flex: 1;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.control-btn svg {
+  margin-right: 0.25rem;
 }
 
 .control-btn:hover:not(:disabled) {
@@ -413,9 +466,13 @@
   .nosotros-header h4 {
     font-size: 1rem;
   }
+  
+  .font-option {
+    flex: 0 0 100%;
+  }
 }
 
-
+/* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -424,10 +481,11 @@
   }
 }
 
+/* Focus visible para mejor accesibilidad */
 .accessibility-toggle:focus-visible,
 .option-btn:focus-visible,
 .control-btn:focus-visible,
 .close-btn:focus-visible {
-  outline: 2px solid #007bff;
+  outline: 3px solid #007bff;
   outline-offset: 2px;
 }

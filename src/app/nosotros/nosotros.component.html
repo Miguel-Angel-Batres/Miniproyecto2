@@ -1,7 +1,4 @@
-
-
-  <!-- Botón de accesibilidad flotante -->
-<div class="accessibility-widget">
+<!-- <div class="accessibility-widget">
   <button 
     class="accessibility-toggle" 
     (click)="toggleAccessibilityMenu()"
@@ -13,14 +10,12 @@
     </svg>
   </button>
 
-  <!-- Menú de accesibilidad -->
-  <div class="accessibility-menu" [class.show]="showAccessibilityMenu">
+ <div class="accessibility-menu" [class.show]="showAccessibilityMenu">
     <div class="accessibility-menu-header">
       <h3>Opciones de Accesibilidad</h3>
       <button class="close-btn" (click)="closeAccessibilityMenu()" aria-label="Cerrar menú">×</button>
     </div>
 
-    <!-- Contraste de colores -->
     <div class="accessibility-section">
       <h4>Contraste de Colores</h4>
       <div class="option-group">
@@ -34,7 +29,6 @@
       </div>
     </div>
 
-    <!-- Tamaño de texto -->
     <div class="accessibility-section">
       <h4>Tamaño de Texto</h4>
       <div class="option-group">
@@ -48,7 +42,6 @@
       </div>
     </div>
 
-    <!-- Tipo de fuente -->
     <div class="accessibility-section">
       <h4>Tipo de Fuente</h4>
       <div class="option-group">
@@ -62,7 +55,6 @@
       </div>
     </div>
 
-    <!-- Lector de pantalla -->
     <div class="accessibility-section">
       <h4>Lector de Pantalla</h4>
       <div class="reader-controls">
@@ -92,14 +84,13 @@
   </div>
 </div>
 
-<!-- Overlay para cerrar el menú -->
+
 <div 
   class="accessibility-overlay" 
   [class.show]="showAccessibilityMenu"
   (click)="closeAccessibilityMenu()">
 </div>
 
-<!-- Componente Nosotros - Carrusel de equipo -->
 <div class="team-carousel-container">
     <div class="nosotros-header">
         <h1>Nuestro Equipo</h1>
@@ -204,4 +195,217 @@
         <span class="visually-hidden">Siguiente</span>
       </button>
     </div>
+  </div> -->
+
+<!-- Botón de accesibilidad flotante con nuevo icono -->
+<div class="accessibility-widget">
+  <button 
+    class="accessibility-toggle" 
+    (click)="toggleAccessibilityMenu()"
+    [attr.aria-expanded]="showAccessibilityMenu"
+    aria-label="Abrir menú de accesibilidad"
+    title="Opciones de accesibilidad">
+    <!-- Nuevo icono de accesibilidad más universal -->
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-8.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zM12 7a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0V8a1 1 0 0 1 1-1zm0 10a1 1 0 0 1-1-1v-4a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1z"/>
+    </svg>
+  </button>
+
+  <!-- Menú de accesibilidad mejorado -->
+  <div class="accessibility-menu" [class.show]="showAccessibilityMenu">
+    <div class="accessibility-menu-header">
+      <h3>Opciones de Accesibilidad</h3>
+      <button class="close-btn" (click)="closeAccessibilityMenu()" aria-label="Cerrar menú">×</button>
+    </div>
+
+    <!-- Contraste de colores -->
+    <div class="accessibility-section">
+      <h4>Contraste de Colores</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of contrastOptions"
+          class="option-btn"
+          [class.active]="currentContrast === option.value"
+          (click)="changeContrast(option.value)">
+          {{option.label}}
+        </button>
+      </div>
+    </div>
+
+    <!-- Tamaño de texto con previsualización -->
+    <div class="accessibility-section">
+      <h4>Tamaño de Texto</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of fontSizeOptions"
+          class="option-btn"
+          [class.active]="currentFontSize === option.value"
+          (click)="changeFontSize(option.value)">
+          {{option.label}}
+        </button>
+      </div>
+      <div class="font-size-preview">
+        <span class="preview-label">Vista previa:</span>
+        <span class="preview-text">Aa</span>
+      </div>
+    </div>
+
+    <!-- Tipo de fuente con previsualización -->
+    <div class="accessibility-section">
+      <h4>Tipo de Fuente</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of fontOptions"
+          class="option-btn font-option"
+          [class.active]="currentFont === option.value"
+          (click)="changeFont(option.value)">
+          <span>{{option.label}}</span>
+          </button>
+      </div>
+    </div>
+
+    <!-- Lector de pantalla -->
+    <div class="accessibility-section">
+      <h4>Lector de Pantalla</h4>
+      <div class="reader-controls">
+        <button 
+          class="control-btn start"
+          (click)="startReading()"
+          [disabled]="isReading"
+          title="Iniciar lectura">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span>Iniciar</span>
+        </button>
+        <button 
+          class="control-btn pause"
+          (click)="pauseReading()"
+          [disabled]="!isReading"
+          title="Pausar/Reanudar lectura">
+          <svg *ngIf="!isPaused" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+          <svg *ngIf="isPaused" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span>{{isPaused ? 'Reanudar' : 'Pausar'}}</span>
+        </button>
+        <button 
+          class="control-btn stop"
+          (click)="stopReading()"
+          [disabled]="!isReading"
+          title="Detener lectura">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M6 6h12v12H6z"/>
+          </svg>
+          <span>Detener</span>
+        </button>
+      </div>
+    </div>
   </div>
+</div>
+
+<!-- Overlay para cerrar el menú -->
+<div 
+  class="accessibility-overlay" 
+  [class.show]="showAccessibilityMenu"
+  (click)="closeAccessibilityMenu()">
+</div>
+
+<!-- Componente Nosotros - Carrusel de equipo -->
+<div class="team-carousel-container">
+    <div class="nosotros-header">
+        <h1>Nuestro Equipo</h1>
+        <div class="divider"></div>
+        <h4>Descubre el poder del deporte con el respaldo de un equipo profesional y capacitado. Mejora tu salud, supera tus límites y disfruta cada paso del camino. ¡Inscríbete y vive la diferencia!</h4>
+    </div>
+
+    <div id="teamCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/martin.jpeg" class="team-member-img" alt="Martin Alfonso Romo Martinez, CEO del Gimnasio">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Martin Alfonso Romo Martinez</h3>
+              <h5 class="team-member-position">Ceo del Gimnasio</h5>
+              <p class="team-member-description">
+                Martín es el CEO del gimnasio, la persona encargada de liderar y tomar las decisiones más importantes para que todo funcione correctamente. Supervisa al equipo, organiza las estrategias de crecimiento, cuida que los clientes estén satisfechos y se asegura de que el gimnasio sea rentable y exitoso. Gracias a su visión y liderazgo el gimnasio ofrece un buen servicio.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/ariel.jpeg" class="team-member-img" alt="Ariel Emilio Parra Martinez, Coach General">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Ariel Emilio Parra Martinez</h3>
+              <h5 class="team-member-position">Coach General</h5>
+              <p class="team-member-description">
+                Ariel es el coach general del gimnasio, responsable de dirigir las clases y asegurarse de que cada entrenamiento se realice con energía, técnica y motivación. Su labor no solo consiste en guiar a los alumnos durante las rutinas, sino también en inspirarlos, corregir posturas, adaptar ejercicios según el nivel de cada persona y mantener un ambiente positivo en cada sesión. 
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/batres.jpeg" class="team-member-img" alt="Miguel Angel Batres Luna, Director de Finanzas y Administración">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Miguel Angel Batres Luna</h3>
+              <h5 class="team-member-position">Director de Finanzas Y Administracion</h5>
+              <p class="team-member-description">
+                Miguel es el administrador financiero del gimnasio, encargado de gestionar de manera estratégica los recursos económicos y garantizar la estabilidad financiera del negocio. Gracias a su enfoque analítico y su capacidad de organización, Miguel asegura que el gimnasio mantenga un crecimiento sostenible y que todas las operaciones económicas se realicen de forma eficiente y transparente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/vicente.jpeg" class="team-member-img" alt="Vicente Barrios Mariscal, Entrenador de Kickboxing">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Vicente Barrios Mariscal</h3>
+              <h5 class="team-member-position">Entrenador kickBoxing</h5>
+              <p class="team-member-description">
+                Vicente es tu entrenador de kickboxing, listo para llevarte más allá de tus límites. Conmigo, no solo transformarás tu fuerza y técnica en cada golpe, sino que también forjarás una confianza inquebrantable, descubriendo el verdadero poder que reside en ti. Prepárate para dominar el ring y tu propio camino.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/Chinchillas.jpg" class="team-member-img" alt="Alfredo Chinchillas Duardi, Nutriólogo">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Alfredo Chinchillas Duardi</h3>
+              <h5 class="team-member-position">Nutriólogo</h5>
+              <p class="team-member-description">
+                Alfredo es el nutriólogo del gimnasio, encargado de planificar dietas perfectas basadas en tus gustos personales para que cada persona que asista pueda cumplir sus metas y objetivos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="carousel-control-prev" type="button" data-bs-target="#teamCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#teamCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+</div>

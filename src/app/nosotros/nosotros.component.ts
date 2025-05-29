@@ -1,6 +1,26 @@
 import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
+// Interfaz para opciones de accesibilidad
+interface FontOption {
+  value: string;
+  label: string;
+  font: string;
+  preview?: string;
+}
+
+interface FontSizeOption {
+  value: string;
+  label: string;
+  size: string;
+}
+
+interface ContrastOption {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
 @Component({
   selector: 'app-nosotros',
   standalone: true,
@@ -15,28 +35,30 @@ export class NosotrosComponent implements OnInit, OnDestroy {
   
   // Variables para contraste
   currentContrast = 'normal';
-  contrastOptions = [
-    { value: 'normal', label: 'Normal' },
-    { value: 'high', label: 'Alto Contraste' },
-    { value: 'dark', label: 'Modo Oscuro' }
+  contrastOptions: ContrastOption[] = [
+    { value: 'normal', label: 'Normal', icon: 'sun' },
+    { value: 'high', label: 'Alto Contraste', icon: 'contrast' },
+    { value: 'dark', label: 'Modo Oscuro', icon: 'moon' }
   ];
   
-  // Variables para tamaño de texto
+  // Variables para tamaño de texto - Valores más extremos
   currentFontSize = 'medium';
-  fontSizeOptions = [
-    { value: 'small', label: 'Pequeño', size: '14px' },
-    { value: 'medium', label: 'Mediano', size: '16px' },
-    { value: 'large', label: 'Grande', size: '18px' },
-    { value: 'xlarge', label: 'Muy Grande', size: '22px' }
+  fontSizeOptions: FontSizeOption[] = [
+    { value: 'xsmall', label: 'Muy Pequeño', size: '10px' },
+    { value: 'small', label: 'Pequeño', size: '12px' },
+    { value: 'medium', label: 'Mediano', size: '14px' },
+    { value: 'large', label: 'Grande', size: '16px' },
+    { value: 'xlarge', label: 'Muy Grande', size: '18px' }
   ];
   
-  // Variables para tipo de fuente
+  // Variables para tipo de fuente - Fuentes más distintivas
   currentFont = 'default';
-  fontOptions = [
+  fontOptions: FontOption[] = [
     { value: 'default', label: 'Por Defecto', font: 'inherit' },
-    { value: 'arial', label: 'Arial', font: 'Arial, sans-serif' },
-    { value: 'verdana', label: 'Verdana', font: 'Verdana, sans-serif' },
-    { value: 'roboto', label: 'Roboto', font: 'Roboto, sans-serif' }
+    { value: 'montserrat', label: 'Montserrat', font: "'Montserrat', sans-serif" },
+    { value: 'roboto', label: 'Roboto', font: "'Roboto', sans-serif" },
+    { value: 'merriweather', label: 'Merriweather', font: "'Merriweather', serif" },
+    { value: 'courier', label: 'Courier', font: "'Courier New', monospace" }
   ];
   
   // Variables para lector de pantalla
@@ -52,6 +74,9 @@ export class NosotrosComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     if (this.isBrowser) {
+      // Cargar fuentes web necesarias
+      this.loadWebFonts();
+      
       if ('speechSynthesis' in window) {
         this.speechSynthesis = window.speechSynthesis;
       }
@@ -69,7 +94,19 @@ export class NosotrosComponent implements OnInit, OnDestroy {
     
     if (this.isBrowser) {
       this.removeAllContrastClasses();
+      this.removeCustomStyles();
     }
+  }
+  
+  /**
+   * Carga las fuentes web necesarias para las opciones de accesibilidad
+   */
+  private loadWebFonts(): void {
+    // Crear un elemento link para cargar las fuentes de Google
+    const fontLink = document.createElement('link');
+    fontLink.rel = 'stylesheet';
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&display=swap';
+    document.head.appendChild(fontLink);
   }
   
   // Métodos para el menú de accesibilidad
@@ -81,7 +118,7 @@ export class NosotrosComponent implements OnInit, OnDestroy {
     this.showAccessibilityMenu = false;
   }
   
-  // Métodos para contraste MEJORADOS
+  // Métodos para contraste
   changeContrast(contrast: string): void {
     this.currentContrast = contrast;
     this.applyContrast();
@@ -292,6 +329,13 @@ export class NosotrosComponent implements OnInit, OnDestroy {
         background: #ffff00 !important;
         color: #000 !important;
       }
+      
+      /* Previsualizaciones de fuente */
+      body.high-contrast .font-preview {
+        background: #000 !important;
+        color: #fff !important;
+        border: 1px solid #fff !important;
+      }
     `;
     
     this.removeExistingContrastStyles();
@@ -417,6 +461,13 @@ export class NosotrosComponent implements OnInit, OnDestroy {
       body.dark-mode .control-btn:hover:not(:disabled) {
         background: #4d4d4d !important;
       }
+      
+      /* Previsualizaciones de fuente */
+      body.dark-mode .font-preview {
+        background: #3d3d3d !important;
+        color: #fff !important;
+        border: 1px solid #555 !important;
+      }
     `;
     
     this.removeExistingContrastStyles();
@@ -440,7 +491,7 @@ export class NosotrosComponent implements OnInit, OnDestroy {
     }
   }
   
-  // Métodos para tamaño de fuente
+  // Métodos para tamaño de fuente - MEJORADOS
   changeFontSize(size: string): void {
     this.currentFontSize = size;
     this.applyFontSize();
@@ -461,32 +512,61 @@ export class NosotrosComponent implements OnInit, OnDestroy {
         document.head.appendChild(fontSizeStyle);
       }
       
+      // Aplicar tamaños más extremos y específicos para cada elemento
       fontSizeStyle.innerHTML = `
-        .team-carousel-container,
-        .team-carousel-container * {
+        /* Tamaño base para todo el contenedor */
+        .team-carousel-container {
           font-size: ${selectedSize.size} !important;
         }
         
+        /* Tamaños específicos para diferentes elementos con mayor contraste entre ellos */
         .team-member-name {
-          font-size: calc(${selectedSize.size} + 4px) !important;
+          font-size: calc(${selectedSize.size} * 1.5) !important;
+          letter-spacing: 0.5px !important;
         }
         
         .team-member-position {
-          font-size: calc(${selectedSize.size} + 2px) !important;
+          font-size: calc(${selectedSize.size} * 1.2) !important;
+          letter-spacing: 0.3px !important;
+        }
+        
+        .team-member-description {
+          font-size: ${selectedSize.size} !important;
+          line-height: 1.6 !important;
         }
         
         .nosotros-header h1 {
-          font-size: calc(${selectedSize.size} + 8px) !important;
+          font-size: calc(${selectedSize.size} * 2) !important;
+          letter-spacing: 1px !important;
         }
         
         .nosotros-header h4 {
-          font-size: calc(${selectedSize.size} + 2px) !important;
+          font-size: calc(${selectedSize.size} * 1.2) !important;
+          line-height: 1.5 !important;
+        }
+        
+        /* Ajustes para el menú de accesibilidad */
+        .accessibility-menu-header h3 {
+          font-size: calc(${selectedSize.size} * 1.2) !important;
+        }
+        
+        .accessibility-section h4 {
+          font-size: ${selectedSize.size} !important;
+        }
+        
+        .option-btn, .control-btn {
+          font-size: calc(${selectedSize.size} * 0.9) !important;
+        }
+        
+        /* Ajuste para la previsualización de fuentes */
+        .font-preview {
+          font-size: calc(${selectedSize.size} * 1.2) !important;
         }
       `;
     }
   }
   
-  // Métodos para tipo de fuente
+  // Métodos para tipo de fuente - MEJORADOS
   changeFont(font: string): void {
     this.currentFont = font;
     this.applyFont();
@@ -507,9 +587,48 @@ export class NosotrosComponent implements OnInit, OnDestroy {
         document.head.appendChild(fontFamilyStyle);
       }
       
+      // Aplicar la fuente con características específicas para hacerla más distintiva
       fontFamilyStyle.innerHTML = `
-        .team-carousel-container,
-        .team-carousel-container * {
+        /* Aplicar la fuente a todo el contenedor */
+        .team-carousel-container {
+          font-family: ${selectedFont.font} !important;
+        }
+        
+        /* Características específicas para diferentes elementos */
+        .team-member-name {
+          font-family: ${selectedFont.font} !important;
+          font-weight: 700 !important;
+        }
+        
+        .team-member-position {
+          font-family: ${selectedFont.font} !important;
+          font-style: ${selectedFont.value === 'merriweather' ? 'italic' : 'normal'} !important;
+        }
+        
+        .team-member-description {
+          font-family: ${selectedFont.font} !important;
+          font-weight: 400 !important;
+          ${selectedFont.value === 'dyslexic' ? 'letter-spacing: 0.5px !important; word-spacing: 2px !important;' : ''}
+        }
+        
+        .nosotros-header h1 {
+          font-family: ${selectedFont.font} !important;
+          font-weight: 700 !important;
+          ${selectedFont.value === 'montserrat' ? 'text-transform: uppercase !important;' : ''}
+        }
+        
+        .nosotros-header h4 {
+          font-family: ${selectedFont.font} !important;
+          ${selectedFont.value === 'merriweather' ? 'font-style: italic !important;' : ''}
+        }
+        
+        /* Aplicar también al menú de accesibilidad para consistencia */
+        .accessibility-menu {
+          font-family: ${selectedFont.font} !important;
+        }
+        
+        /* Estilo para la previsualización de fuentes */
+        .font-preview {
           font-family: ${selectedFont.font} !important;
         }
       `;
@@ -646,5 +765,21 @@ export class NosotrosComponent implements OnInit, OnDestroy {
       this.applyFontSize();
       this.applyFont();
     }, 200);
+  }
+  
+  /**
+   * Elimina todos los estilos personalizados al destruir el componente
+   */
+  private removeCustomStyles(): void {
+    const fontSizeStyle = document.getElementById('font-size-style');
+    const fontFamilyStyle = document.getElementById('font-family-style');
+    
+    if (fontSizeStyle) {
+      fontSizeStyle.remove();
+    }
+    
+    if (fontFamilyStyle) {
+      fontFamilyStyle.remove();
+    }
   }
 }
