@@ -1,5 +1,15 @@
 <app-navbar></app-navbar>
 
+@if (loading) {
+  <div class="loading-overlay">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate"
+      diameter="60">
+    </mat-progress-spinner>
+  </div>
+}
+
 <div class="container mt-5">
   <router-outlet></router-outlet>
 </div>

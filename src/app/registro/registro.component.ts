@@ -54,7 +54,13 @@ export class RegistroComponent {
       correo: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       fechaNacimiento: ['', [Validators.required, this.validarFecha]],
-      contraseña: ['', [Validators.required, Validators.minLength(6),Validators.pattern(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d_]+$/)],
+      contraseña: ['',   [
+    Validators.required,
+    Validators.minLength(6),
+    Validators.maxLength(12),
+    Validators.pattern(/^[A-Za-z\d_]+$/), // Solo letras, dígitos y _
+    Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/) // Al menos una mayúscula y un dígito
+  ],
     ],
       confirmarContraseña: ['', [Validators.required, this.validarConfirmacionContraseña()] ],
       horario: ['', Validators.required],
