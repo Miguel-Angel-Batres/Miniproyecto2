@@ -24,16 +24,16 @@
 
       </div>
       <div class="col-md-4 text-center">
-      @if (usuario.plan.nombre !== '') {
+      @if (contratado==true) {
       <p 
         [ngStyle]="{
-          color: usuario.plan.nombre === 'Básico' ? '#0d6efd' : 
-                usuario.plan.nombre === 'Premium' ? '#d4af37' : 
-                usuario.plan.nombre === 'Avanzado' ? '#198754' : 
+          color: pagoActivo.plan === 'Básico' ? '#0d6efd' : 
+          pagoActivo.plan=== 'Premium' ? '#d4af37' : 
+          pagoActivo.plan === 'Avanzado' ? '#198754' : 
                 '#6c757d'
         }"
       >
-        <strong>Plan Contratado:</strong> {{ usuario.plan.nombre }}
+        <strong>Plan Contratado:</strong> {{ pagoActivo.plan }}
       </p>
       } @else {
         <p class="text-warning"><strong>Nota:</strong> No tienes un plan contratado aún.</p>
@@ -50,7 +50,7 @@
 <!-- Informacion de la membresia -->
 <div class="container mt-5 p-4 border rounded shadow bg-light">
   <h2 class="mb-4 text-center">Informacion de membresia</h2>
-  @if(this.usuario.plan.nombre === '') {
+  @if(false) {
     <div class="alert alert-warning text-center">
       No tienes una membresía activa. Por favor, 
       <a routerLink="/horarioscostos" class="text-success">Elige un plan</a>
@@ -73,20 +73,16 @@
           <tbody>
             @if (usuario.plan) {
               <tr>
-                <td>{{ usuario.plan.nombre }}</td>
-                <td>{{ usuario.plan.precio | currency }}</td>
+                <td>{{  pagoActivo.plan}}</td>
+                <td>{{ pagoActivo.monto| currency }}</td>
                 <td>{{ usuario.plan.duracion }} meses</td>
-                @if (usuario.plan.estado === 'Activo') {
+                @if (this.contratado === true) {
                   <td class="text-success">Activo</td>
-                } @if (usuario.plan.estado === 'Vencido') {
-                  <td class="text-warning">Inactivo</td>
-                } @if (usuario.plan.estado === 'Cancelado') {
-                  <td class="text-danger">Cancelado</td>
-                }
+                } 
               </tr>
             } @else {
               <tr>
-                <td colspan="3" class="text-center">No tienes un plan contratado.</td>
+                <td colspan="3" class="text-center">vencido.</td>
               </tr>
             }
           </tbody>

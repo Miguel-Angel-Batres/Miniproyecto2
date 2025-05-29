@@ -62,7 +62,8 @@ export class PagosComponent implements OnInit {
     this.usuarioService.user.subscribe((user) => {
       if (user) {
         this.pago.titular = user.nombre;
-        this.pago.plan = user.plan;
+        this.pago.plan = this.planSeleccionado.nombre;
+        this.pago.monto=this.planSeleccionado.precio;
       }
     }
     );
