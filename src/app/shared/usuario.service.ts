@@ -97,7 +97,7 @@ export class UsuarioService {
       Swal.fire({
         icon: 'error',
         title: 'Cuenta bloqueada',
-        html: 'Usuario o contraseña incorrectos. Intenta nuevamente. <a href="#" id="recuperar-link">¿Olvidaste tu contraseña?</a>',
+        html: 'Usuario o contraseña incorrectos. Intenta nuevamente. <a href="#" id="recuperar-link"> Recuperar tu contraseña </a>',
         didRender: () => {
           const link = document.getElementById('recuperar-link');
           if (link) {
@@ -132,7 +132,7 @@ export class UsuarioService {
                   Swal.fire({
                     icon: 'success',
                     title: 'Correo enviado',
-                    text: 'Se ha enviado un correo para recuperar tu cuenta.',
+                    text: 'Espera al adminitrador para que desbloquee tu cuenta.',
                   });
                 } else {
                   Swal.fire({
