@@ -245,4 +245,14 @@ app.get('/api/usuarios', async (_, res) => {
         res.status(500).json({ message: 'Error al obtener los usuarios' });
     }
 });
+app.get('/deportes', async (req, res) => {
+    try {
+      const snapshot = await db.collection('deportes').get();
+      const deportes = snapshot.docs.map(doc => doc.data());
+      res.json(deportes);
+    } catch (error) {
+      console.error("Error al obtener deportes:", error);
+      res.status(500).send("Error al obtener deportes");
+    }
+  });
 module.exports=app;
