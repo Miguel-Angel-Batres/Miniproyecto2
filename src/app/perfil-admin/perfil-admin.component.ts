@@ -81,10 +81,11 @@ export class PerfilAdminComponent implements OnInit {
   
     this.usuarioService.obtenerUsuarios();
 
-    this.usuarioService.pagos.subscribe(pagos => {
-      this.pagos = pagos;
-    }
-    );
+    this.pagoService.obtenerPagos().subscribe(pagos=>{
+      this.pagos=pagos;
+      console.log(pagos)
+    })
+    
     this.usuarioService.obtenerPlanes().then(planes => {
       this.planes = planes;
     }
