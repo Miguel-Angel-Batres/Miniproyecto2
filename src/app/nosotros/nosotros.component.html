@@ -1,3 +1,207 @@
+<!-- Componente Nosotros - Carrusel de equipo
+<div class="team-carousel-container">
+    <div class="nosotros-header">
+        <h1>Nuestro Equipo</h1>
+        <div class="divider"></div>
+        <h4>Descubre el poder del deporte con el respaldo de un equipo profesional y capacitado. Mejora tu salud, supera tus límites y disfruta cada paso del camino. ¡Inscríbete y vive la diferencia!</h4>
+      </div>
+
+    <div id="teamCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#teamCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+      </div>
+      
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/martin.jpeg" class="team-member-img" alt="meimbro1">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Martin Alfonso Romo Martinez</h3>
+              <h5 class="team-member-position">Ceo del Gimnasio</h5>
+              <p class="team-member-description">
+                Martín es el CEO del gimnasio, la persona encargada de liderar y tomar las decisiones más importantes para que todo funcione correctamente. Supervisa al equipo, organiza las estrategias de crecimiento, cuida que los clientes estén satisfechos y se asegura de que el gimnasio sea rentable y exitoso. Gracias a su visión y liderazgo el gimnasio ofrece un buen servicio.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/ariel.jpeg" class="team-member-img" alt="miembro2">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Ariel Emilio Parra Martinez</h3>
+              <h5 class="team-member-position">Coach General</h5>
+              <p class="team-member-description">
+                Ariel es el coach general del gimnasio, responsable de dirigir las clases y asegurarse de que cada entrenamiento se realice con energía, técnica y motivación. Su labor no solo consiste en guiar a los alumnos durante las rutinas, sino también en inspirarlos, corregir posturas, adaptar ejercicios según el nivel de cada persona y mantener un ambiente positivo en cada sesión. 
+            </div>
+          </div>
+        </div>
+        
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/batres.jpeg" class="team-member-img" alt="miembro3">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">MIguel Angel Batres Luna</h3>
+              <h5 class="team-member-position">Director de Finanzas Y Administracion</h5>
+              <p class="team-member-description">
+                Miguel es el administrador financiero del gimnasio, encargado de gestionar de manera estratégica los recursos económicos y garantizar la estabilidad financiera del negocio. Gracias a su enfoque analítico y su capacidad de organización, Miguel asegura que el gimnasio mantenga un crecimiento sostenible y que todas las operaciones económicas se realicen de forma eficiente y transparente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div class="team-member-card">
+            <div class="team-member-img-container">
+              <img src="assets/vicente.jpeg" class="team-member-img" alt="miembro4">
+            </div>
+            <div class="team-member-info">
+              <h3 class="team-member-name">Vicente Barrios Mariscal</h3>
+              <h5 class="team-member-position">Entrenador kickBoxing</h5>
+              <p class="team-member-description">
+                Vicente es tu entrenador de kickboxing, listo para llevarte más allá de tus límites. Conmigo, no solo transformarás tu fuerza y técnica en cada golpe, sino que también forjarás una confianza inquebrantable, descubriendo el verdadero poder que reside en ti. Prepárate para dominar el ring y tu propio camino.                </p>
+            </div>
+          </div>
+        </div>
+
+         <div class="carousel-item">
+        <div class="team-member-card">
+          <div class="team-member-img-container">
+            <img src="assets/Chinchillas.jpg" class="team-member-img" alt="miembro5">
+          </div>
+          <div class="team-member-info">
+            <h3 class="team-member-name">Alfredo Chinchillas Duardi</h3>
+            <h5 class="team-member-position">Nutriólogo</h5>
+            <p class="team-member-description">
+              Alfredo es el nutriólogo del gimnasio, encargado de planificar dietas perfectas basadas en tus gustos personales para que cada persona que asista pueda cumplir sus metas y objetivos.
+            </p>
+          </div>
+        </div>
+      </div>
+        
+      </div>
+      
+      
+      <button class="carousel-control-prev" type="button" data-bs-target="#teamCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#teamCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+    </div>
+  </div> -->
+
+  <!-- Botón de accesibilidad flotante -->
+<div class="accessibility-widget">
+  <button 
+    class="accessibility-toggle" 
+    (click)="toggleAccessibilityMenu()"
+    [attr.aria-expanded]="showAccessibilityMenu"
+    aria-label="Abrir menú de accesibilidad"
+    title="Opciones de accesibilidad">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9M15 11.5C15.8 11.5 16.5 12.2 16.5 13S15.8 14.5 15 14.5 13.5 13.8 13.5 13 14.2 11.5 15 11.5M5 12C5 13.1 4.1 14 3 14S1 13.1 1 12 1.9 10 3 10 5 10.9 5 12ZM21 13C21 14.1 20.1 15 19 15S17 14.1 17 13 17.9 11 19 11 21 11.9 21 13ZM14 20.5V22H10V20.5L8 19L9.5 17.5L12 19L14.5 17.5L16 19L14 20.5Z"/>
+    </svg>
+  </button>
+
+  <!-- Menú de accesibilidad -->
+  <div class="accessibility-menu" [class.show]="showAccessibilityMenu">
+    <div class="accessibility-menu-header">
+      <h3>Opciones de Accesibilidad</h3>
+      <button class="close-btn" (click)="closeAccessibilityMenu()" aria-label="Cerrar menú">×</button>
+    </div>
+
+    <!-- Contraste de colores -->
+    <div class="accessibility-section">
+      <h4>Contraste de Colores</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of contrastOptions"
+          class="option-btn"
+          [class.active]="currentContrast === option.value"
+          (click)="changeContrast(option.value)">
+          {{option.label}}
+        </button>
+      </div>
+    </div>
+
+    <!-- Tamaño de texto -->
+    <div class="accessibility-section">
+      <h4>Tamaño de Texto</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of fontSizeOptions"
+          class="option-btn"
+          [class.active]="currentFontSize === option.value"
+          (click)="changeFontSize(option.value)">
+          {{option.label}}
+        </button>
+      </div>
+    </div>
+
+    <!-- Tipo de fuente -->
+    <div class="accessibility-section">
+      <h4>Tipo de Fuente</h4>
+      <div class="option-group">
+        <button 
+          *ngFor="let option of fontOptions"
+          class="option-btn"
+          [class.active]="currentFont === option.value"
+          (click)="changeFont(option.value)">
+          {{option.label}}
+        </button>
+      </div>
+    </div>
+
+    <!-- Lector de pantalla -->
+    <div class="accessibility-section">
+      <h4>Lector de Pantalla</h4>
+      <div class="reader-controls">
+        <button 
+          class="control-btn start"
+          (click)="startReading()"
+          [disabled]="isReading"
+          title="Iniciar lectura">
+          ▶️ Iniciar
+        </button>
+        <button 
+          class="control-btn pause"
+          (click)="pauseReading()"
+          [disabled]="!isReading"
+          title="Pausar/Reanudar lectura">
+          {{isPaused ? '▶️' : '⏸️'}} {{isPaused ? 'Reanudar' : 'Pausar'}}
+        </button>
+        <button 
+          class="control-btn stop"
+          (click)="stopReading()"
+          [disabled]="!isReading"
+          title="Detener lectura">
+          ⏹️ Detener
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay para cerrar el menú -->
+<div 
+  class="accessibility-overlay" 
+  [class.show]="showAccessibilityMenu"
+  (click)="closeAccessibilityMenu()">
+</div>
+
 <!-- Componente Nosotros - Carrusel de equipo -->
 <div class="team-carousel-container">
     <div class="nosotros-header">
@@ -16,11 +220,10 @@
       </div>
       
       <div class="carousel-inner">
-        <!-- Miembro 1 -->
         <div class="carousel-item active">
           <div class="team-member-card">
             <div class="team-member-img-container">
-              <img src="assets/martin.jpeg" class="team-member-img" alt="meimbro1">
+              <img src="assets/martin.jpeg" class="team-member-img" alt="Martin Alfonso Romo Martinez, CEO del Gimnasio">
             </div>
             <div class="team-member-info">
               <h3 class="team-member-name">Martin Alfonso Romo Martinez</h3>
@@ -32,29 +235,28 @@
           </div>
         </div>
         
-        <!-- Miembro 2 -->
         <div class="carousel-item">
           <div class="team-member-card">
             <div class="team-member-img-container">
-              <img src="assets/ariel.jpeg" class="team-member-img" alt="miembro2">
+              <img src="assets/ariel.jpeg" class="team-member-img" alt="Ariel Emilio Parra Martinez, Coach General">
             </div>
             <div class="team-member-info">
               <h3 class="team-member-name">Ariel Emilio Parra Martinez</h3>
               <h5 class="team-member-position">Coach General</h5>
               <p class="team-member-description">
                 Ariel es el coach general del gimnasio, responsable de dirigir las clases y asegurarse de que cada entrenamiento se realice con energía, técnica y motivación. Su labor no solo consiste en guiar a los alumnos durante las rutinas, sino también en inspirarlos, corregir posturas, adaptar ejercicios según el nivel de cada persona y mantener un ambiente positivo en cada sesión. 
+              </p>
             </div>
           </div>
         </div>
         
-        <!-- Miembro 3 -->
         <div class="carousel-item">
           <div class="team-member-card">
             <div class="team-member-img-container">
-              <img src="assets/batres.jpeg" class="team-member-img" alt="miembro3">
+              <img src="assets/batres.jpeg" class="team-member-img" alt="Miguel Angel Batres Luna, Director de Finanzas y Administración">
             </div>
             <div class="team-member-info">
-              <h3 class="team-member-name">MIguel Angel Batres Luna</h3>
+              <h3 class="team-member-name">Miguel Angel Batres Luna</h3>
               <h5 class="team-member-position">Director de Finanzas Y Administracion</h5>
               <p class="team-member-description">
                 Miguel es el administrador financiero del gimnasio, encargado de gestionar de manera estratégica los recursos económicos y garantizar la estabilidad financiera del negocio. Gracias a su enfoque analítico y su capacidad de organización, Miguel asegura que el gimnasio mantenga un crecimiento sostenible y que todas las operaciones económicas se realicen de forma eficiente y transparente.
@@ -63,26 +265,25 @@
           </div>
         </div>
 
-        <!-- miembro 4 -->
         <div class="carousel-item">
           <div class="team-member-card">
             <div class="team-member-img-container">
-              <img src="assets/vicente.jpeg" class="team-member-img" alt="miembro4">
+              <img src="assets/vicente.jpeg" class="team-member-img" alt="Vicente Barrios Mariscal, Entrenador de Kickboxing">
             </div>
             <div class="team-member-info">
               <h3 class="team-member-name">Vicente Barrios Mariscal</h3>
               <h5 class="team-member-position">Entrenador kickBoxing</h5>
               <p class="team-member-description">
-                Vicente es tu entrenador de kickboxing, listo para llevarte más allá de tus límites. Conmigo, no solo transformarás tu fuerza y técnica en cada golpe, sino que también forjarás una confianza inquebrantable, descubriendo el verdadero poder que reside en ti. Prepárate para dominar el ring y tu propio camino.                </p>
+                Vicente es tu entrenador de kickboxing, listo para llevarte más allá de tus límites. Conmigo, no solo transformarás tu fuerza y técnica en cada golpe, sino que también forjarás una confianza inquebrantable, descubriendo el verdadero poder que reside en ti. Prepárate para dominar el ring y tu propio camino.
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Miembro 5 -->
          <div class="carousel-item">
         <div class="team-member-card">
           <div class="team-member-img-container">
-            <img src="assets/Chinchillas.jpg" class="team-member-img" alt="miembro5">
+            <img src="assets/Chinchillas.jpg" class="team-member-img" alt="Alfredo Chinchillas Duardi, Nutriólogo">
           </div>
           <div class="team-member-info">
             <h3 class="team-member-name">Alfredo Chinchillas Duardi</h3>
