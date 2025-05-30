@@ -10,6 +10,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-horarioscostos',
@@ -76,6 +77,11 @@ export class HorarioscostosComponent implements OnInit{
   pagar(plan: string): void {
     if (this.usuarioService.isAuthenticated()) {
         if(this.usuario.rol === 'admin') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'Los administradores no pueden seleccionar un plan.',
+          });
           this.router.navigate(['/inicio']);
         }else{
           this.router.navigate(['/pagos']);

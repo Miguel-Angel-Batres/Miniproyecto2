@@ -104,7 +104,7 @@ export class UsuarioService {
             link.addEventListener('click', async (event) => {
               event.preventDefault();
               try {
-                const capturedEmail = email; // Capture the email in the current scope
+                const capturedEmail = email; 
                 console.log(capturedEmail);
                 const response = await fetch(
                   'http://localhost:3000/api/recuperar-cuenta',
@@ -276,19 +276,6 @@ export class UsuarioService {
   }
 
   async obtenerUsuarios() {
-    // try {
-    //   const usuarios: any[] = [];
-    //   const querySnapshot = await getDocs(collection(db, 'usuarios'));
-    //   querySnapshot.forEach((doc) => {
-    //     usuarios.push({ uid: doc.id, ...doc.data() });
-    //   });
-    //   this.usersSubject.next(usuarios);
-    //   console.log('Usuarios obtenidos:', usuarios);
-    //   return usuarios;
-    // } catch (error) {
-    //   console.error('Error al obtener los usuarios:', error);
-    //   return [];
-    // }
     fetch('http://localhost:3000/api/usuarios')
       .then((response) => response.json())
       .then((data) => {
@@ -315,7 +302,7 @@ export class UsuarioService {
       })
       .catch((error) => {
         console.error('Error al obtener los planes:', error);
-        this.planesSubject.next([]); // Emitir un array vacío en caso de error
+        this.planesSubject.next([]); 
       });
   }
 
@@ -352,8 +339,8 @@ export class UsuarioService {
           const errorData = await response.json().catch(() => null);
           throw new Error(errorData?.message || 'Error al actualizar la contraseña');
         }
-        const data = await response.json(); // Procesa la respuesta JSON
-        console.log('Respuesta del servidor:', data.message); // Muestra el mensaje en la consola
+        const data = await response.json();
+
       }else{
         delete usuario.contraseña; 
       }      
@@ -364,6 +351,11 @@ export class UsuarioService {
       );
 
       this.usersSubject.next(usuarios);
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Usuario actualizado correctamente.', 
+      });
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
     }
@@ -446,7 +438,7 @@ export class UsuarioService {
   ): void {
     if (this.recaptchaVerifier) {
       console.warn('ReCAPTCHA ya está inicializado. Reinicializando...');
-      return; // No vuelvas a inicializar si ya está activo
+      return; 
     }
 
     this.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
@@ -592,52 +584,7 @@ export class UsuarioService {
       throw error;
     }
   }
-  async vincularConFacebook(): Promise<void> {
-    const provider = new FacebookAuthProvider();
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-      throw new Error('No hay usuario autenticado para vincular');
-    }
-
-    try {
-      const result = await linkWithPopup(currentUser, provider);
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const facebookUser = result.user;
-
-      console.log('Cuenta de Facebook vinculada con éxito:', facebookUser);
-
-      // Opcional: actualizar Firestore si quieres guardar que se vinculó Facebook
-      const userRef = doc(db, 'usuarios', currentUser.uid);
-      await updateDoc(userRef, {
-        facebookVinculado: true,
-      });
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Éxito',
-        text: 'Tu cuenta de Facebook se ha vinculado correctamente.',
-      });
-    } catch (error: any) {
-      console.error('Error al vincular cuenta de Facebook:', error);
-
-      if (error.code === 'auth/credential-already-in-use') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Cuenta ya vinculada',
-          text: 'Esta cuenta de Facebook ya está vinculada con otro usuario.',
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al vincular la cuenta de Facebook.',
-        });
-      }
-
-      throw error;
-    }
-  }
+  
   async desvincularProveedor(
     proveedor: 'google.com' | 'facebook.com' | 'phone'
   ) {

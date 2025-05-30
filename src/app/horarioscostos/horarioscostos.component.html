@@ -38,7 +38,7 @@
         <div class="plan-card {{ plan.nombre | lowercase }}">
           <div class="plan-header">
             <h3>{{ plan.nombre }}</h3>
-            <div class="price">${{ plan.precio }}<span>/mes</span></div>
+            <div class="price">${{ plan.precio }}<span>/{{plan.tipoPago}}</span></div>
           </div>
           <div class="plan-features">
             <ul>

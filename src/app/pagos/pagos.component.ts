@@ -96,7 +96,7 @@ initPayPalButton() {
 setMetodoPago(metodo: 'regular' | 'paypal') {
   this.metodoPago = metodo;
   if (metodo === 'paypal') {
-    setTimeout(() => this.initPayPalButton(), 0); // Espera a que el DOM se actualice
+    setTimeout(() => this.initPayPalButton(), 0); 
   }
 }
   ngOnInit(): void {
