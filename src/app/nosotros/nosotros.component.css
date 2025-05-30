@@ -1,145 +1,491 @@
-/* Estilos para el componente Nosotros (Diseño Vertical) */
+
 .team-carousel-container {
-    padding: 3rem 1rem;
-  }
-  
+  padding: 3rem 1rem;
+  font-size: var(--accessibility-font-size, 16px);
+  font-family: var(--accessibility-font-family, inherit);
+  transition: all 0.3s ease;
+}
+
+.team-member-card {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin: 70px auto;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.team-member-img-container {
+  overflow: hidden;
+  height: 350px;
+  position: relative;
+}
+
+.team-member-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.team-member-card:hover .team-member-img {
+  transform: scale(1.05);
+}
+
+.team-member-info {
+  padding: 2rem;
+  text-align: center;
+}
+
+.team-member-name {
+  color: #343a40;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  transition: color 0.3s ease;
+}
+
+.team-member-position {
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.team-member-description {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  padding: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}
+
+.carousel-indicators button {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #dee2e6;
+  opacity: 0.5;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+  background-color: #142339;
+  opacity: 1;
+}
+
+.nosotros-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.nosotros-header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.nosotros-header h1::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 3px;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2c3e50;
+  transition: background-color 0.3s ease;
+}
+
+.nosotros-header h4 {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  font-weight: 400;
+  margin-top: 1rem;
+  transition: color 0.3s ease;
+}
+
+.divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 0 auto 2rem auto;
+  width: 200px;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilos para el widget de accesibilidad - MEJORADOS */
+.accessibility-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.accessibility-toggle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0056b3; /* Color más oscuro para mejor contraste */
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.accessibility-toggle:hover {
+  background: #004494;
+  transform: scale(1.1);
+}
+
+.accessibility-toggle:focus {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+.accessibility-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+}
+
+.accessibility-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.accessibility-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.accessibility-menu-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #e9ecef;
+  color: #333;
+}
+
+.close-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
+}
+
+.accessibility-section {
+  padding: 1rem;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.accessibility-section:last-child {
+  border-bottom: none;
+}
+
+.accessibility-section h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.option-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Botones de opciones mejorados */
+.option-btn {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 70px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-btn:hover {
+  background: #f8f9fa;
+  border-color: #007bff;
+  transform: translateY(-1px);
+}
+
+.option-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
+}
+
+.option-btn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Estilos para opciones de fuente */
+.font-option {
+  height: auto;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.font-preview {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  font-size: 0.9rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Previsualización de tamaño de fuente */
+.font-size-preview {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-label {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.preview-text {
+  font-size: var(--accessibility-font-size, 16px);
+  font-weight: bold;
+}
+
+/* Controles del lector de pantalla mejorados */
+.reader-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.control-btn {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  flex: 1;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.control-btn svg {
+  margin-right: 0.25rem;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #007bff;
+  transform: translateY(-1px);
+}
+
+.control-btn:focus:not(:disabled) {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.control-btn.start:not(:disabled) {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.control-btn.start:hover:not(:disabled) {
+  background: #218838;
+}
+
+.control-btn.pause:not(:disabled) {
+  background: #ffc107;
+  color: #212529;
+  border-color: #ffc107;
+}
+
+.control-btn.pause:hover:not(:disabled) {
+  background: #e0a800;
+}
+
+.control-btn.stop:not(:disabled) {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.control-btn.stop:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.accessibility-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.accessibility-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
   .team-member-card {
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    margin: 70px auto;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
+    max-width: 600px;
   }
   
   .team-member-img-container {
-    overflow: hidden;
-    height: 3500px;
-    position: relative;
+    height: 400px;
   }
-  
-  .team-member-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-  
-  .team-member-card:hover .team-member-img {
-    transform: scale(1.05);
-  }
-  
-  .team-member-info {
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .team-member-name {
-    color: #343a40;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    font-size: 1.8rem;
-  }
-  
-  .team-member-position {
-    color: #6c757d;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-    font-size: 1.2rem;
-  }
-  
-  .team-member-description {
-    color: #495057;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-  }
-  
+}
 
-  /* Personalización de los controles del carrusel */
-  .carousel-control-prev,
-  .carousel-control-next {
-    width: 10%;
-    opacity: 0.7;
+@media (min-width: 992px) {
+  .team-member-card {
+    max-width: 700px;
   }
-  
-  .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-    padding: 1.5rem;
-  }
-  
-  .carousel-indicators {
-    bottom: -50px;
-  }
-  
-  .carousel-indicators button {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: #dee2e6;
-    opacity: 0.5;
-    margin: 0 5px;
-  }
-  
-  .carousel-indicators button.active {
-    background-color: #142339;
-    opacity: 1;
-  }
-  
-  /* Estilos responsivos manteniendo el diseño vertical */
-  @media (min-width: 768px) {
-    .team-member-card {
-      max-width: 600px;
-    }
-    
-    .team-member-img-container {
-      height: 400px;
-    }
-  }
-  
-  @media (min-width: 992px) {
-    .team-member-card {
-      max-width: 700px;
-    }
-  }
+}
 
-    /* Estilos del encabezado */
-    .nosotros-header {
-        text-align: center;
-        margin-bottom: 3rem;
-      }
-      
-      .nosotros-header h1 {
-        color: #2c3e50;
-        font-size: 2.5rem;
-        font-weight: 700;
-        position: relative;
-        display: inline-block;
-      }
-      
-      .nosotros-header h1::after {
-        content: "";
-        position: absolute;
-        width: 50px;
-        height: 3px;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      .nosotros-header h4 {
-        font-size: 1.2rem;
-        color: #7f8c8d;
-        font-weight: 400;
-        margin-top: 1rem;
-      }
-    
-      .divider {
-        height: 1px;
-        background: #e0e0e0;
-        margin: 0 auto 2rem auto;
-        width: 200px;
-      }
+@media (max-width: 480px) {
+  .accessibility-menu {
+    width: 280px;
+    right: -10px;
+  }
+  
+  .accessibility-toggle {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .team-carousel-container {
+    padding: 2rem 0.5rem;
+  }
+  
+  .nosotros-header h1 {
+    font-size: 2rem;
+  }
+  
+  .nosotros-header h4 {
+    font-size: 1rem;
+  }
+  
+  .font-option {
+    flex: 0 0 100%;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible para mejor accesibilidad */
+.accessibility-toggle:focus-visible,
+.option-btn:focus-visible,
+.control-btn:focus-visible,
+.close-btn:focus-visible {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+}
