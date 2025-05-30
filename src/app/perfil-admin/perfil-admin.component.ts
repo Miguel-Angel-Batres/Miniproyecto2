@@ -116,7 +116,9 @@ export class PerfilAdminComponent implements OnInit {
 
     this.usuarioService.pagos.subscribe((pagos) => {
       this.pagos = pagos;
+      console.log('Pagos obtenidos:', this.pagos);
     });
+    this.usuarioService.obtenerPagos();
     this.usuarioService.planes.subscribe((planes) => {
       this.planes = planes;
     });

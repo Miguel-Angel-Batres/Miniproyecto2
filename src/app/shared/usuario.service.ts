@@ -274,7 +274,25 @@ export class UsuarioService {
   isAuthenticated(): boolean {
     return this.userSubject.value !== null;
   }
+  async obtenerPagos(){
+    try {
+      const user = this.userSubject.value;
+      if (!user) return [];
 
+      const pagosRef = collection(db, 'pagos');
+      const pagosSnapshot = await getDocs(pagosRef);
+      const pagos = pagosSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      this.pagosSubject.next(pagos);
+      return pagos;
+    } catch (error) {
+      console.error('Error al obtener los pagos:', error);
+      return [];
+    }
+  }
   async obtenerUsuarios() {
     fetch('http://localhost:3000/api/usuarios')
       .then((response) => response.json())
