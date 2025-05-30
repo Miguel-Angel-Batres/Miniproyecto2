@@ -86,8 +86,8 @@ export class PerfilAdminComponent implements OnInit {
       this.hayUsuariosNormales = usuarios.some((u) => u.rol === 'usuario');
 
       this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
-        if (usuario.plan) {
-          const plan = usuario.plan;
+        if (usuario.plan.nombre) {
+          const plan = usuario.plan.nombre;
           if (!acc[plan]) {
         acc[plan] = 0;
           }
@@ -154,39 +154,7 @@ export class PerfilAdminComponent implements OnInit {
     this.usuarioService.pagos.subscribe((pagos) => {
       this.pagos = pagos;
       console.log('Pagos obtenidos:', this.pagos);
-    });
-    this.usuarioService.obtenerPagos();
-    this.usuarioService.planes.subscribe((planes) => {
-      this.planes = planes;
-    });
-    this.usuarioService.obtenerPlanes();
-
-
-    
-    
-    const registrosPorFecha: { [key: string]: number } = {};
-    this.usuarios.forEach((usuario) => {
-      const fecha = new Date(usuario.fechaRegistro).toISOString().split('T')[0]; // YYYY-MM-DD
-      registrosPorFecha[fecha] = (registrosPorFecha[fecha] || 0) + 1;
-    });
-
-    const fechas = Object.keys(registrosPorFecha).sort();
-    const registros = fechas.map((fecha) => registrosPorFecha[fecha]);
-
-    this.graficaUsuariosPorFecha = {
-      labels: fechas,
-      datasets: [
-        {
-          label: 'Usuarios Registrados',
-          data: registros,
-          fill: false,
-          borderColor: '#42A5F5',
-          backgroundColor: '#42A5F5',
-          tension: 0.4,
-        },
-      ],
-    };
-    const ingresosPorMes: { [key: string]: number } = {};
+      const ingresosPorMes: { [key: string]: number } = {};
 
     this.pagos.forEach((pago) => {
       const fecha = new Date(pago.fechaPago);
@@ -211,6 +179,14 @@ export class PerfilAdminComponent implements OnInit {
         },
       ],
     };
+    });
+    this.usuarioService.obtenerPagos();
+    this.usuarioService.planes.subscribe((planes) => {
+      this.planes = planes;
+    });
+    this.usuarioService.obtenerPlanes();
+
+    
   }
 
   logout(): void {
