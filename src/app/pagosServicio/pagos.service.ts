@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { collection, addDoc, getDocs, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, query, where, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';  
 import { Pago, PagoConId } from '../models/pago.model';
 import { from, Observable } from 'rxjs';
@@ -10,11 +10,40 @@ import { from, Observable } from 'rxjs';
 })
 export class PagoService {
   async registrarPago(pago: Pago) {
-    const pagosRef = collection(db, 'pagos'); 
-    return await addDoc(pagosRef, {
+    const pagosRef = collection(db, 'pagos');
+    
+    const usuariosQuery = query(collection(db, 'usuarios'), where('nombre', '==', pago.titular));
+    const usuariosSnapshot = await getDocs(usuariosQuery);
+    if (usuariosSnapshot.empty) {
+      throw new Error('Usuario no encontrado');
+    }
+    const usuarioDoc = usuariosSnapshot.docs[0];
+    const usuariosRef = doc(db, 'usuarios', usuarioDoc.id);
+
+    const planesQuery = query(collection(db, 'planes'), where('nombre', '==', pago.plan));
+    const planesSnapshot = await getDocs(planesQuery);
+    if (planesSnapshot.empty) {
+      throw new Error('Plan no encontrado');
+    }
+    const planDoc = planesSnapshot.docs[0];
+
+    const nuevoPago = await addDoc(pagosRef, {
       ...pago,
       fechaRegistro: new Date()
     });
+
+    await updateDoc(usuariosRef, {
+      pagos: arrayUnion(nuevoPago.id),
+      plan: {
+        nombre: pago.plan,
+        estado: 'activo',
+        fechaInicio: new Date(),
+        fechaFin: new Date(new Date().setMonth(new Date().getMonth() + pago.duracion)),
+      }
+      
+    });
+
+    return nuevoPago;
   }
   obtenerPagos(): Observable<PagoConId[]> {
     const pagosRef = collection(db, 'pagos');
@@ -32,17 +61,21 @@ export class PagoService {
     const pagoRef = doc(db, 'pagos', id);
     return deleteDoc(pagoRef);
   }
-  obtenerPagosUsuario(nombre: string): Observable<PagoConId[]> {
-    const pagosRef = collection(db, 'pagos');
-    const q = query(pagosRef, where('titular', '==', nombre));
-    return from(
-      getDocs(q).then((snap) =>
-        snap.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as any),
-        }))
-      )
-    );
-  }
-  
+ 
+   obtenerPagosPorIds(ids: string[]): Promise<any[]> {
+      const promesas = ids.map((id) => {
+        const pagoRef = doc(db, 'pagos', id);
+        return getDoc(pagoRef).then((docSnap) => {
+          if (docSnap.exists()) {
+            
+            return { id: docSnap.id, ...docSnap.data() };
+          } else {
+            console.warn(`Pago con ID ${id} no encontrado.`);
+            return null;
+          }
+        });
+      });
+    
+      return Promise.all(promesas).then((pagos) => pagos.filter((pago) => pago !== null));
+    }
 }

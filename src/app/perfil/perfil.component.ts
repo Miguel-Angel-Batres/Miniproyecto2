@@ -21,6 +21,8 @@ export class PerfilComponent implements OnInit {
   user: any;
   contratado:any;
   pagoActivo:any
+  planUsuario: any;
+  editarfoto: boolean | undefined;
 
   constructor(private route: Router, private usuarioService: UsuarioService, private pagoService :PagoService) {
     this.today = new Date().toISOString().split('T')[0];
@@ -28,18 +30,37 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.usuarioService.user.subscribe((user) => {
       this.usuario = user;
-  
+
+      if(this.usuario?.nombre){
+        this.planUsuario = this.usuarioService.obtenerPlan(this.usuario.plan.nombre).then((plan) => {
+          this.planUsuario = plan;
+          console.log('Plan del usuario:', this.planUsuario);
+        }
+        ).catch((error) => {
+          console.error('Error al obtener el plan del usuario:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo obtener el plan del usuario.',
+          });
+        }
+        );
+      }
+
       if (this.usuario?.fechaNacimiento?.seconds) {
         this.usuario.fechaNacimiento = new Date(this.usuario.fechaNacimiento.seconds * 1000);
       }
+      if (this.usuario?.plan?.fechaInicio) {
+        this.usuario.plan.fechaInicio = this.convertirFecha(this.usuario.plan.fechaInicio);
+      }
+      if (this.usuario?.plan?.fechaFin) {
+        this.usuario.plan.fechaFin = this.convertirFecha(this.usuario.plan.fechaFin);
+      }
   
-      if (this.usuario?.nombre) {
-        this.pagoService.obtenerPagosUsuario(this.usuario.nombre).subscribe((pagos) => {
+      if (this.usuario?.pagos?.length > 0) {
+        this.pagoService.obtenerPagosPorIds(this.usuario.pagos).then((pagos) => {
           this.pagos = pagos;
-          console.log(this.pagos);
-  
           if (this.pagos.length > 0) {
-            // Ordenar por fecha (de más reciente a más antigua)
             const pagosOrdenados = [...this.pagos].sort((a, b) => {
               const fechaA = (a.fechaPago as any).seconds
                 ? new Date(a.fechaPago.seconds * 1000)
@@ -49,7 +70,7 @@ export class PerfilComponent implements OnInit {
                 : new Date(b.fechaPago);
               return fechaB.getTime() - fechaA.getTime();
             });
-  
+      
             const ultimoPago = pagosOrdenados[0];
             const fechaUltimoPago = (ultimoPago.fechaPago as any).seconds
               ? new Date(ultimoPago.fechaPago.seconds * 1000)
@@ -57,21 +78,22 @@ export class PerfilComponent implements OnInit {
             const hoy = new Date();
             const diferenciaEnMs = hoy.getTime() - fechaUltimoPago.getTime();
             const diasPasados = diferenciaEnMs / (1000 * 60 * 60 * 24);
-  
+      
             if (diasPasados <= 30) {
-              this.pagoActivo=ultimoPago
-              console.log('El usuario está ACTIVO');
-              this.contratado=true;
+              this.pagoActivo = ultimoPago;
+              this.contratado = true;
             } else {
-              console.log('El usuario está INACTIVO');
-              this.contratado=false;
+              this.contratado = false;
             }
           } else {
-            console.log('El usuario no tiene pagos registrados');
+            console.log('No se encontraron pagos para el usuario.');
           }
+      
         });
       }
+
     });
+
   }
   
 
@@ -118,6 +140,53 @@ export class PerfilComponent implements OnInit {
       });
     }
   }
-  
+  cambiarImagen(event: any) {
+    const file = event.target.files[0];
+    if (!file) {
+      console.warn('No se seleccionó ningún archivo.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      try {
+        this.usuario.imagenPerfil = e.target.result;
+        this.usuarioService.actualizarfotoPerfil(this.usuario.uid, this.usuario.imagenPerfil).then
+          (() => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Éxito',
+              text: 'Foto de perfil actualizada correctamente.',
+            });
+            this.editarfoto = false;
+          })
+          .catch((error) => {
+            console.error('Error al actualizar la foto de perfil:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo actualizar la foto de perfil.',
+            });
+          });
+      } catch (error) {
+        console.error('Error al procesar la imagen:', error);
+      }
+    };
+
+   
+    reader.readAsDataURL(file);
+  }
+  activarEdicionFoto() {
+    this.editarfoto = true;
+  }
+  convertirFecha(fecha: any): Date | null {
+    if (fecha?.seconds) {
+      return new Date(fecha.seconds * 1000);
+    } else if (typeof fecha === 'string') {
+      return new Date(fecha);
+    } else if (fecha instanceof Date) {
+      return fecha;
+    }
+    return null;
+  }
  
 }

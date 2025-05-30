@@ -4,14 +4,38 @@
   @if (usuario) {
     <div class="row">
       <!-- Imagen de perfil -->
-      <div class="col-md-4 text-center mb-4">
+      <div class="col-md-4 text-center mb-4 position-relative">
+        <!-- Imagen de perfil -->
         <img 
           [src]="usuario.imagenPerfil || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'" 
           alt="Imagen de perfil" 
           class="img-thumbnail rounded-circle" 
           width="250" 
-          height="250">
+          height="250"
+        />
+      
+        <!-- Botón de edición al lado de la imagen -->
+        @if(!editarfoto){
+        <button 
+          class="btn btn-primary position-absolute editar-foto-btn" 
+          (click)="activarEdicionFoto()"
+        >
+          <span class="bi bi-pencil"></span>
+        </button>
+        }
+      
+        <!-- Input para cambiar la imagen -->
+        @if(editarfoto){
+          <input
+            type="file"
+            accept="image/*"
+            (change)="cambiarImagen($event)"
+            class="form-control-file"
+          />
+        }
+        
       </div>
+     
 
       <!-- Datos del usuario -->
       <div class="col-md-4">
@@ -71,28 +95,31 @@
             </tr>
           </thead>
           <tbody>
-            @if (usuario.plan) {
+            @if (pagoActivo) {
               <tr>
-                <td>{{  pagoActivo.plan}}</td>
-                <td>{{ pagoActivo.monto| currency }}</td>
-                <td>{{ usuario.plan.duracion }} meses</td>
-                @if (this.contratado === true) {
-                  <td class="text-success">Activo</td>
-                } 
+              <td>{{ pagoActivo.plan }}</td>
+              <td>{{ pagoActivo.monto | currency }}</td>
+              <td>{{ pagoActivo.duracion }} meses</td>
+              @if (contratado === true) {
+                <td class="text-success">Activo</td>
+              } @else {
+                <td class="text-danger">Inactivo</td>
+              }
               </tr>
             } @else {
               <tr>
-                <td colspan="3" class="text-center">vencido.</td>
+              <td colspan="4" class="text-center">No hay información disponible del plan activo.</td>
               </tr>
             }
+          
           </tbody>
 
         </table>
         <!-- Beneficios -->
         <h4 class="text-center">Beneficios de tu Membresía</h4>
         <ul class="list-group mb-4">
-          @if (usuario.plan && usuario.plan.beneficios) {
-            @for (beneficio of usuario.plan.beneficios; track beneficio) {
+          @if (planUsuario && planUsuario.beneficios) {
+            @for (beneficio of planUsuario.beneficios; track beneficio) {
               <li class="list-group-item">{{ beneficio }}</li>
             }
           } @else {
@@ -101,10 +128,16 @@
         </ul>
         <!-- Fecha de inicio y fin -->
         <h4 class="text-center">Fechas de Membresía</h4>
-        <p class="text-center">Tu membresía es válida desde {{ usuario.plan.fechaInicio | date }} hasta {{ usuario.plan.fechaFin | date }}</p>
-        <!-- Botón para renovar -->
+        @if (usuario?.plan?.fechaInicio && usuario?.plan?.fechaFin) {
+          <p class="text-center">
+            Tu membresía comenzó el {{ usuario.plan.fechaInicio | date }} y finalizará el {{ usuario.plan.fechaFin | date }}
+          </p>
+        } @else {
+          <p class="text-center">No hay fechas de inicio y fin disponibles.</p>
+        }
+          <!-- Botón para renovar -->
         <div class="text-center">
-          @if(usuario.plan && usuario.plan.estado === 'Activo') {
+          @if(usuario.plan && usuario.plan.estado === 'activo') {
             <button class="btn bg-danger" (click)="cancelarMembresia()">Cancelar Membresia</button>
           } @else {
             <button class="btn btn-primary" (click)="renovarMembresia()">Renovar Membresía</button>
@@ -154,11 +187,10 @@
   </div>
   }
 </div>
-<!-- Vincular cuentas -->
+<!-- Vincular cuentas
 <div class="container mt-5 p-4 border rounded shadow bg-light">
   <h2 class="mb-4 text-center">Vincular Cuentas</h2>
   <div class="row text-center">
-    <!-- Vincular Google -->
     <div class="col-md-4 mb-3">
       <button class="btn btn-danger w-100" (click)="vincularGoogle()">
         <i class="fab fa-google"></i> Vincular con Google
@@ -166,4 +198,4 @@
     </div>
     
   </div>
-</div>
+</div> -->

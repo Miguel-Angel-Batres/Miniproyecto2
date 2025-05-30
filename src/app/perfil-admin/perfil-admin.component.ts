@@ -85,6 +85,43 @@ export class PerfilAdminComponent implements OnInit {
       this.usuarios = usuarios;
       this.hayUsuariosNormales = usuarios.some((u) => u.rol === 'usuario');
 
+      this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
+        if (usuario.plan) {
+          const plan = usuario.plan;
+          if (!acc[plan]) {
+        acc[plan] = 0;
+          }
+          acc[plan]++;
+        }
+        return acc;
+      }, {});
+      const chartLabels = Object.keys(this.UsuariosPorPlan);
+      const chartData = Object.values(this.UsuariosPorPlan) as number[];
+      
+      this.GraficaPastel = {
+        labels: chartLabels,
+        datasets: [
+          {
+        data: chartData,
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+        ],
+        hoverBackgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+        ],
+          },
+        ],
+      };
+
+      
       const registrosPorFecha: { [key: string]: number } = {};
       this.usuarios.forEach((usuario) => {
         const fecha = new Date(usuario.fechaRegistro)
@@ -126,44 +163,7 @@ export class PerfilAdminComponent implements OnInit {
 
 
     
-    this.UsuariosPorPlan = this.usuarios.reduce((acc: any, usuario: any) => {
-      if (usuario.plan && usuario.plan.nombre) {
-        const plan = usuario.plan.nombre;
-        if (!acc[plan]) {
-          acc[plan] = 0;
-        }
-        acc[plan]++;
-      }
-      return acc;
-    }, {});
-
-    // Prepare data for the pie chart
-    const chartLabels = Object.keys(this.UsuariosPorPlan);
-    const chartData = Object.values(this.UsuariosPorPlan) as number[];
-
-    this.GraficaPastel = {
-      labels: chartLabels,
-      datasets: [
-        {
-          data: chartData,
-          backgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0',
-            '#9966FF',
-          ],
-          hoverBackgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0',
-            '#9966FF',
-          ],
-        },
-      ],
-    };
-
+    
     const registrosPorFecha: { [key: string]: number } = {};
     this.usuarios.forEach((usuario) => {
       const fecha = new Date(usuario.fechaRegistro).toISOString().split('T')[0]; // YYYY-MM-DD

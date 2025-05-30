@@ -323,6 +323,19 @@ export class UsuarioService {
         this.planesSubject.next([]); 
       });
   }
+  async obtenerPlan(planNombre: string) {
+    try {
+      const planes = collection(db, 'planes');
+      const snapshot = await getDocs(planes);
+      const plan = snapshot.docs.find((doc) => doc.data()['nombre'] === planNombre);
+      console.log('Plan encontrado:', plan?.data());
+      return plan ? { ...plan.data() } : null;
+    } catch (error) {
+      console.error('Error al obtener el plan:', error);
+      return null;
+    }
+  }
+
 
   async obtenerUsuarioLogeado(): Promise<any> {
     const usuarioActual = this.userSubject.value;
@@ -341,8 +354,10 @@ export class UsuarioService {
     }
   }
   async actualizarUsuario(usuario: any): Promise<void> {
+    console.log('Actualizando usuario:', usuario);
+    console.log('Contraseña:', usuario.contraseña);
     try {
-      if(usuario.contraseña!== '') {
+      if(usuario.contraseña!== '' && usuario.contraseña !== undefined){
         const response = await fetch('http://localhost:3000/api/actualizar-contrasena', {
           method: 'PUT',
           headers: {
@@ -358,7 +373,7 @@ export class UsuarioService {
           throw new Error(errorData?.message || 'Error al actualizar la contraseña');
         }
         const data = await response.json();
-
+        delete usuario.contraseña;
       }else{
         delete usuario.contraseña; 
       }      
@@ -367,7 +382,7 @@ export class UsuarioService {
       const usuarios = this.usersSubject.value.map((u) =>
         u.uid === usuario.uid ? { ...u, ...usuario } : u
       );
-
+      this.userSubject.next(usuario);
       this.usersSubject.next(usuarios);
       Swal.fire({
         icon: 'success',
@@ -376,6 +391,19 @@ export class UsuarioService {
       });
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
+      
+    }
+  }
+  async actualizarfotoPerfil(uid: string, imagen: string): Promise<void> {
+    try {
+      const userDocRef = doc(db, 'usuarios', uid);
+      await updateDoc(userDocRef, { imagenPerfil: imagen });
+      const usuarios = this.usersSubject.value.map((u) =>
+        u.uid === uid ? { ...u, imagenPerfil: imagen } : u
+      );
+      this.usersSubject.next(usuarios);
+    } catch (error) {
+      console.error('Error al actualizar la foto de perfil:', error);
     }
   }
 

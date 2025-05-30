@@ -53,7 +53,6 @@ export class PagosComponent implements OnInit {
     const fecha = new Date();
     this.today = fecha.toISOString().split('T')[0];
     this.pago.fechaPago = this.today;
-    this.planes = JSON.parse(localStorage.getItem('planes') || '[]');
   }
  
 initPayPalButton() {
@@ -115,6 +114,7 @@ setMetodoPago(metodo: 'regular' | 'paypal') {
   onSubmit(): void {
     if (this.formPago.valid) {
       this.pagoServicio.registrarPago(this.pago)
+      
         .then(() => {
           Swal.fire({
             icon: 'success',
