@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 // usuario service
 import { UsuarioService } from '../shared/usuario.service';
+import { PagoService } from '../pagosServicio/pagos.service';
 
 @Component({
   selector: 'app-perfil',
@@ -18,31 +19,62 @@ export class PerfilComponent implements OnInit {
   pagos: any[] = [];
   today: string;
   user: any;
+  contratado:any;
+  pagoActivo:any
 
-  constructor(private route: Router, private usuarioService: UsuarioService) {
+  constructor(private route: Router, private usuarioService: UsuarioService, private pagoService :PagoService) {
     this.today = new Date().toISOString().split('T')[0];
   }
-
   ngOnInit(): void {
     this.usuarioService.user.subscribe((user) => {
       this.usuario = user;
-    if (this.usuario?.fechaNacimiento?.seconds) {
-      this.usuario.fechaNacimiento = new Date(this.usuario.fechaNacimiento.seconds * 1000);
-    }
-    });
-
-    this.usuarioService.pagos.subscribe((pagos) => {
-      this.pagos = pagos;
-    });
-    if (this.usuario.plan.nombre !== '') {
-      if (this.usuario.plan.fechaFin < this.today) {
-        this.usuario.plan.estado = 'Vencido';
-        this.usuarioService.actualizarUsuario(this.usuario);
+  
+      if (this.usuario?.fechaNacimiento?.seconds) {
+        this.usuario.fechaNacimiento = new Date(this.usuario.fechaNacimiento.seconds * 1000);
       }
-    }
-   // this.usuarioService.desvincularProveedor('facebook.com');
-    
+  
+      if (this.usuario?.nombre) {
+        this.pagoService.obtenerPagosUsuario(this.usuario.nombre).subscribe((pagos) => {
+          this.pagos = pagos;
+          console.log(this.pagos);
+  
+          if (this.pagos.length > 0) {
+            // Ordenar por fecha (de más reciente a más antigua)
+            const pagosOrdenados = [...this.pagos].sort((a, b) => {
+              const fechaA = (a.fechaPago as any).seconds
+                ? new Date(a.fechaPago.seconds * 1000)
+                : new Date(a.fechaPago);
+              const fechaB = (b.fechaPago as any).seconds
+                ? new Date(b.fechaPago.seconds * 1000)
+                : new Date(b.fechaPago);
+              return fechaB.getTime() - fechaA.getTime();
+            });
+  
+            const ultimoPago = pagosOrdenados[0];
+            const fechaUltimoPago = (ultimoPago.fechaPago as any).seconds
+              ? new Date(ultimoPago.fechaPago.seconds * 1000)
+              : new Date(ultimoPago.fechaPago);
+            const hoy = new Date();
+            const diferenciaEnMs = hoy.getTime() - fechaUltimoPago.getTime();
+            const diasPasados = diferenciaEnMs / (1000 * 60 * 60 * 24);
+  
+            if (diasPasados <= 30) {
+              this.pagoActivo=ultimoPago
+              console.log('El usuario está ACTIVO');
+              this.contratado=true;
+            } else {
+              console.log('El usuario está INACTIVO');
+              this.contratado=false;
+            }
+          } else {
+            console.log('El usuario no tiene pagos registrados');
+          }
+        });
+      }
+    });
   }
+  
+
   renovarMembresia() {
     // redirigir a la pagina de pago
     this.route.navigate(['/pagos']);
