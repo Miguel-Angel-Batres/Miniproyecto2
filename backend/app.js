@@ -201,7 +201,7 @@ app.get('/api/confirmacion', async (req, res) => {
         const userCredential = await auth.createUser({
             email,
             password,
-            phoneNumber: extraData.telefono, 
+            //phoneNumber: extraData.telefono, 
         });
         const user = userCredential;
         await db.collection('usuarios').doc(user.uid).set({
