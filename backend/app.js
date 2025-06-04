@@ -76,7 +76,7 @@ app.post('/api/registro', async (req, res) => {
     const { email, password, extraData } = req.body;
     try {
         const confirmationToken = Math.random().toString(36).substring(2, 15);
-        const docRef = db.collection('pendingRegistrations').doc(confirmationToken); 
+        const docRef = db.collection('registros_pendientes').doc(confirmationToken); 
         await docRef.set({
             email,
             password,
@@ -112,7 +112,7 @@ app.post('/api/recuperar-cuenta', async (req, res) => {
         }
         
         const resetToken = Math.random().toString(36).substring(2, 15);
-        const docRef = db.collection('passwordResets').doc(resetToken);
+        const docRef = db.collection('contraseñas_reseteadas').doc(resetToken);
         await docRef.set({
             email,
             createdAt: new Date().toISOString(),
@@ -139,7 +139,7 @@ app.post('/api/recuperar-cuenta', async (req, res) => {
 app.get('/api/reset-password', async (req, res) => {
     const { token } = req.query;
     try {
-        const resetRef = db.collection('passwordResets').doc(token);
+        const resetRef = db.collection('contraseñas_reseteadas').doc(token);
         const resetSnap = await resetRef.get();
         if (!resetSnap.exists) {
             return res.status(400).json({ message: 'Token inválido o expirado.' });
@@ -192,7 +192,7 @@ app.get('/api/reset-password', async (req, res) => {
 app.get('/api/confirmacion', async (req, res) => {
     const { token } = req.query;
     try {
-        const pendingRef = db.collection('pendingRegistrations').doc(token);
+        const pendingRef = db.collection('registros_pendientes').doc(token);
         const pendingSnap = await pendingRef.get(); 
         if (!pendingSnap.exists) {
             return res.status(400).json({ message: 'Token inválido o expirado.' });
