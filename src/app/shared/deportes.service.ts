@@ -8,7 +8,7 @@ import { Deporte } from '../deporte';
   providedIn: 'root'
 })
 export class DeportesService {
-  private apiUrl = 'http://localhost:3000/deportes';  
+  private apiUrl = 'https://backendnode-iouo.onrender.com/deportes'; // URL de la API
 
   constructor(private http: HttpClient) {}
 
