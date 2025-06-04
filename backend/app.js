@@ -8,7 +8,7 @@ const {db,auth}=require('./firebase');
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
-const angularDistPath = path.join(__dirname, './dist/mini-ii/browser');
+const angularDistPath = path.join(__dirname, '../dist/mini-ii/browser');
 console.log('Ruta de Angular:', angularDistPath);
 
 app.use(express.static(angularDistPath));
