@@ -5,7 +5,8 @@
     "ng": "ng",
     "frontend": "ng serve",
     "backend": "cd backend && npm start",
-    "build": "ng build",
+    "generate-env": "node scripts/generate-env.js",
+  "build": "npm run generate-env && ng build",
     "start": "npm-run-all --parallel frontend backend",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
