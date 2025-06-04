@@ -7,7 +7,7 @@
     "backend": "cd backend && npm start",
     "generate-env": "node scripts/generate-env.js",
     "build": "npm run generate-env && ng build",
-    "start": "npm-run-all --parallel frontend backend",
+    "start": "cd backend && npm start",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "install-all": "npm install && cd backend && npm install"
