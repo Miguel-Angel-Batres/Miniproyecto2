@@ -16,22 +16,9 @@ app.use((req, res, next) => {
     console.log(`Solicitud recibida: ${req.method} ${req.url}`);
     next();
 });
-app.get('/', async (req, res) => {
-    try {
-      const snapshot = await db.collection('pagos').get();
-      const data = snapshot.docs.map(doc => doc.data());
-      // obtener usuarios de auth
-    const users = await auth.listUsers();
-    
-    
-      res.json({ pagos: data, usuarios: users.users });
-
-
-    } catch (err) {
-      console.error('Error al obtener pagos:', err);
-      res.status(500).send('Error al obtener pagos');
-    }
-  });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(angularDistPath, 'index.html'));
+});
 const transporter=nodemailer.createTransport({
     service:'gmail',
     auth:{
