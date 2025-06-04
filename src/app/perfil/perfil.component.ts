@@ -34,7 +34,6 @@ export class PerfilComponent implements OnInit {
       if(this.usuario?.nombre){
         this.planUsuario = this.usuarioService.obtenerPlan(this.usuario.plan.nombre).then((plan) => {
           this.planUsuario = plan;
-          console.log('Plan del usuario:', this.planUsuario);
         }
         ).catch((error) => {
           console.error('Error al obtener el plan del usuario:', error);
@@ -86,7 +85,6 @@ export class PerfilComponent implements OnInit {
               this.contratado = false;
             }
           } else {
-            console.log('No se encontraron pagos para el usuario.');
           }
       
         });

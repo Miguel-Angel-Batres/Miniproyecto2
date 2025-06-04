@@ -105,7 +105,6 @@ export class UsuarioService {
               event.preventDefault();
               try {
                 const capturedEmail = email; 
-                console.log(capturedEmail);
                 const response = await fetch(
                   'http://localhost:3000/api/recuperar-cuenta',
                   {
@@ -298,7 +297,6 @@ export class UsuarioService {
       .then((response) => response.json())
       .then((data) => {
         this.usersSubject.next(data);
-        console.log('Usuarios obtenidos:', data);
         return data;
       })
       .catch((error) => {
@@ -316,7 +314,6 @@ export class UsuarioService {
       })
       .then((planes) => {
         this.planesSubject.next(planes);
-        console.log('Planes obtenidos:', planes);
       })
       .catch((error) => {
         console.error('Error al obtener los planes:', error);
@@ -328,7 +325,6 @@ export class UsuarioService {
       const planes = collection(db, 'planes');
       const snapshot = await getDocs(planes);
       const plan = snapshot.docs.find((doc) => doc.data()['nombre'] === planNombre);
-      console.log('Plan encontrado:', plan?.data());
       return plan ? { ...plan.data() } : null;
     } catch (error) {
       console.error('Error al obtener el plan:', error);
@@ -354,8 +350,6 @@ export class UsuarioService {
     }
   }
   async actualizarUsuario(usuario: any): Promise<void> {
-    console.log('Actualizando usuario:', usuario);
-    console.log('Contraseña:', usuario.contraseña);
     try {
       if(usuario.contraseña!== '' && usuario.contraseña !== undefined){
         const response = await fetch('http://localhost:3000/api/actualizar-contrasena', {
@@ -490,7 +484,6 @@ export class UsuarioService {
     this.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
       size: size,
       callback: (response: any) => {
-        console.log('reCAPTCHA resuelto:', response);
       },
       'expired-callback': () => {
         console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
@@ -624,7 +617,6 @@ export class UsuarioService {
 
     try {
       await linkWithPopup(currentUser, provider);
-      console.log('Cuenta de Google vinculada exitosamente');
     } catch (error) {
       console.error('Error al vincular cuenta de Google:', error);
       throw error;
@@ -639,7 +631,6 @@ export class UsuarioService {
 
     try {
       const resultado = await unlink(currentUser, proveedor);
-      console.log(`Proveedor ${proveedor} desvinculado con éxito.`, resultado);
     } catch (error) {
       console.error(`Error al desvincular ${proveedor}:`, error);
       throw error;

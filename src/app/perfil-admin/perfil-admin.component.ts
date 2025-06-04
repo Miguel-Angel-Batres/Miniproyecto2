@@ -153,7 +153,6 @@ export class PerfilAdminComponent implements OnInit {
 
     this.usuarioService.pagos.subscribe((pagos) => {
       this.pagos = pagos;
-      console.log('Pagos obtenidos:', this.pagos);
       const ingresosPorMes: { [key: string]: number } = {};
 
     this.pagos.forEach((pago) => {
@@ -226,9 +225,6 @@ export class PerfilAdminComponent implements OnInit {
     });
   }
 
-  editarPerfil(): void {
-    console.log('Editar perfil');
-  }
 
   gestionarUsuarios(): void {
     this.ventanas.usuarios = true;
