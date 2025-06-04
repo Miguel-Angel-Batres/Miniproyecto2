@@ -198,10 +198,11 @@ app.get('/api/confirmacion', async (req, res) => {
             return res.status(400).json({ message: 'Token inválido o expirado.' });
         }
         const { email, password, extraData } = pendingSnap.data();
+        const telefonoSanitizado = sanitizarNumeroMexicano(extraData.telefono);
         const userCredential = await auth.createUser({
             email,
             password,
-            //phoneNumber: extraData.telefono, 
+            phoneNumber: telefonoSanitizado, 
         });
         const user = userCredential;
         await db.collection('usuarios').doc(user.uid).set({
@@ -289,6 +290,15 @@ app.get('/api/planes', async (req, res) => {
     }
 }
 );
+function sanitizarNumeroMexicano(numero) {
+    if (!numero) return null;
+    let limpio = numero.toString().replace(/[\s\-\(\)]/g, ''); // quita espacios, guiones, paréntesis
+    limpio = limpio.replace(/^(\+?52)?(1|044|045|01)?/, ''); // quita prefijos
+    if (/^\d{10}$/.test(limpio)) {
+        return '+52' + limpio;
+    }
+    return null; // número inválido
+}
 
 
 module.exports=app;
