@@ -80,7 +80,7 @@ app.post('/api/registro', async (req, res) => {
             createdAt: new Date().toISOString(),
         });
 
-        const confirmationLink = `http://localhost:3000/api/confirmacion?token=${confirmationToken}`;
+        const confirmationLink = `https://gimnasio-santa-cruz-ww7d.onrender.com/api/confirmacion?token=${confirmationToken}`;
         await transporter.sendMail({
             from: "Tu dios chinchillas",
             to: email,
@@ -114,7 +114,7 @@ app.post('/api/recuperar-cuenta', async (req, res) => {
             createdAt: new Date().toISOString(),
         });
 
-        const resetLink = `http://localhost:3000/api/reset-password?token=${resetToken}`;
+        const resetLink = `https://gimnasio-santa-cruz-ww7d.onrender.com/api/reset-password?token=${resetToken}`;
         const enviaremail = await transporter.sendMail({
             from: email, 
             to: "maesito23763446@gmail.com", 
