@@ -82,7 +82,7 @@ export class UsuarioService {
 
   async manageAttemps(email: string): Promise<void> {
     const verificarAttemps = await fetch(
-      'https://gimnasio-santa-cruz-ww7d.onrender.com/api/verificar-attemps',
+      'http://localhost:3000/api/verificar-attemps',
       {
         method: 'POST',
         headers: {
@@ -106,7 +106,7 @@ export class UsuarioService {
               try {
                 const capturedEmail = email; 
                 const response = await fetch(
-                  'https://gimnasio-santa-cruz-ww7d.onrender.com/api/recuperar-cuenta',
+                  'http://localhost:3000/api/recuperar-cuenta',
                   {
                     method: 'POST',
                     headers: {
@@ -168,6 +168,8 @@ export class UsuarioService {
 
   async login(email: string, password: string): Promise<any> {
     try {
+      console.log('Intentando iniciar sesión con:', email);
+      console.log('Contraseña:', password ? 'Proporcionada' : 'No proporcionada');
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -206,7 +208,7 @@ export class UsuarioService {
   ): Promise<any> {
     try {
       const verificarEmail = await fetch(
-        'https://gimnasio-santa-cruz-ww7d.onrender.com/api/verificar-email',
+        'http://localhost:3000/api/verificar-email',
         {
           method: 'POST',
           headers: {
@@ -225,7 +227,7 @@ export class UsuarioService {
         return;
       }
 
-      const response = await fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/registro', {
+      const response = await fetch('http://localhost:3000/api/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -293,7 +295,7 @@ export class UsuarioService {
     }
   }
   async obtenerUsuarios() {
-    fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/usuarios')
+    fetch('http://localhost:3000/api/usuarios')
       .then((response) => response.json())
       .then((data) => {
         this.usersSubject.next(data);
@@ -305,7 +307,7 @@ export class UsuarioService {
       });
   }
   obtenerPlanes(): void {
-    fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/planes')
+    fetch('http://localhost:3000/api/planes')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error al obtener los planes');
@@ -352,7 +354,7 @@ export class UsuarioService {
   async actualizarUsuario(usuario: any): Promise<void> {
     try {
       if(usuario.contraseña!== '' && usuario.contraseña !== undefined){
-        const response = await fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/actualizar-contrasena', {
+        const response = await fetch('http://localhost:3000/api/actualizar-contrasena', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
