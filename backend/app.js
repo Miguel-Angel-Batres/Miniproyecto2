@@ -1,24 +1,15 @@
 const express=require('express');
 const morgan=require('morgan');
 const cors = require('cors');
-const path = require('path');
 const nodemailer=require('nodemailer');
 const app=express()
 const {db,auth}=require('./firebase');
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
-const angularDistPath = path.join(__dirname, '../dist/mini-ii/browser');
-console.log('Ruta de Angular:', angularDistPath);
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(angularDistPath));
-app.use((req, res, next) => {
-    console.log(`Solicitud recibida: ${req.method} ${req.url}`);
-    next();
-});
-app.get('/', (req, res) => {
-    res.sendFile(path.join(angularDistPath, 'index.html'));
-});
+
 const transporter=nodemailer.createTransport({
     service:'gmail',
     auth:{
