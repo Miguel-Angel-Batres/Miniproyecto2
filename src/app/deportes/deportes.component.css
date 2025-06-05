@@ -165,3 +165,11 @@
     content: "💲";
   }
   
+
+  .loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px; /* Puedes ajustar la altura */
+  width: 100%;
+}

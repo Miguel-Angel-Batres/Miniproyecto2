@@ -10,12 +10,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import Swal from 'sweetalert2';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-horarioscostos',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, MatTableModule, MatPaginatorModule],
+  imports: [RouterModule, MatProgressSpinnerModule,CommonModule, FormsModule, MatTableModule, MatPaginatorModule],
   templateUrl: './horarioscostos.component.html',
   styleUrls: ['./horarioscostos.component.css']
 })

@@ -10,14 +10,30 @@
  <div class="deportes-container">
   @if (filteredDeportes.length === 0) {
     <div class="loading-message">
-      <p>No se encontraron deportes...</p>
+      <mat-progress-spinner
+        color="primary"
+        mode="indeterminate"
+        diameter="60">
+      </mat-progress-spinner>
     </div>
   }
   @if (filteredDeportes.length > 0) {
-    @for (deporte of filteredDeportes; track deporte) {
-      <div class="deporte-card">
-        <div class="card-image-container">
-          <img src="{{deporte.img}}" alt="{{deporte.nombre}}" class="card-image">
+@for (deporte of filteredDeportes; track deporte) {
+  <div class="deporte-card">
+    <div class="card-image-container" style="position: relative;">
+      @if (imagenCargando[deporte.nombre]) {
+        <div class="image-spinner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          <mat-progress-spinner color="primary" mode="indeterminate" diameter="40"></mat-progress-spinner>
+        </div>
+          }
+          <img
+            [src]="deporte.img"
+            alt="{{deporte.nombre}}"
+            class="card-image"
+            (load)="imagenCargando[deporte.nombre] = false"
+            (error)="imagenCargando[deporte.nombre] = true"
+            [style.visibility]="imagenCargando[deporte.nombre] ? 'hidden' : 'visible'"
+          >
         </div>
         <div class="card-content">
           <h3 class="card-title">{{deporte.nombre}}</h3>

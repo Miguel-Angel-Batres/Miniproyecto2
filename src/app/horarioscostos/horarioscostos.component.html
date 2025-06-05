@@ -32,7 +32,13 @@
   <div class="section horarios-section ">
     <div class="planes-container"> 
       @if (planes.length === 0) {
-        <div class="text-center text-danger my-4">No hay planes disponibles.</div>
+        <div class="loading-message" style="display: flex; justify-content: center; align-items: center; min-height: 200px;">
+          <mat-progress-spinner
+            color="primary"
+            mode="indeterminate"
+            diameter="60">
+          </mat-progress-spinner>
+        </div>
       }
       @for (plan of planes; track plan.nombre) {
         <div class="plan-card {{ plan.nombre | lowercase }}">

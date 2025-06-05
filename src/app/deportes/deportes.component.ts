@@ -3,17 +3,20 @@ import { DeportesService } from '../shared/deportes.service';
 import { Deporte } from '../deporte';
 import { RouterModule } from '@angular/router';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-deportes',
   standalone: true,
-  imports: [RouterModule, SearchBarComponent],
+  imports: [RouterModule, SearchBarComponent,MatProgressSpinnerModule],
   templateUrl: './deportes.component.html',
   styleUrls: ['./deportes.component.css']
 })
 export class DeportesComponent implements OnInit {
   deportes_de_api: Deporte[] = [];
-    filteredDeportes: Deporte[] = []; 
+  filteredDeportes: Deporte[] = []; 
+  imagenCargando: { [nombre: string]: boolean } = {}; // <-- variable de carga
+
 
   constructor(private deportesService: DeportesService) {}
   ngOnInit(): void {
@@ -21,6 +24,8 @@ export class DeportesComponent implements OnInit {
       next: (data) => {
         this.deportes_de_api = data;
         this.filteredDeportes = data; 
+        data.forEach(deporte => this.imagenCargando[deporte.nombre] = true);
+
       }
     });
   }
