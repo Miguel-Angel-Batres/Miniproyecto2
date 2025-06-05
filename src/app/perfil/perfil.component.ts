@@ -95,6 +95,10 @@ export class PerfilComponent implements OnInit {
   }
   
 
+  planDieta(){
+    this.route.navigate(['/nutricion']);
+  }
+
   renovarMembresia() {
     // redirigir a la pagina de pago
     this.route.navigate(['/pagos']);
