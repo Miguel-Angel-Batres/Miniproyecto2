@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^19.2.12",
     "@angular/router": "^19.2.12",
     "@angular/service-worker": "^19.2.13",
+    "@firebase/firestore": "^4.7.17",
     "@popperjs/core": "^2.11.8",
     "@semantic-components/re-captcha": "^0.40.0",
     "angular-cli-ghpages": "^2.0.3",

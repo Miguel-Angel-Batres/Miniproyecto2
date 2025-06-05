@@ -5,6 +5,7 @@ const path = require('path');
 const nodemailer=require('nodemailer');
 const app=express()
 const {db,auth}=require('./firebase');
+const { ConsoleLogger } = require('@angular/compiler-cli');
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
@@ -68,6 +69,7 @@ app.post('/api/verificar-attemps', async (req, res) => {
         return res.status(500).json({ bloqueo: false, message: 'Error al verificar el usuario' });
     }
 });
+
 app.post('/api/registro', async (req, res) => {
     const { email, password, extraData } = req.body;
     try {
@@ -263,6 +265,42 @@ app.get('/api/usuarios', async (_, res) => {
         res.status(500).json({ message: 'Error al obtener los usuarios' });
     }
 });
+app.get('/api/usuarios/:uid', async (req, res) => {
+    const { uid } = req.params;
+    try {
+        const userDoc = await db.collection('usuarios').doc(uid).get();
+        if (!userDoc.exists) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        res.status(200).json({ uid: userDoc.id, ...userDoc.data() });
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        res.status(500).json({ message: 'Error al obtener el usuario' });
+    }
+}
+);
+app.put('/api/usuarios/:uid', async (req, res) => {
+    const { uid } = req.params;
+    const updates = req.body;
+    try {
+        const userRef = db.collection('usuarios').doc(uid);
+        const userDoc = await userRef.get();
+        if (!userDoc.exists) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        await userRef.update(updates);
+
+        const updatedUserSnap = await userRef.get();
+        const updatedUser = updatedUserSnap.data();
+    
+        // Devuelve los datos actualizados
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error('Error al actualizar el usuario:', error);
+        res.status(500).json({ message: 'Error al actualizar el usuario' });
+    }
+}
+);
 app.get('/deportes', async (req, res) => {
     try {
       const snapshot = await db.collection('deportes').get();
@@ -286,6 +324,64 @@ app.get('/api/planes', async (req, res) => {
     }
 }
 );
+app.get('/api/planes/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const planDoc = await db.collection('planes').doc(id).get();
+        if (!planDoc.exists) {
+            return res.status(404).json({ message: 'Plan no encontrado' });
+        }
+        res.status(200).json({ id: planDoc.id, ...planDoc.data() });
+    } catch (error) {
+        console.error('Error al obtener el plan:', error);
+        res.status(500).json({ message: 'Error al obtener el plan' });
+    }
+} );
+app.post('/api/planes', async (req, res) => {
+    const { nombre, descripcion, precio, tipoPago } = req.body;
+    try {
+        const newPlanRef = await db.collection('planes').add({
+            nombre,
+            descripcion,
+            precio,
+            tipoPago
+        });
+        const newPlanDoc = await newPlanRef.get();
+        const newPlanData = { id: newPlanDoc.id, ...newPlanDoc.data() };
+        res.status(201).json({ newPlanData, message: 'Plan creado exitosamente' });
+    } catch (error) {
+        console.error('Error al crear el plan:', error);
+        res.status(500).json({ message: 'Error al crear el plan' });
+    }
+});
+app.put('/api/planes/:id', async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+    try {
+        const planRef = db.collection('planes').doc(id);
+        const planDoc = await planRef.get();
+        if (!planDoc.exists) {
+            return res.status(404).json({ message: 'Plan no encontrado' });
+        }
+        await planRef.update(updates);
+        res.status(200).json({ message: 'Plan actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar el plan:', error);
+        res.status(500).json({ message: 'Error al actualizar el plan' });
+    }
+}
+);
+app.get('/api/pagos'), async (req, res) => {
+    try {
+        const snapshot = await db.collection('pagos').get();
+        const pagos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        res.status(200).json(pagos);
+        console.log('Pagos obtenidos:', pagos);
+    } catch (error) {
+        console.error('Error al obtener los pagos:', error);
+        res.status(500).json({ message: 'Error al obtener los pagos' });
+    }
+}
 function sanitizarNumeroMexicano(numero) {
     if (!numero) return null;
     let limpio = numero.toString().replace(/[\s\-\(\)]/g, ''); // quita espacios, guiones, paréntesis

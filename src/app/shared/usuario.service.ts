@@ -34,6 +34,7 @@ export class UsuarioService {
     '+521222222222': '654321',
     '+521333333333': '111222',
   };
+  private apiUrl = 'http://localhost:3000/api/'; 
 
   private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
@@ -82,7 +83,7 @@ export class UsuarioService {
 
   async manageAttemps(email: string): Promise<void> {
     const verificarAttemps = await fetch(
-      'http://localhost:3000/api/verificar-attemps',
+      `${this.apiUrl}/verificar-attemps`,
       {
         method: 'POST',
         headers: {
@@ -106,7 +107,7 @@ export class UsuarioService {
               try {
                 const capturedEmail = email; 
                 const response = await fetch(
-                  'http://localhost:3000/api/recuperar-cuenta',
+                  '${this.apiUrl}/recuperar-cuenta',
                   {
                     method: 'POST',
                     headers: {
@@ -168,35 +169,38 @@ export class UsuarioService {
 
   async login(email: string, password: string): Promise<any> {
     try {
-      console.log('Intentando iniciar sesión con:', email);
-      console.log('Contraseña:', password ? 'Proporcionada' : 'No proporcionada');
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      const userDocRef = doc(db, 'usuarios', user.uid);
-      const userSnapshot = await getDoc(userDocRef);
-      if (userSnapshot.exists()) {
-        const usuarioCompleto = userSnapshot.data();
-        if (usuarioCompleto['Bloqueado']) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Cuenta bloqueada',
-            text: 'Tu cuenta ha sido bloqueada. Por favor, contacta al soporte.',
-          });
-          this.route.navigate(['/']);
-          return false;
-        }
-        this.userSubject.next(usuarioCompleto);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(usuarioCompleto));
-      } else {
-        this.userSubject.next(null);
+      const response = await fetch(`${this.apiUrl}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al iniciar sesión');
       }
+
+      const user = await response.json();
+      if (user.Bloqueado) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Cuenta bloqueada',
+          text: 'Tu cuenta ha sido bloqueada. Por favor, contacta al soporte.',
+        });
+        this.route.navigate(['/']);
+        return false;
+      }
+
+      this.userSubject.next(user);
       return true;
-    } catch (error: any) {
-      this.manageAttemps(email);
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Usuario o contraseña incorrectos. Intenta nuevamente.',
+      });
       return false;
     }
   }
@@ -208,7 +212,7 @@ export class UsuarioService {
   ): Promise<any> {
     try {
       const verificarEmail = await fetch(
-        'http://localhost:3000/api/verificar-email',
+        `${this.apiUrl}/verificar-email`,
         {
           method: 'POST',
           headers: {
@@ -227,7 +231,7 @@ export class UsuarioService {
         return;
       }
 
-      const response = await fetch('http://localhost:3000/api/registro', {
+      const response = await fetch('${this.apiUrl}/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -275,60 +279,55 @@ export class UsuarioService {
   isAuthenticated(): boolean {
     return this.userSubject.value !== null;
   }
-  async obtenerPagos(){
+  async obtenerPagos(): Promise<any[]> {
     try {
-      const user = this.userSubject.value;
-      if (!user) return [];
-
-      const pagosRef = collection(db, 'pagos');
-      const pagosSnapshot = await getDocs(pagosRef);
-      const pagos = pagosSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      this.pagosSubject.next(pagos);
-      return pagos;
+      const response = await fetch(`${this.apiUrl}/pagos`);
+      const data = await response.json();
+      console.log('Pagos obtenidos:', data);
+      this.pagosSubject.next(data);
+      return data;
     } catch (error) {
       console.error('Error al obtener los pagos:', error);
       return [];
     }
   }
-  async obtenerUsuarios() {
-    fetch('http://localhost:3000/api/usuarios')
-      .then((response) => response.json())
-      .then((data) => {
-        this.usersSubject.next(data);
-        return data;
-      })
-      .catch((error) => {
-        console.error('Error al obtener los usuarios:', error);
-        return [];
-      });
-  }
-  obtenerPlanes(): void {
-    fetch('http://localhost:3000/api/planes')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error al obtener los planes');
-        }
-        return response.json();
-      })
-      .then((planes) => {
-        this.planesSubject.next(planes);
-      })
-      .catch((error) => {
-        console.error('Error al obtener los planes:', error);
-        this.planesSubject.next([]); 
-      });
-  }
-  async obtenerPlan(planNombre: string) {
+
+  async obtenerUsuarios(): Promise<any[]> {
     try {
-      const planes = collection(db, 'planes');
-      const snapshot = await getDocs(planes);
-      const plan = snapshot.docs.find((doc) => doc.data()['nombre'] === planNombre);
-      return plan ? { ...plan.data() } : null;
+      const response = await fetch(`${this.apiUrl}/usuarios`);
+      const data = await response.json();
+      console.log('Usuarios obtenidos:', data);
+      this.usersSubject.next(data);
+      return data;
     } catch (error) {
+      console.error('Error al obtener los usuarios:', error);
+      return [];
+    }
+  }
+
+  async obtenerPlanes(): Promise<void> {
+    try {
+      const response = await fetch(`${this.apiUrl}/planes`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los planes');
+      }
+      const planes = await response.json();
+      this.planesSubject.next(planes);
+    } catch (error) {
+      console.error('Error al obtener los planes:', error);
+      this.planesSubject.next([]);
+    }
+  }
+  async obtenerPlan(planId: string) {
+    try{
+      const response = await fetch(`${this.apiUrl}/planes/${planId}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener el plan');
+      }
+      const plan = await response.json();
+      return plan;
+    }
+    catch (error) {
       console.error('Error al obtener el plan:', error);
       return null;
     }
@@ -340,12 +339,16 @@ export class UsuarioService {
     if (!usuarioActual) return null;
 
     try {
-      const userDocRef = doc(db, 'usuarios', usuarioActual.uid);
-      const userSnapshot = await getDoc(userDocRef);
-      if (userSnapshot.exists()) {
-        return { ...userSnapshot.data() };
+      const response = await fetch(
+        `${this.apiUrl}/usuarios/${usuarioActual.uid}`
+      );
+      if (!response.ok) {
+        throw new Error('Error al obtener el usuario logeado');
       }
-      return null;
+      const usuario = await response.json();
+      this.userSubject.next(usuario);
+      return usuario;
+
     } catch (error) {
       console.error('Error al obtener el usuario logeado:', error);
       return null;
@@ -353,8 +356,8 @@ export class UsuarioService {
   }
   async actualizarUsuario(usuario: any): Promise<void> {
     try {
-      if(usuario.contraseña!== '' && usuario.contraseña !== undefined){
-        const response = await fetch('http://localhost:3000/api/actualizar-contrasena', {
+      if (usuario.contraseña !== '' && usuario.contraseña !== undefined) {
+        const response = await fetch(`${this.apiUrl}/actualizar-contrasena`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -370,47 +373,87 @@ export class UsuarioService {
         }
         const data = await response.json();
         delete usuario.contraseña;
-      }else{
-        delete usuario.contraseña; 
-      }      
-      const userDocRef = doc(db, 'usuarios', usuario.uid);
-      await updateDoc(userDocRef, usuario);
-      const usuarios = this.usersSubject.value.map((u) =>
-        u.uid === usuario.uid ? { ...u, ...usuario } : u
-      );
-      this.userSubject.next(usuario);
-      this.usersSubject.next(usuarios);
+      }
+
+      const response = await fetch(`${this.apiUrl}/usuarios/${usuario.uid}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(usuario),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.message || 'Error al actualizar el usuario');
+      }
+      const updatedUser = await response.json();
+      this.userSubject.next(updatedUser); 
       Swal.fire({
         icon: 'success',
         title: 'Éxito',
-        text: 'Usuario actualizado correctamente.', 
+        text: 'Usuario actualizado correctamente.',
       });
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
-      
     }
   }
   async actualizarfotoPerfil(uid: string, imagen: string): Promise<void> {
     try {
-      const userDocRef = doc(db, 'usuarios', uid);
-      await updateDoc(userDocRef, { imagenPerfil: imagen });
-      const usuarios = this.usersSubject.value.map((u) =>
-        u.uid === uid ? { ...u, imagenPerfil: imagen } : u
+      const response = await fetch(
+        `${this.apiUrl}/usuarios/${uid}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imagenPerfil: imagen }),
+        }
       );
-      this.usersSubject.next(usuarios);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 'Error al actualizar la foto de perfil'
+        );
+      }
+      const updatedUser = await response.json();
+      this.userSubject.next(updatedUser);
+        Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Foto de perfil actualizada correctamente.',
+      });
+
     } catch (error) {
       console.error('Error al actualizar la foto de perfil:', error);
     }
   }
 
   async eliminarUsuario(uid: string): Promise<void> {
-    try {
-      const userDocRef = doc(db, 'usuarios', uid);
-      await deleteDoc(userDocRef);
+    try{
+      const response = await fetch(`${this.apiUrl}/usuarios/${uid}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 'Error al eliminar el usuario'
+        );
+      }
       const usuarios = this.usersSubject.value.filter((u) => u.uid !== uid);
       this.usersSubject.next(usuarios);
-    } catch (error) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Usuario eliminado correctamente.',
+      });
+    }
+    catch (error) {
       console.error('Error al eliminar el usuario:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el usuario. Inténtalo nuevamente.',
+      });
     }
   }
 
@@ -419,29 +462,100 @@ export class UsuarioService {
     return usuario?.pagos || [];
   }
   async eliminarPlan(plan: any): Promise<void> {
-    const planes = await getDocs(collection(db, 'planes'));
-    planes.forEach(async (doc) => {
-      if (doc.id === plan.id) {
-        await deleteDoc(doc.ref);
+    try {
+      const response = await fetch(
+        `${this.apiUrl}/planes/${plan.id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 'Error al eliminar el plan'
+        );
       }
-    });
+      const planes = this.planesSubject.value.filter((p) => p.id !== plan.id);
+      this.planesSubject.next(planes);
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Plan eliminado correctamente.',
+      });
+    } catch (error) {
+      console.error('Error al eliminar el plan:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el plan. Inténtalo nuevamente.',
+      });
+    }
   }
   async agregarPlan(plan: any): Promise<void> {
-    try {
-      const planesRef = collection(db, 'planes');
-      await setDoc(doc(planesRef), plan);
-      this.obtenerPlanes();
-    } catch (error) {
+    try{
+      const response = await fetch(`${this.apiUrl}/planes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(plan),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 'Error al agregar el plan'
+        );
+      }
+      const newPlan = await response.json();
+      const planes = [...this.planesSubject.value, newPlan];
+      this.planesSubject.next(planes);
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: 'Plan agregado correctamente.',
+      });
+    }
+    catch (error) {
       console.error('Error al agregar el plan:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo agregar el plan. Inténtalo nuevamente.',
+      });
     }
   }
   async actualizarPlan(plan: any): Promise<void> {
-    try {
-      const planDocRef = doc(db, 'planes', plan.id);
-      await updateDoc(planDocRef, plan);
+   try{
+    const response = await fetch(
+      `${this.apiUrl}/planes/${plan.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(plan),
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.message || 'Error al actualizar el plan'
+      );
+    }
+    const updatedPlan = await response.json();
+    const planes = this.planesSubject.value.map((p) =>
+      p.id === updatedPlan.id ? updatedPlan : p
+    );
+    this.planesSubject.next(planes);
     } catch (error) {
       console.error('Error al actualizar el plan:', error);
-    }
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el plan. Inténtalo nuevamente.',
+      });
+
+   }
   }
   async loginWithGoogle(): Promise<boolean> {
     const provider = new GoogleAuthProvider();
@@ -592,17 +706,19 @@ export class UsuarioService {
   private async verifyUserInDatabase(user: any): Promise<boolean> {
     if (!user) return false;
 
-    const userRef = doc(db, 'usuarios', user.uid);
-    const userSnap = await getDoc(userRef);
+    try {
+      const response = await fetch(`${this.apiUrl}/usuarios/${user.uid}`);
+      if (!response.ok) {
+      console.warn('Usuario autenticado, pero no existe en la colección usuarios');
+      this.userSubject.next(null);
+      return false;
+      }
 
-    if (userSnap.exists()) {
-      const usuarioCompleto = userSnap.data();
+      const usuarioCompleto = await response.json();
       this.userSubject.next(usuarioCompleto);
       return true;
-    } else {
-      console.warn(
-        'Usuario autenticado, pero no existe en la colección usuarios'
-      );
+    } catch (error) {
+      console.error('Error al verificar usuario en la base de datos:', error);
       this.userSubject.next(null);
       return false;
     }
