@@ -175,8 +175,23 @@ export class UsuarioService {
         email,
         password
       );
+      if(!userCredential) {
+        console.warn('No se pudo obtener las credenciales del usuario.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo iniciar sesión. Por favor, intenta nuevamente.',
+        });
+        return false;
+      }
       const user = userCredential.user;
       const userDocRef = doc(db, 'usuarios', user.uid);
+
+      if (user) {
+        console.log('Usuario logeado exitosamente:', user.email);
+      } else {
+        console.warn('No se pudo iniciar sesión.');
+      }
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
         const usuarioCompleto = userSnapshot.data();
