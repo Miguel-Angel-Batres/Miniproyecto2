@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { UsuarioService } from '../shared/usuario.service';
 import Swal from 'sweetalert2';
 import { ScCheckboxReCaptcha } from '@semantic-components/re-captcha';
-import { recaptchav2Config } from '/etc/secrets/env';
+import { recaptchav2Config } from '../../env';
 //material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
