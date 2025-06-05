@@ -39,8 +39,8 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       correo: ['',Validators.required],
-      contraseña: ['', [Validators.required]]      ,
-      captcha: ['', Validators.required] // <-- agrega captcha aquí
+      contraseña: ['', [Validators.required]]      
+      //captcha: ['', Validators.required] // <-- agrega captcha aquí
    });
    
   }
