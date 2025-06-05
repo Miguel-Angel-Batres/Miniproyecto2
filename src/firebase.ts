@@ -1,4 +1,4 @@
-import { firebaseConfig } from './env';
+import { firebaseConfig } from '/etc/secrets/env';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
