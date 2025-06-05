@@ -41,7 +41,7 @@ export class FormularioRNutricionComponent {
         sexo: ['', Validators.required],
         peso: ['', [Validators.required, Validators.min(30), Validators.max(200)]],
         altura: ['', [Validators.required, Validators.min(130), Validators.max(250)]],
-        deportes: [[], Validators.required],
+        deportes: ['', Validators.required],
         alimentos: this.fb.group(
           this.alimentos.reduce((acc, alimento) => {
             acc[alimento] = [false];
