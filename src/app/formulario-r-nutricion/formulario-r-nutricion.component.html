@@ -1,0 +1,120 @@
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Formulario Nutricion</h2>
+    <form [formGroup]="formulario" (ngSubmit)="enviar()">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Objetivo -->
+                <mat-form-field appearance="outline" class="w-100 mb-4">
+                    <mat-label>Objetivo</mat-label>
+                    <mat-select formControlName="objetivo">
+                        @for(obj of objetivos; track obj){
+                            <mat-option [value]="obj">{{obj}}</mat-option>
+                        }
+                    </mat-select>
+                    @if(formulario.get('objetivo')?.hasError('required')){
+                        <mat-error>Seleccione un objetivo</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Sexo -->
+                <label>Sexo:</label>
+                <mat-radio-group formControlName="sexo" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <mat-radio-button value="Masculino">Masculino</mat-radio-button>
+                    <mat-radio-button value="Femenino">Femenino</mat-radio-button>
+                </mat-radio-group>
+                @if(formulario.get('sexo')?.hasError('required')){
+                    <mat-error>Seleccione un genero</mat-error>
+                }
+
+                <!-- Peso -->
+                <mat-form-field appearance="outline" class="w-100 mb-4">
+                    <mat-label>Peso (kg)</mat-label>
+                    <input matInput type="number" formControlName="peso">
+                    @if(formulario.get('peso')?.errors?.['required']){
+                        <mat-error>Ingrese su Peso</mat-error>
+                    }
+                    @if(formulario.get('peso')?.errors?.['min']){
+                        <mat-error>Peso Minimo 30 kg</mat-error>
+                    }
+                    @if(formulario.get('peso')?.errors?.['max']){
+                        <mat-error>Peso Maximo 200 kg</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Altura -->
+                <mat-form-field appearance="outline" class="w-100 mb-4">
+                    <mat-label>Altura (cm)</mat-label>
+                    <input matInput type="number" formControlName="altura">
+                    @if(formulario.get('altura')?.errors?.['required']){
+                        <mat-error>Ingrese su Altura</mat-error>
+                    }
+                    @if(formulario.get('altura')?.errors?.['min']){
+                        <mat-error>Altura Minima 130 cm</mat-error>
+                    }
+                    @if(formulario.get('altura')?.errors?.['max']){
+                        <mat-error>Altura Maxima 250 cm</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <!-- Deportes -->
+                <mat-form-field appearance="outline" class="w-100 mb-4">
+                    <mat-label>Deportes</mat-label>
+                    <mat-select formControlName="deportes" multiple>
+                        @for(deporte of deportes;track deporte){
+                            <mat-option [value]="deporte">{{ deporte }}</mat-option>
+                        }
+                    </mat-select>
+                    @if(formulario.get('deportes')?.hasError('required')){
+                        <mat-error>Seleccione minimo 1 deporte</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Alimentos -->
+                <label>Alimentos que le gustan:</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;" formGroupName="alimentos">
+                    @for(alimento of alimentos;track alimento){
+                        <mat-checkbox [formControlName]="alimento">{{ alimento }}</mat-checkbox>
+                    }
+                </div>
+
+                <!-- Fecha de inicio -->
+                <mat-form-field appearance="outline" class="w-50 mb-4">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input matInput [matDatepicker]="inicioPicker" formControlName="fechaInicio">
+                    <mat-datepicker-toggle matSuffix [for]="inicioPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #inicioPicker></mat-datepicker>
+                    @if(formulario.get('fechaInicio')?.['hasError']('required')){
+                        <mat-error>Ingrese una fehca de inicio de dieta</mat-error>
+                    }
+                    <mat-error *ngIf="formulario.get('fechaInicio')?.hasError('required')">Requerido</mat-error>
+                    @if(formulario.get('fechaInicio')?.['hasError']('fechaInicioPasada')){
+                        <mat-error>No puedes iniciar antes que hoy</mat-error>
+                    }
+                </mat-form-field>
+
+                <!-- Fecha de fin -->
+                <mat-form-field appearance="outline" class="w-50 mb-4">
+                    <mat-label>Fecha de fin</mat-label>
+                    <input matInput [matDatepicker]="finPicker" formControlName="fechaFin">
+                    <mat-datepicker-toggle matSuffix [for]="finPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #finPicker></mat-datepicker>
+                    @if(formulario.get('fechaFin')?.hasError('required')){
+                        <mat-error>Ingrese una fehca de fin de dieta</mat-error>
+                    }
+                    @if(formulario.get('fechaFin')?.['hasError']('fechaFinInvalida')){
+                        <mat-error>Debe ser posterior a la fecha de inicio</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <div class="mt-3">
+                <button mat-raised-button
+                    color="primary"
+                    type="submit"
+                    class="w-100"
+                    [disabled]="formulario.invalid">
+                    Enviar</button>
+            </div>
+        </div>
+    </form>
+</div>

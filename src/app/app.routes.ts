@@ -11,6 +11,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { PagosComponent } from './pagos/pagos.component';
 import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
+import { FormularioRNutricionComponent } from './formulario-r-nutricion/formulario-r-nutricion.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -26,5 +27,6 @@ export const routes: Routes = [
     { path: 'perfil', component: PerfilComponent },
     { path: 'pagos', component: PagosComponent },
     { path: 'perfil_admin',component: PerfilAdminComponent},
+    {path:'nutricion',component:FormularioRNutricionComponent}
     
 ];  
