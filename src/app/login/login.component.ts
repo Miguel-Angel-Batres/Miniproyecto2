@@ -46,14 +46,14 @@ export class LoginComponent {
   }
 
 async onSubmit() {
-  if (!this.loginForm.value.captcha) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Captcha requerido',
-      text: 'Por favor, resuelve el reCAPTCHA antes de iniciar sesión.',
-    });
-    return;
-  }
+  // if (!this.loginForm.value.captcha) {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Captcha requerido',
+  //     text: 'Por favor, resuelve el reCAPTCHA antes de iniciar sesión.',
+  //   });
+  //   return;
+  // }
 
   // Aquí puedes validar los otros campos si quieres
   if (this.loginForm.invalid) {
