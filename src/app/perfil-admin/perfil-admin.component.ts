@@ -393,7 +393,6 @@ export class PerfilAdminComponent implements OnInit {
   }
   cancelarEdicionPerfil() {
     this.editandoPerfil = false;
-    this.usuario = this.usuarioService.obtenerUsuarioLogeado();
   }
   onFileSelected(event: any) {
     const file = event.target.files[0];

@@ -176,7 +176,7 @@
       } @else { @for (usuario of usuarios; track usuario) { @if (usuario.rol !==
       'admin') {
       <tr>
-        @if (usuarioEditando!= null && usuarioEditando.nombre === usuario.nombre) {
+        @if (usuarioEditando!= null && usuarioEditando.uid === usuario.uid) {
         <!-- Modo edición -->
         <td>
           <input [(ngModel)]="usuarioEditando.nombre" class="form-control" />
@@ -377,7 +377,7 @@
         <th>Descripción</th>
         <th>tipo</th>
         <th>Beneficios</th>
-        <!-- Nueva columna -->
+        <th>Orden</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -402,8 +402,8 @@
         </td>
         <td>
           <select [(ngModel)]="planEditando.tipoPago" class="form-select">
-            <option value="mensual">Mensual</option>
-            <option value="anual">Anual</option>
+            <option value="Mensual">Mensual</option>
+            <option value="Anual">Anual</option>
           </select>
         </td>
         <td>
@@ -435,8 +435,14 @@
             </div>
           </div>
         </td>
-
-        <!-- Sección de beneficios -->
+        <td>
+          <input
+            type="number"
+            [(ngModel)]="planEditando.orden"
+            class="form-control"
+            placeholder="Orden"
+          />
+        </td>
 
         <td>
           <button
@@ -459,7 +465,7 @@
         <td>{{ plan.descripcion }}</td>
         <td>{{ plan.tipoPago }}</td>
         <td>{{ plan.beneficios }}</td>
-
+        <td>{{ plan.orden }}</td>
         <td>
           <button
             class="btn btn-outline-warning btn-sm me-1"

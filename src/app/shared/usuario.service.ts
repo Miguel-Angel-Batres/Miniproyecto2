@@ -168,14 +168,12 @@ export class UsuarioService {
 
   async login(email: string, password: string): Promise<any> {
     try {
-      console.log('Intentando iniciar sesión con:', email);
-      console.log('Contraseña:', password ? 'Proporcionada' : 'No proporcionada');
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      if(!userCredential) {
+      if (!userCredential) {
         console.warn('No se pudo obtener las credenciales del usuario.');
         Swal.fire({
           icon: 'error',
@@ -192,6 +190,7 @@ export class UsuarioService {
       } else {
         console.warn('No se pudo iniciar sesión.');
       }
+
       const userSnapshot = await getDoc(userDocRef);
       if (userSnapshot.exists()) {
         const usuarioCompleto = userSnapshot.data();
@@ -204,8 +203,11 @@ export class UsuarioService {
           this.route.navigate(['/']);
           return false;
         }
+
+        // Resetear intentos fallidos a 0
+        await updateDoc(userDocRef, { intentosFallidos: 0 });
+
         this.userSubject.next(usuarioCompleto);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(usuarioCompleto));
       } else {
         this.userSubject.next(null);
       }
@@ -393,7 +395,6 @@ export class UsuarioService {
       const usuarios = this.usersSubject.value.map((u) =>
         u.uid === usuario.uid ? { ...u, ...usuario } : u
       );
-      this.userSubject.next(usuario);
       this.usersSubject.next(usuarios);
       Swal.fire({
         icon: 'success',

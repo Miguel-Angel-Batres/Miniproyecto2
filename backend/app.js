@@ -67,6 +67,7 @@ app.post('/api/verificar-attemps', async (req, res) => {
 app.post('/api/registro', async (req, res) => {
     const { email, password, extraData } = req.body;
     try {
+        console.log('Datos recibidos:', { email, password, extraData });
         const confirmationToken = Math.random().toString(36).substring(2, 15);
         const docRef = db.collection('registros_pendientes').doc(confirmationToken); 
         await docRef.set({
@@ -272,7 +273,7 @@ app.get('/deportes', async (req, res) => {
 
 app.get('/api/planes', async (req, res) => {
     try {
-        const snapshot = await db.collection('planes').get();
+        const snapshot = await db.collection('planes').orderBy('orden').get();
         const planes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         res.status(200).json(planes);
         console.log('Planes obtenidos:', planes);
