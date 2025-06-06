@@ -59,8 +59,8 @@
             <div class="col-md-6">
                 <!-- Deportes -->
                 <mat-form-field appearance="outline" class="w-100 mb-4">
-                    <mat-label>Deportes</mat-label>
-                    <mat-select formControlName="deportes" multiple>
+                    <mat-label>Deporte</mat-label>
+                    <mat-select formControlName="deportes">
                         @for(deporte of deportes;track deporte){
                             <mat-option [value]="deporte">{{ deporte }}</mat-option>
                         }

@@ -10,6 +10,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { PlanDieta } from '../models/dieta.model';
+import { NutricionService } from '../shared/nutricion.service';
 
 @Component({
   selector: 'app-formulario-r-nutricion',
@@ -34,14 +36,14 @@ export class FormularioRNutricionComponent {
   deportes = ['Zumba', 'Spinning', 'Pilates', 'Yoga', 'Body Pump', 'CrossFit','Boxeo','Kickboxing'];
   alimentos = ['Manzana', 'Pollo', 'Avena', 'Verduras', 'Huevo', 'Pescado',];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private nutricionService: NutricionService) {
     this.formulario = this.fb.group(
       {
         objetivo: ['', Validators.required],
         sexo: ['', Validators.required],
         peso: ['', [Validators.required, Validators.min(30), Validators.max(200)]],
         altura: ['', [Validators.required, Validators.min(130), Validators.max(250)]],
-        deportes: [[], Validators.required],
+        deportes: ['', Validators.required],
         alimentos: this.fb.group(
           this.alimentos.reduce((acc, alimento) => {
             acc[alimento] = [false];
@@ -113,12 +115,40 @@ get erroresFechas() {
       fechaFin: valores.fechaFin,
     };
 
-    console.log('Formulario válido:', resultado);
+    const datos: PlanDieta = {
+      objetivo: valores.objetivo,
+      sexo: valores.sexo,
+      peso: valores.peso,
+      altura: valores.altura,
+      deportes: valores.deportes,
+      alimentos: alimentosSeleccionados,
+      fechaInicio: valores.fechaInicio,
+      fechaFin: valores.fechaFin
+    };
+    this.nutricionService.guardarDatosNutricion(datos)
+    .then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Guardado en Firebase',
+        text: 'Datos nutricionales almacenados correctamente'
+      });
+      this.formulario.reset();
+    })
+    .catch((error) => {
+      console.error('Error al guardar:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron guardar los datos'
+      });
+    });
+
+    /*console.log('Formulario válido:', resultado);
     Swal.fire({
       icon: 'success',
       title: 'Registro exitoso',
       text: 'Datos enviados correctamente',
-    });
+    });*/
 
     this.formulario.reset()
     this.formulario.markAsUntouched();
