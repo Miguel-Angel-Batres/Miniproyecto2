@@ -168,11 +168,7 @@ export class UsuarioService {
 
   async login(email: string, password: string): Promise<any> {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (!userCredential) {
         console.warn('No se pudo obtener las credenciales del usuario.');
         Swal.fire({
@@ -182,6 +178,7 @@ export class UsuarioService {
         });
         return false;
       }
+
       const user = userCredential.user;
       const userDocRef = doc(db, 'usuarios', user.uid);
 
@@ -213,7 +210,22 @@ export class UsuarioService {
       }
       return true;
     } catch (error: any) {
-      this.manageAttemps(email);
+      if (error.code === 'auth/wrong-password') {
+        this.manageAttemps(email);
+      } else if (error.code === 'auth/network-request-failed') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de conexión',
+          text: 'No se pudo conectar al servidor. Por favor, verifica tu conexión a internet.',
+        });
+      } else {
+        console.error('Error inesperado al iniciar sesión:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
+        });
+      }
       return false;
     }
   }
@@ -312,32 +324,34 @@ export class UsuarioService {
     }
   }
   async obtenerUsuarios() {
-    fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/usuarios')
-      .then((response) => response.json())
-      .then((data) => {
-        this.usersSubject.next(data);
-        return data;
-      })
-      .catch((error) => {
-        console.error('Error al obtener los usuarios:', error);
-        return [];
-      });
+    try {
+      const usuariosRef = collection(db, 'usuarios');
+      const usuariosSnapshot = await getDocs(usuariosRef);
+      const usuarios = usuariosSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      this.usersSubject.next(usuarios);
+      return usuarios;
+    } catch (error) {
+      console.error('Error al obtener los usuarios:', error);
+      return [];
+    }
   }
-  obtenerPlanes(): void {
-    fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/planes')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error al obtener los planes');
-        }
-        return response.json();
-      })
-      .then((planes) => {
-        this.planesSubject.next(planes);
-      })
-      .catch((error) => {
-        console.error('Error al obtener los planes:', error);
-        this.planesSubject.next([]); 
-      });
+
+  async obtenerPlanes(): Promise<void> {
+    try {
+      const planesRef = collection(db, 'planes');
+      const planesSnapshot = await getDocs(planesRef);
+      const planes = planesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      this.planesSubject.next(planes);
+    } catch (error) {
+      console.error('Error al obtener los planes:', error);
+      this.planesSubject.next([]);
+    }
   }
   async obtenerPlan(planNombre: string) {
     try {

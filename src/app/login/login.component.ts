@@ -39,23 +39,22 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       correo: ['',Validators.required],
-      contraseña: ['', [Validators.required]]      
-      //captcha: ['', Validators.required] // <-- agrega captcha aquí
+      contraseña: ['', [Validators.required]],     
+      captcha: ['', Validators.required] // <-- agrega captcha aquí
    });
    
   }
 
 async onSubmit() {
-  // if (!this.loginForm.value.captcha) {
-  //   Swal.fire({
-  //     icon: 'error',
-  //     title: 'Captcha requerido',
-  //     text: 'Por favor, resuelve el reCAPTCHA antes de iniciar sesión.',
-  //   });
-  //   return;
-  // }
+  if (!this.loginForm.value.captcha) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Captcha requerido',
+      text: 'Por favor, resuelve el reCAPTCHA antes de iniciar sesión.',
+    });
+    return;
+  }
 
-  // Aquí puedes validar los otros campos si quieres
   if (this.loginForm.invalid) {
     Swal.fire({
       icon: 'error',
