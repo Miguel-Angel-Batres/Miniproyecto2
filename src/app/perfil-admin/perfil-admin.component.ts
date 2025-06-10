@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./perfil-admin.component.css'],
   standalone: true,
 
-  imports: [FormsModule, GraficoComponent],
+  imports: [FormsModule, GraficoComponent, CommonModule],
 })
 export class PerfilAdminComponent implements OnInit {
   usuario: any = null;
@@ -31,6 +31,8 @@ export class PerfilAdminComponent implements OnInit {
   nuevoPlan: any = {};
   UsuariosPorPlan: any = {};
   hayUsuariosNormales: boolean = false;
+  infoNutricion: any[] = [];
+  planEditandoNutricion: any = null;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -44,6 +46,7 @@ export class PerfilAdminComponent implements OnInit {
     planes: false,
     estadisticas: false,
     nuevoplan: false,
+    nutricion: false,
   };
 
   GraficaPastel: ChartData<'pie'> = {
@@ -184,6 +187,10 @@ export class PerfilAdminComponent implements OnInit {
       this.planes = planes;
     });
     this.usuarioService.obtenerPlanes();
+    this.usuarioService.infoNutricion.subscribe((info) => {
+      this.infoNutricion = info;
+    });
+    this.usuarioService.obtenerInfoNutricion();
 
     
   }
@@ -229,7 +236,9 @@ export class PerfilAdminComponent implements OnInit {
   gestionarUsuarios(): void {
     this.ventanas.usuarios = true;
   }
-
+  gestionarNutricion(): void {
+    this.ventanas.nutricion = true;
+  }
   gestionarPagos(): void {
     this.ventanas.pagos = true;
   }
@@ -280,6 +289,63 @@ export class PerfilAdminComponent implements OnInit {
     
     this.usuarioEditando = null;
   }
+  eliminarPlanNutricion(plan: any) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Quieres eliminar el plan de nutrición de ${plan.usuario}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuarioService.eliminarPlanNutricion(plan);
+        this.infoNutricion = JSON.parse(localStorage.getItem('infoNutricion') || '[]');
+        Swal.fire(
+          'Eliminado!',
+          `El plan de nutrición de ${plan.usuario} ha sido eliminado.`,
+          'success'
+        );
+      }
+    });
+  }
+  editarPlanNutricion(plan: any) {
+    this.planEditandoNutricion = { ...plan };
+    console.log(this.planEditandoNutricion);
+  } 
+  guardarCambiosNutricion() {
+    if (
+      !this.planEditandoNutricion ||
+      !this.planEditandoNutricion.fechaInicio ||
+      !this.planEditandoNutricion.fechaFin ||
+      !this.planEditandoNutricion.alimentos ||
+      !this.planEditandoNutricion.objetivo ||
+      !this.planEditandoNutricion.sexo ||
+      !this.planEditandoNutricion.peso ||
+      !this.planEditandoNutricion.altura ||
+      !this.planEditandoNutricion.deportes
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Campos incompletos o inválidos',
+        text: 'Por favor completa todos los campos requeridos con valores válidos.',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+    this.usuarioService.actualizarPlanNutricion(this.planEditandoNutricion);
+    Swal.fire({
+      icon: 'success',
+      title: 'Plan de nutrición actualizado',
+      text: `El plan de nutrición de ${this.planEditandoNutricion.usuario} ha sido actualizado.`,
+      confirmButtonText: 'Aceptar',
+    });
+    this.planEditandoNutricion = null;
+  }
+  cancelarEdicionNutricion() {
+    this.planEditandoNutricion = null;
+  }
+
 
   editarPlan(plan: any) {
     this.planEditando = plan;
@@ -404,4 +470,5 @@ export class PerfilAdminComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
 }

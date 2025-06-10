@@ -7,5 +7,6 @@ export interface PlanDieta{
     alimentos: string[];
     fechaInicio: string; 
     fechaFin: string;
+    usuario: string; 
 }
     

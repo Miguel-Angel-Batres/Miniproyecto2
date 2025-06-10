@@ -87,7 +87,6 @@
                     @if(formulario.get('fechaInicio')?.['hasError']('required')){
                         <mat-error>Ingrese una fehca de inicio de dieta</mat-error>
                     }
-                    <mat-error *ngIf="formulario.get('fechaInicio')?.hasError('required')">Requerido</mat-error>
                     @if(formulario.get('fechaInicio')?.['hasError']('fechaInicioPasada')){
                         <mat-error>No puedes iniciar antes que hoy</mat-error>
                     }

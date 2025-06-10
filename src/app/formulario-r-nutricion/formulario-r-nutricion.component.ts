@@ -11,7 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { PlanDieta } from '../models/dieta.model';
-import { NutricionService } from '../shared/nutricion.service';
+import {UsuarioService } from '../shared/usuario.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-formulario-r-nutricion',
@@ -27,7 +28,7 @@ import { NutricionService } from '../shared/nutricion.service';
     MatDatepickerModule,
     MatNativeDateModule,],
   templateUrl: './formulario-r-nutricion.component.html',
-  styleUrl: './formulario-r-nutricion.component.css'
+  styleUrls: ['./formulario-r-nutricion.component.css'], 
 })
 export class FormularioRNutricionComponent {
   formulario: FormGroup;
@@ -35,23 +36,26 @@ export class FormularioRNutricionComponent {
   objetivos = ['Bajar de peso', 'Subir de peso'];
   deportes = ['Zumba', 'Spinning', 'Pilates', 'Yoga', 'Body Pump', 'CrossFit','Boxeo','Kickboxing'];
   alimentos = ['Manzana', 'Pollo', 'Avena', 'Verduras', 'Huevo', 'Pescado',];
+  usuario: any;
 
-  constructor(private fb: FormBuilder,private nutricionService: NutricionService) {
+  constructor(private fb: FormBuilder,private nutricionService: UsuarioService,private router: Router) {
+   
     this.formulario = this.fb.group(
       {
-        objetivo: ['', Validators.required],
-        sexo: ['', Validators.required],
-        peso: ['', [Validators.required, Validators.min(30), Validators.max(200)]],
-        altura: ['', [Validators.required, Validators.min(130), Validators.max(250)]],
-        deportes: ['', Validators.required],
-        alimentos: this.fb.group(
-          this.alimentos.reduce((acc, alimento) => {
-            acc[alimento] = [false];
-            return acc;
-          }, {} as any)
-        ),
-        fechaInicio: [null, Validators.required],
-        fechaFin: [null, Validators.required],
+      objetivo: ['', Validators.required],
+      sexo: ['', Validators.required],
+      peso: ['', [Validators.required, Validators.min(30), Validators.max(200)]],
+      altura: ['', [Validators.required, Validators.min(130), Validators.max(250)]],
+      deportes: ['', Validators.required],
+      alimentos: this.fb.group(
+        this.alimentos.reduce((acc, alimento) => {
+        acc[alimento] = [false];
+        return acc;
+        }, {} as any)
+      ),
+      fechaInicio: [null, Validators.required],
+      fechaFin: [null, Validators.required],
+      usuario: [''] 
       },
       { validators: this.validarFechas }
     );
@@ -96,6 +100,19 @@ validarFechas(group: AbstractControl): ValidationErrors | null {
 get erroresFechas() {
   return this.formulario.errors;
 }
+ngOnInit() {
+  this.nutricionService.user.subscribe((usuario) => {
+    this.usuario = usuario;
+    if (!this.usuario) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Acceso denegado',
+        text: 'Debes iniciar sesión para acceder a esta sección.',
+      });
+      this.router.navigate(['/login']);
+    }
+  });
+}
 
   enviar() {
 
@@ -104,17 +121,8 @@ get erroresFechas() {
       .filter(([_, seleccionado]) => seleccionado)
       .map(([alimento]) => alimento);
 
-    const resultado = {
-      objetivo: valores.objetivo,
-      sexo: valores.sexo,
-      peso: valores.peso,
-      altura: valores.altura,
-      deportes: valores.deportes,
-      alimentos: alimentosSeleccionados,
-      fechaInicio: valores.fechaInicio,
-      fechaFin: valores.fechaFin,
-    };
-
+       
+   
     const datos: PlanDieta = {
       objetivo: valores.objetivo,
       sexo: valores.sexo,
@@ -123,7 +131,8 @@ get erroresFechas() {
       deportes: valores.deportes,
       alimentos: alimentosSeleccionados,
       fechaInicio: valores.fechaInicio,
-      fechaFin: valores.fechaFin
+      fechaFin: valores.fechaFin,
+      usuario: this.usuario ? this.usuario.uid : 'Usuario no autenticado'
     };
     this.nutricionService.guardarDatosNutricion(datos)
     .then(() => {

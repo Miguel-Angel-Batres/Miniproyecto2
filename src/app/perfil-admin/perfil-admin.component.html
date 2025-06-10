@@ -3,8 +3,6 @@
   <h2 class="text-center mb-4">No hay Usuario logeado</h2>
 </div>
 } @else {
-
-
 <div class="container mt-5 p-4 border rounded shadow bg-light">
   <h2 class="text-center mb-4">Panel de Administración</h2>
 
@@ -103,6 +101,12 @@
             </button>
             <button class="btn btn-outline-warning" (click)="verPlanes()">
               <i class="bi bi-box-fill me-2"></i> Ver o Asignar Planes
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="gestionarNutricion()"
+            >
+              <i class="bi bi-heart-pulse-fill me-2"></i> Gestionar Nutrición
             </button>
             <button
               class="btn btn-outline-secondary"
@@ -491,7 +495,126 @@
     Agregar Nuevo Plan
   </button>
 </div>
-} @if(ventanas.estadisticas){
+}
+@if (ventanas.nutricion) {
+  <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+    <!-- tabla con datos de nutricion -->
+    <div class="container mt-5 p-4 border rounded shadow bg-light position-relative">
+      <!-- Header con botón cerrar -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Gestión de Nutrición</h3>
+        <button
+          class="btn btn-sm btn-outline-danger"
+          (click)="ventanas.nutricion = false"
+        >
+          &times;
+        </button>
+      </div>
+  
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Objetivo</th>
+            <th>Sexo</th>
+            <th>Peso</th>
+            <th>Altura</th>
+            <th>Deportes</th>
+            <th>Alimentos</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (infoNutricion.length === 0 || infoNutricion == null) {
+          <tr>
+            <td colspan="10" class="text-center">No hay planes de nutrición registrados.</td>
+          </tr>
+          } @else {
+          @for (plan of infoNutricion; track plan) {
+          <tr>
+            @if (planEditandoNutricion != null && planEditandoNutricion.id === plan.id) {
+            <!-- Modo edición -->
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.objetivo" class="form-control" />
+            </td>
+            <td>
+              <select [(ngModel)]="planEditandoNutricion.sexo" class="form-select">
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </select>
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.peso" type="number" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.altura" type="number" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.deportes" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.alimentos" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.fechaInicio" type="date" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.fechaFin" type="date" class="form-control" />
+            </td>
+            <td>
+              <input [(ngModel)]="planEditandoNutricion.usuario" class="form-control" />
+            </td>
+            <td>
+              <button
+                class="btn btn-success btn-sm me-1"
+                (click)="guardarCambiosNutricion()"
+              >
+                Guardar
+              </button>
+              <button
+                class="btn btn-secondary btn-sm"
+                (click)="cancelarEdicionNutricion()"
+              >
+                Cancelar
+              </button>
+            </td>
+            } @else {
+            <!-- Modo normal -->
+            <td>{{ plan.objetivo }}</td>
+            <td>{{ plan.sexo }}</td>
+            <td>{{ plan.peso }}</td>
+            <td>{{ plan.altura }}</td>
+            <td>{{ plan.deportes }}</td>
+            <td>{{ plan.alimentos.join(', ') }}</td>
+            <td>{{ plan.fechaInicio | date }}</td>
+            <td>{{ plan.fechaFin | date }}</td>
+            <td>{{ plan.usuarioNombre }}</td>
+            <td>
+              <button
+                class="btn btn-outline-warning btn-sm me-1"
+                (click)="editarPlanNutricion(plan)"
+              >
+                Editar
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="eliminarPlanNutricion(plan)"
+              >
+                Eliminar
+              </button>
+            </td>
+            }
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+@if(ventanas.estadisticas){
 <div
   class="container mt-5 p-4 border rounded shadow bg-light position-relative"
 >
@@ -506,7 +629,7 @@
     </button>
   </div>
 
-  Aquí puedes agregar gráficos o estadísticas
+  <!-- Aquí puedes agregar gráficos o estadísticas -->
   <p>Gráficos y estadísticas vendrán aquí.</p>
   <app-grafico
     [GraficaPastel]="GraficaPastel"

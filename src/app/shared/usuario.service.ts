@@ -13,6 +13,8 @@ import {
   signInWithPhoneNumber,
   RecaptchaVerifier,
 } from 'firebase/auth';
+import { PlanDieta } from '../models/dieta.model';
+
 import {
   doc,
   getDoc,
@@ -21,6 +23,7 @@ import {
   collection,
   deleteDoc,
   updateDoc,
+  addDoc,
 } from 'firebase/firestore';
 import { auth, db } from '../../firebase';
 
@@ -41,6 +44,7 @@ export class UsuarioService {
   private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(
     []
   );
+  private infoNutricionSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private vinculacionesSubject = new BehaviorSubject<{
     googleVinculado: boolean;
     facebookVinculado: boolean;
@@ -74,12 +78,21 @@ export class UsuarioService {
   get planes() {
     return this.planesSubject.asObservable();
   }
-
+  get infoNutricion() {
+    return this.infoNutricionSubject.asObservable();
+  }
   isAdmin(): boolean {
     const user = this.userSubject.value;
     return user && user.rol === 'admin';
   }
-
+  isLoggedIn(): boolean {
+    const user = this.userSubject.value;
+    return user !== null && user !== undefined;
+  }
+  guardarDatosNutricion(datos: PlanDieta) {
+    const nutricionRef = collection(db, 'nutricion'); 
+    return addDoc(nutricionRef, datos);
+  }
   async manageAttemps(email: string): Promise<void> {
     const verificarAttemps = await fetch(
       'https://gimnasio-santa-cruz-ww7d.onrender.com/api/verificar-attemps',
@@ -338,7 +351,28 @@ export class UsuarioService {
       return [];
     }
   }
-
+  async obtenerInfoNutricion(): Promise<void> {
+    try {
+      const nutricionRef = collection(db, 'nutricion');
+      const nutricionSnapshot = await getDocs(nutricionRef);
+      const nutricion = await Promise.all(
+        nutricionSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const usuariosSnapshot = await getDocs(collection(db, 'usuarios'));
+          const usuarioDoc = usuariosSnapshot.docs.find((usuario) => usuario.id === data['usuario']);
+          const usuarioNombre = usuarioDoc ? usuarioDoc.data()['nombre'] : 'Usuario desconocido';
+          return {
+        id: doc.id,
+        ...data,
+        usuarioNombre,
+          };
+        })
+      );
+      this.infoNutricionSubject.next(nutricion);
+    } catch (error) {
+      console.error('Error al obtener la información de nutrición:', error);
+    }
+  }
   async obtenerPlanes(): Promise<void> {
     try {
       const planesRef = collection(db, 'planes');
@@ -456,6 +490,15 @@ export class UsuarioService {
       }
     });
   }
+  async eliminarPlanNutricion(plan: any): Promise<void> {
+    const nutricion = await getDocs(collection(db, 'nutricion'));
+    nutricion.forEach(async (doc) => {
+      if (doc.id === plan.id) {
+        await deleteDoc(doc.ref);
+      }
+    });
+  }
+
   async agregarPlan(plan: any): Promise<void> {
     try {
       const planesRef = collection(db, 'planes');
@@ -473,6 +516,16 @@ export class UsuarioService {
       console.error('Error al actualizar el plan:', error);
     }
   }
+  async actualizarPlanNutricion(plan: any): Promise<void> {
+    try {
+      const planDocRef = doc(db, 'nutricion', plan.id);
+      await updateDoc(planDocRef, plan);
+      this.obtenerInfoNutricion();
+    } catch (error) {
+      console.error('Error al actualizar el plan de nutrición:', error);
+    }
+  }
+  
   async loginWithGoogle(): Promise<boolean> {
     const provider = new GoogleAuthProvider();
     try {
