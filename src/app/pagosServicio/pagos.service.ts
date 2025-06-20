@@ -18,14 +18,7 @@ export class PagoService {
       throw new Error('Usuario no encontrado');
     }
     const usuarioDoc = usuariosSnapshot.docs[0];
-    const usuariosRef = doc(db, 'usuarios', usuarioDoc.id);
-
-    const planesQuery = query(collection(db, 'planes'), where('nombre', '==', pago.plan));
-    const planesSnapshot = await getDocs(planesQuery);
-    if (planesSnapshot.empty) {
-      throw new Error('Plan no encontrado');
-    }
-    const planDoc = planesSnapshot.docs[0];
+    const usuariosRef = doc(db, 'usuarios', usuarioDoc.id);   
 
     const nuevoPago = await addDoc(pagosRef, {
       ...pago,

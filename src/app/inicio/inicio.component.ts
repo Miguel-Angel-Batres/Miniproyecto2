@@ -16,6 +16,7 @@ interface Feature {
 })
 export class InicioComponent implements OnInit, OnDestroy {
   video: string = "gr8emAKZV7M";
+  videoPilates: string = "aHYvmY3nV5U";
 
   images = [
     'assets/inicio/inicio1.avif',
