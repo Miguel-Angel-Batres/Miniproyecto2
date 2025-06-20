@@ -569,13 +569,17 @@ export class UsuarioService {
     this.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
       size: size,
       callback: (response: any) => {
+        console.log('reCAPTCHA resuelto:', response);
       },
       'expired-callback': () => {
         console.warn('reCAPTCHA expirado. Por favor, resuélvelo nuevamente.');
       },
     });
-
-    this.recaptchaVerifier.render();
+    this.recaptchaVerifier.render().then((widgetId: string) => {
+      console.log('reCAPTCHA renderizado con ID:', widgetId);
+    }).catch((error: unknown) => {
+      console.error('Error al renderizar reCAPTCHA:', error);
+    });
   }
   async loginWithPhone(phoneNumber: string): Promise<boolean> {
     if (!this.recaptchaVerifier) {
@@ -618,21 +622,35 @@ export class UsuarioService {
           code = verificationCode.value;
 
           if (code === predefinedCode) {
+            
             const result = await confirmationResult.confirm(code);
             const user = result.user;
-            const log = await this.verifyUserInDatabase(user);
-            if (!log) {
+            console.log('Usuario autenticado con teléfono:', user);
+
+            const usuariosRef = collection(db, 'usuarios');
+            const usuariosSnapshot = await getDocs(usuariosRef);
+            
+            const normalizedPhoneNumber = user.phoneNumber ? user.phoneNumber.replace('+52', '') : '';
+            console.log('Número de teléfono normalizado:', normalizedPhoneNumber);
+            const usuarioEncontrado = usuariosSnapshot.docs.find(
+              (doc) => doc.data()['telefono'] === normalizedPhoneNumber
+            );
+
+            if (!usuarioEncontrado) {
               await user.delete();
               await signOut(auth);
 
               Swal.fire({
-                icon: 'warning',
-                title: 'Cuenta no registrada',
-                text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
+              icon: 'warning',
+              title: 'Cuenta no registrada',
+              text: 'No hay una cuenta vinculada a este acceso. Por favor, regístrate primero.',
               });
               this.recaptchaVerifier = null;
               return false;
             }
+
+            const usuarioCompleto = usuarioEncontrado.data();
+            this.userSubject.next(usuarioCompleto);
             this.recaptchaVerifier = null;
             return true;
           } else {
@@ -674,7 +692,7 @@ export class UsuarioService {
   }
   private async verifyUserInDatabase(user: any): Promise<boolean> {
     if (!user) return false;
-
+    console.log('Verificando usuario en la base de datos:', user.uid);
     const userRef = doc(db, 'usuarios', user.uid);
     const userSnap = await getDoc(userRef);
 

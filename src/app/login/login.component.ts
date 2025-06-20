@@ -124,6 +124,7 @@ async onSubmit() {
   }
 
   async onPhoneLogin(phoneNumber: string) {
+    console.log('Iniciando sesión con teléfono:', phoneNumber);
     try {
       const phoneUser = await this.usuarioService.loginWithPhone(phoneNumber);
       if (phoneUser) {
