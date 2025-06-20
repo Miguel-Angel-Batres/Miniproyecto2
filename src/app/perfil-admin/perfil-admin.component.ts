@@ -187,9 +187,7 @@ export class PerfilAdminComponent implements OnInit {
       this.planes = planes;
     });
     this.usuarioService.obtenerPlanes();
-    this.usuarioService.infoNutricion.subscribe((info) => {
-      this.infoNutricion = info;
-    });
+    this.infoNutricion = this.usuarioService.infoNutricion();
     this.usuarioService.obtenerInfoNutricion();
 
     

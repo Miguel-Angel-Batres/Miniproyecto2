@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, Signal} from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -44,7 +44,7 @@ export class UsuarioService {
   private planesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(
     []
   );
-  private infoNutricionSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  private infoNutricionSubject = signal<any[]>([]);
   private vinculacionesSubject = new BehaviorSubject<{
     googleVinculado: boolean;
     facebookVinculado: boolean;
@@ -79,7 +79,7 @@ export class UsuarioService {
     return this.planesSubject.asObservable();
   }
   get infoNutricion() {
-    return this.infoNutricionSubject.asObservable();
+    return this.infoNutricionSubject;
   }
   isAdmin(): boolean {
     const user = this.userSubject.value;
@@ -223,7 +223,7 @@ export class UsuarioService {
       }
       return true;
     } catch (error: any) {
-      if (error.code === 'auth/wrong-password') {
+      if (error.code === 'auth/invalid-credential') {
         this.manageAttemps(email);
       } else if (error.code === 'auth/network-request-failed') {
         Swal.fire({
@@ -368,7 +368,7 @@ export class UsuarioService {
           };
         })
       );
-      this.infoNutricionSubject.next(nutricion);
+      this.infoNutricionSubject.set(nutricion);
     } catch (error) {
       console.error('Error al obtener la información de nutrición:', error);
     }
