@@ -95,7 +95,7 @@ export class UsuarioService {
   }
   async manageAttemps(email: string): Promise<void> {
     const verificarAttemps = await fetch(
-      'https://gimnasio-santa-cruz-ww7d.onrender.com/api/verificar-attemps',
+      '/api/verificar-attemps',
       {
         method: 'POST',
         headers: {
@@ -119,7 +119,7 @@ export class UsuarioService {
               try {
                 const capturedEmail = email; 
                 const response = await fetch(
-                  'https://gimnasio-santa-cruz-ww7d.onrender.com/api/recuperar-cuenta',
+                  '/api/recuperar-cuenta',
                   {
                     method: 'POST',
                     headers: {
@@ -250,7 +250,7 @@ export class UsuarioService {
   ): Promise<any> {
     try {
       const verificarEmail = await fetch(
-        'https://gimnasio-santa-cruz-ww7d.onrender.com/api/verificar-email',
+        '/api/verificar-email',
         {
           method: 'POST',
           headers: {
@@ -269,7 +269,7 @@ export class UsuarioService {
         return;
       }
 
-      const response = await fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/registro', {
+      const response = await fetch('/api/registro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -419,7 +419,7 @@ export class UsuarioService {
   async actualizarUsuario(usuario: any): Promise<void> {
     try {
       if(usuario.contraseña!== '' && usuario.contraseña !== undefined){
-        const response = await fetch('https://gimnasio-santa-cruz-ww7d.onrender.com/api/actualizar-contrasena', {
+        const response = await fetch('/api/actualizar-contrasena', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
